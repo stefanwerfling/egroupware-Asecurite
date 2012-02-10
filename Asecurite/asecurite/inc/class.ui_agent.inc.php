@@ -16,6 +16,7 @@ include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_agent.inc.php');
 class ui_agent extends bo_agent {
 
     var $type_contrat = array();
+
     /**
      * Public functions callable via menuaction
      *
@@ -41,24 +42,31 @@ class ui_agent extends bo_agent {
     /**
      * Display the application home content
      */
-    public function index($content=NULL) {
+    public function index($content = NULL) {
 
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
 
 
         if (isset($content['nm']['rows']['delete'])) {
-            list($del) = each($content['nm']['rows']['delete']);
-
-            $this->delete(array('idasecurite_agent' => $del));
+            list($id_agent) = each($content['nm']['rows']['delete']);
+            try {
+                $this->delete_agent($id_agent);
+            } catch (Exception $e) {
+                $msg = $e->getMessage();
+                $save = 'error';
+            }
         } elseif (isset($content['delete_selected'])) {
-
             for ($i = 0; $i < count($content['nm']['rows']['checkbox']); $i++) {
-
-                $this->delete(array('idasecurite_agent' => $content['nm']['rows']['checkbox'][$i]));
+                try {
+                    $this->delete_agent($content['nm']['rows']['checkbox'][$i]);
+                } catch (Exception $e) {
+                    $msg = $e->getMessage();
+                    $save = 'error';
+                }
             }
         }
-
+        $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $content['msg'] = "<span id=\"$save\">" . lang($msg) . " </span>";
         $readonlys['nm']['export'] = true;
         $content['nm'] = $this->nm + array('get_rows' => APP_NAME . '.ui_agent.get_rows', 'order' => 'nom');
@@ -89,7 +97,6 @@ class ui_agent extends bo_agent {
             $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '--' : $this->format_date($row['date_debut_contrat']);
             $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '--' : $this->format_date($row['date_fin_contrat']);
             $row['nom'] = '<span style="cursor:pointer">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
-            
         }
 
         return $total;
@@ -121,11 +128,10 @@ class ui_agent extends bo_agent {
             'idasecurite_ville' => $this->cities,
             'type_contrat' => $this->type_contrat,
         );
-        if(!$this->cities){
+        if (!$this->cities) {
             $js = "opener.location.href='" . ($link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.index'))) . "';window.close();";
 
             $content['no_ville_msg'] = "<span id='error'>" . lang('Aucune ville trouvée') . ' <a><button onclick="' . $js . '">' . lang('Créer en ici') . '</button></a>' . " </span>";
-           
         }
         parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('nom', 'prenom', 'date_naissance', 'adresse', 'code_postal', 'idasecurite_ville', 'type_contrat', 'telephone', 'date_debut_contrat', 'date_fin_contrat'), array('menuaction' => APP_NAME . '.ui_agent.index'));
 

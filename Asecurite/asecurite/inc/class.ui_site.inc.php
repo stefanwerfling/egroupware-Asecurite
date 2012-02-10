@@ -40,18 +40,25 @@ class ui_site extends bo_site {
         $save = get_var('save', array('GET'));
 
         if (isset($content['nm']['rows']['delete'])) {
-            list($del) = each($content['nm']['rows']['delete']);
-
-            $this->delete(array('idasecurite_site' => $del));
+            list($id_site) = each($content['nm']['rows']['delete']);
+            try {
+                $this->delete_site($id_site);
+            } catch (Exception $e) {
+                $msg = $e->getMessage();
+                $save = 'error';
+            }
         } elseif (isset($content['delete_selected'])) {
 
             for ($i = 0; $i < count($content['nm']['rows']['checkbox']); $i++) {
-
-                $this->delete(array('idasecurite_site' => $content['nm']['rows']['checkbox'][$i]));
+                try {
+                    $this->delete_site($content['nm']['rows']['checkbox'][$i]);
+                } catch (Exception $e) {
+                    $msg = $e->getMessage();
+                    $save = 'error';
+                }
             }
         }
-
-
+        $this->setup_table(APP_NAME, 'egw_asecurite_site');
         $content['msg'] = "<span id=\"$save\">" . lang($msg) . " </span>";
         $readonlys['nm']['export'] = true;
         $content['nm'] = $this->nm + array('get_rows' => APP_NAME . '.ui_site' . '.get_rows', 'order' => 'nom');

@@ -19,3 +19,11 @@ Working sites management	asecurite	fr	Gestion des sites de travail
 Choose ...	asecurite	fr	Choisissez ...
 Threre is no site !	asecurite	fr	Il n'existe aucun site !
 Threre is no agent !	asecurite	fr	Il n'existe aucun agent !
+Enable to delete the agent	asecurite	fr	Impossible de supprimer l'agent
+Enable to delete the site	asecurite	fr	Impossible de supprimer le site
+Enable to delete the city	asecurite	fr	Impossible de supprimer la ville
+Enable to delete agent's plannings	asecurite	fr	Impossible de supprimer les plannings de l'agent
+Enable to delete plannings of the city	asecurite	fr	Impossible de supprimer les plannings de la ville
+Enable to delete plannings of the site	asecurite	fr	Impossible de supprimer les plannings du site
+Enable to delete site of the city	asecurite	fr	Impossible de supprimer les sites de la ville
+Enable to delete agents of the city	asecurite	fr	Impossible de supprimer les agents de la ville
