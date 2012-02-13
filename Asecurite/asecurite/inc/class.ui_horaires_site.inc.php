@@ -89,10 +89,18 @@ class ui_horaires_site extends bo_horaires_site {
             $content['msg_horaire'] = "<span id='error' style='font-weight:bold'>" . lang('Threre is no agent !') . " </span>";
         }
         $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME, $this->get_mensual_planning($content['mois'], $content['annee'], $content['idasecurite_agent'], $GLOBALS['egw']->session->appsession('idasecurite_site', APP_NAME), $content['idasecurite_ville']));
+        $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME, array(
+            'month' => $content['mois'],
+            'year' => $content['annee'],
+            'idasecurite_agent' => $content['idasecurite_agent'],
+            'idasecurite_site' => $GLOBALS['egw']->session->appsession('idasecurite_site', APP_NAME),
+            'idasecurite_ville' => $content['idasecurite_ville']));
 
         $content['stat'] = '<div class="stat">' . $this->draw_stat($GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME)) . '</div>';
+        $readonlys['nm']['export'] = true;
+        $content['nm'] = $this->nm + array('get_rows' => APP_NAME . '.ui_horaires_site' . '.get_rows', 'order' => 'heure_arrivee');
 
-        $content['nm'] = $this->get_rows();
+//        $this->get_rows();
         $content['paniers'] = $this->nb_baskets;
         $this->tmpl->read(APP_NAME . '.site.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
 
@@ -110,31 +118,33 @@ class ui_horaires_site extends bo_horaires_site {
      * @param array &$readonlys eg. to disable buttons based on acl, not use here, maybe in a derived class
      * @return int total number of rows
      */
-    public function get_rows() {
+    public function get_rows($query, &$rows, &$readonlys) {
+        $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
+        $all_planning_site = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
+        $this->filter($query, $all_planning_site);
+        parent::get_rows($query, $rows, $readonlys);
 
-        $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
-
-
-
+        //$rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
+        $result_rows = array();
         foreach ($rows as $i => &$row) {
-
             $this->setup_table(APP_NAME, 'egw_asecurite_agent');
-
             if ($row['idasecurite_agent'] != '') {
                 $f_agent_name = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
 
                 if (count($f_agent_name) == 1) {
                     $row['agent'] = $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'];
                 }
-
-                $this->manage_display($row);
+                $m = $all_planning_site['month'] != 0 ? date('m', $row['heure_arrivee']) : 0;
+                $y = $all_planning_site['year'] != 0 ? date('Y', $row['heure_arrivee']) : 0;
+                if ($m == $all_planning_site['month'] && $y == $all_planning_site['year']) {
+                    $this->manage_display($row);
+                    $result_rows[] = $row;
+                }
             }
         }
-
-        $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
-
-        @array_unshift($rows, false);
-        return $rows;
+        $rows = $result_rows;
+        //@array_unshift($rows, false);
+        return count($rows);
     }
 
 }

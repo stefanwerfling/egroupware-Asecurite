@@ -77,12 +77,13 @@ class bo_asecurite extends so_sql {
      */
     var $current_year;
     var $img_src;
-    var $nb_baskets=0;
+    var $nb_baskets = 0;
+
     /**
      * Constructor
      * @param string default table name
      */
-    public function __construct($table='') {
+    public function __construct($table = '') {
 
         parent::__construct(APP_NAME, $table);
 
@@ -123,7 +124,7 @@ class bo_asecurite extends so_sql {
 
         $this->years[0] = lang('Toutes les années');
 
-        for ($i = 2011; $i <= $this->current_year+1; $i++) {
+        for ($i = 2011; $i <= $this->current_year + 1; $i++) {
 
             $this->years[$i] = $i;
         }
@@ -181,7 +182,7 @@ class bo_asecurite extends so_sql {
      * construct objects for user interface
      * @param string page name 
      */
-    public function init_template($pagename="") {
+    public function init_template($pagename = "") {
         if ($pagename != "")
             $pagename = " - " . $pagename;
         $GLOBALS['egw_info']['flags']['app_header'] = lang(APP_NAME) . $pagename;
@@ -211,7 +212,7 @@ class bo_asecurite extends so_sql {
      *
      * @return string
      */
-    public function datetime($timestamp, $do_time=true) {
+    public function datetime($timestamp, $do_time = true) {
         if (!is_a($timestamp, 'DateTime')) {
             $timestamp = new egw_time($timestamp, egw_time::$server_timezone);
         }
@@ -298,7 +299,7 @@ class bo_asecurite extends so_sql {
      * @param array $where where clause in sql query
      * @return void
      */
-    public function move_up_down($up_down, $id, $where, $extra='') {
+    public function move_up_down($up_down, $id, $where, $extra = '') {
 
         if ($this->read($id)) {
             foreach ($this->data as $db_col => $col) {
@@ -605,7 +606,7 @@ class bo_asecurite extends so_sql {
      * @$extra_param array filter for where clause
      * @param string $pk primary key column name
      */
-    public function reset_all_weight($table_name, $pk, $extra_param='') {
+    public function reset_all_weight($table_name, $pk, $extra_param = '') {
 
         $this->setup_table(APP_NAME, $table_name);
         $f_all = array();
@@ -643,7 +644,7 @@ class bo_asecurite extends so_sql {
      * @param int $id_city city id
      * @return array all matching rows 
      */
-    function get_mensual_planning($month, $year, $agent_id='', $id_site='', $id_city='') {
+    function get_mensual_planning($month, $year, $agent_id = '', $id_site = '', $id_city = '') {
         $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
         $where = '';
         if ($agent_id) {
@@ -669,6 +670,18 @@ class bo_asecurite extends so_sql {
         }
 
         return $result;
+    }
+
+    function filter(&$query, $col) {
+        if ($col['idasecurite_agent']) {
+            $query['col_filter']['idasecurite_agent'] = $col['idasecurite_agent'];
+        }
+        if ($col['idasecurite_site']) {
+            $query['col_filter']['idasecurite_site'] = $col['idasecurite_site'];
+        }
+        if ($col['idasecurite_ville']) {
+            $query['col_filter']['idasecurite_ville'] = $col['idasecurite_ville'];
+        }
     }
 
     /**
@@ -1117,8 +1130,8 @@ class bo_asecurite extends so_sql {
         $total_hour = ($row['heure_depart'] - $row['heure_arrivee']) - $row['pause'];
         $row['nombre_heures'] = '<span id="hour">' . $this->get_time($total_hour) . '</span>';
         $row['pause'] = $this->get_time($row['pause']);
-        
-        if($total_hour >= (3600 * 6)){
+
+        if ($total_hour >= (3600 * 6)) {
             $row['panier'] = 1;
             $this->nb_baskets++;
         }
