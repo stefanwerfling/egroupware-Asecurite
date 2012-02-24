@@ -198,9 +198,10 @@ class bo_asecurite extends so_sql {
             APP_NAME => array(
                 '' => array(
                     'app' => '', // file name: asecurite/js/app.js
-                    'jquery-1.5.min' => '', // file name: asecurite/js/jquery-1.5.min.js
+                    'jquery-1.7' => '', // file name: asecurite/js/jquery-1.5.min.js
                     'jquery' => '', // file name: asecurite/js/jquery.js
                     'jscharts' => '', // file name: asecurite/js/jscharts.js
+                    'flexigrid' => 'flexigrid', // file name: asecurite/js/jscharts.js
             )));
     }
 
