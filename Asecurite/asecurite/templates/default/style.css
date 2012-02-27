@@ -1,0 +1,107 @@
+/* 
+    Document   : style
+    Created on : 27 févr. 2012, 11:27:06
+    Author     : knfaly
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.popupManual{
+    display: none;
+}
+
+.print{
+    background-color: #5F6565;
+    width: 30px;
+    height: 30px;
+    color: white;
+    font-weight: bold;
+}
+.print_title{
+    font-size: 20px;
+    font-weight: bold;   
+}
+.addHoraire{
+    border: solid 1px #5F6565;
+    background-color: #5793ff;
+}
+.addHorairePlanningGlobal{
+    background-color: #D8D8D8;
+    border: solid 1px #5F6565;
+    color: black;
+}
+.content{
+    border: solid 1px #5F6565;
+}
+.planningTitle{
+    color:white;
+    font-weight: bold;
+}
+.planningTitlePlanningGlobal{
+    font-weight: bold;
+}
+
+.title{
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#edit, #add{
+    font-weight: bold;
+    color: #009acd;
+}
+
+.editBody{
+    background-color:  #D8D8D8;
+    border: solid 1px #5F6565;
+}
+#error{
+    color: red;
+}
+#success{
+    color: green;
+}
+#end_float{
+    clear: both;
+}
+
+#site_stat{
+    float: left;
+}
+.toggle{
+    cursor: pointer;
+    font-weight:bold;
+    border:solid 1px black;
+    width: 170px;
+    cursor: pointer;
+    background-color: silver;
+}
+#planning td, #planning th, #total td, #site_stat td{
+    border: solid 1px black;
+}
+
+#planning th{
+    background-color: #D8D8D8;    
+}
+#sunday{
+    font-weight: bold;
+}
+#hour{
+    font-weight: bold;
+    color:#257900;
+}
+#total_hour{
+    font-weight: bold;
+    color:#3b86a0;
+}
+
+caption{
+    border: solid 1px black;
+    font-weight: bold;
+}
+#site_stat td div{
+    min-width: 50px;
+
+}
+
+

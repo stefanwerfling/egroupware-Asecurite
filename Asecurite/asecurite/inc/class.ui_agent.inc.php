@@ -26,6 +26,8 @@ class ui_agent extends bo_agent {
         'index' => True,
         'redirect_to_edit' => True,
         'edit' => True,
+        'get_stream_data' => True,
+        'get_rows' => True
     );
 
     function __construct() {
@@ -66,12 +68,30 @@ class ui_agent extends bo_agent {
                 }
             }
         }
+        $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_rows'));
+        // $GLOBALS['egw']->set_onload("initDataTables('$data_link');");
+        $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/agents.html');
+        $tpl_content = str_replace('LINK', $data_link, $tpl_content);
+        $content['data'] = $tpl_content;
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $content['msg'] = "<span id=\"$save\">" . lang($msg) . " </span>";
         $readonlys['nm']['export'] = true;
-        $content['nm'] = $this->nm + array('get_rows' => APP_NAME . '.ui_agent.get_rows', 'order' => 'nom');
+        // $content['nm'] = $this->nm + array('get_rows' => APP_NAME . '.ui_agent.get_rows', 'order' => 'nom');
         $this->tmpl->read(APP_NAME . '.agent'); //APP_NAME defined in asecurite/inc/class.bo_agent.inc.php
         $this->tmpl->exec(APP_NAME . '.ui_agent.index', $content, '', $readonlys);
+    }
+
+    function get_stream_data($file) {
+        $file = get_var('file');
+        if (!file_exists($file))
+            throw new Exception("File not found");
+        ob_end_clean();
+        header("Content-type:text/html;charset=utf-8");
+        header("Content-Transfer-Encoding: binary");
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        echo file_get_contents($file);
+        exit;
     }
 
     /**
@@ -84,10 +104,16 @@ class ui_agent extends bo_agent {
      * @return int total number of rows
      */
     public function get_rows($query, &$rows, &$readonlys) {
-        $total = parent::get_rows($query, $rows, $readonlys);
-
+        //$total = parent::get_rows($query, $rows, $readonlys);
+        $rows = $this->search('', false);
         $this->setup_table(APP_NAME, 'egw_asecurite_ville');
 
+        $output = array(
+            "sEcho" => intval($_GET['sEcho']),
+            "iTotalRecords" => count($rows),
+            "iTotalDisplayRecords" => count($rows),
+            "aaData" => array()
+        );
         foreach ($rows as $i => &$row) {
             $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
 
@@ -97,9 +123,17 @@ class ui_agent extends bo_agent {
             $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '--' : $this->format_date($row['date_debut_contrat']);
             $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '--' : $this->format_date($row['date_fin_contrat']);
             $row['nom'] = '<span style="cursor:pointer">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
+            $id = $row['idasecurite_agent'];
+            $row['operation'] = '<input type="checkbox" name="exec[nm][rows][checkbox][]" value="' . $id . '" id="exec[nm][rows][checkbox][' . $id . ']">';
+            $output['aaData'][] = $rows[$i];
         }
+        $return = json_encode($output);
+        //$f = fopen('/tmp/data.txt', 'w+');
+        //fwrite($f, $return);
+        //fclose($f);
+        echo $return;
 
-        return $total;
+        //return $total;
     }
 
     /**
