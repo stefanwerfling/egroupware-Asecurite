@@ -15,6 +15,8 @@ if (!defined('APP_NAME')) {
     define('APP_NAME', 'asecurite');
 }
 
+include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_tools.inc.php');
+
 class bo_asecurite extends so_sql {
 
     /**
@@ -199,10 +201,11 @@ class bo_asecurite extends so_sql {
                 '' => array(
                     'app' => '', // file name: asecurite/js/app.js
                     'jquery-1.7' => '', // file name: asecurite/js/jquery-1.5.min.js
-//                    'jquery' => '', // file name: asecurite/js/jquery.js
+                    'tooltip' => '', // file name: asecurite/js/jquery.js
                     'dataTables' => 'dataTables', // file name: asecurite/js//dataTables/dataTables.js
                     'jscharts' => '', // file name: asecurite/js/jscharts.js
                     'flexigrid' => 'flexigrid', // file name: asecurite/js/flexigrid/flexigrid.js
+                    'thickbox' => 'thickbox', // file name: asecurite/js/flexigrid/flexigrid.js
             )));
     }
 

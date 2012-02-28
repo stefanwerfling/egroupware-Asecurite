@@ -26,16 +26,20 @@ $(function()
 
             var pos = $(this).offset();
             var width = $(this).width();
+
             container.css({
                 left: (pos.left + width) + 'px',
                 top: pos.top - 5 + 'px'
             });
 
+            var winHeight = $(window).height();
+            var pTop = pos.top - $(window).scrollTop();
+
             $('#popupContent').html('&nbsp;');
 
             $.ajax({
                 type: 'GET',
-                url: link1,                
+                url: link1,
                 data:link2 +'&' + 'id=' + id ,
                 success: function(data)
                 {
@@ -48,20 +52,27 @@ $(function()
                     // Verify requested segment is this segment since we could have multiple ajax
                     // requests out if the server is taking a while.
                     if (data.indexOf('popupResult') > 0)
-                    {                      
+                    {
 
                         $('#popupContent').html(data);
+                        var returnHeight = $('#popupContent').height();
+                        if(returnHeight + pTop > winHeight) {
+                            container.css({
+                                left: (pos.left + width) + 'px',
+                                top: pos.top - (returnHeight - winHeight + pTop +15) + 'px'
+                            });
+                        }
                     }
                 }
             });
-            
+
             container.css('display', 'block');
         });
 
 
 
         $('.popupTrigger').live('mouseout', function()
-        {  
+        {
             if (hideTimer)
                 clearTimeout(hideTimer);
             hideTimer = setTimeout(function()

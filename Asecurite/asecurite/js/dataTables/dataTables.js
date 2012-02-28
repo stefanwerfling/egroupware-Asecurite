@@ -965,23 +965,23 @@
 			 *   by javascript
 			 */
 			this.oLanguage = {
-				"sProcessing": "Processing...",
-				"sLengthMenu": "Show _MENU_ entries",
+				"sProcessing": "En cours...",
+				"sLengthMenu": "Montre _MENU_ entrées",
 				"sZeroRecords": "No matching records found",
-				"sEmptyTable": "No data available in table",
-				"sLoadingRecords": "Loading...",
-				"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
-				"sInfoEmpty": "Showing 0 to 0 of 0 entries",
-				"sInfoFiltered": "(filtered from _MAX_ total entries)",
+				"sEmptyTable": "Aucune donnée disponible dans la table",
+				"sLoadingRecords": "Chargement...",
+				"sInfo": "Montre _START_ à _END_ de _TOTAL_ entrées",
+				"sInfoEmpty": "Montre 0 à 0 de 0 entries",
+				"sInfoFiltered": "(filtered from _MAX_ total entrées)",
 				"sInfoPostFix": "",
 				"sInfoThousands": ",",
-				"sSearch": "Search:",
+				"sSearch": "Rechercher:",
 				"sUrl": "",
 				"oPaginate": {
-					"sFirst":    "First",
-					"sPrevious": "Previous",
-					"sNext":     "Next",
-					"sLast":     "Last"
+					"sFirst":    "Premier",
+					"sPrevious": "Précédent",
+					"sNext":     "Suivant",
+					"sLast":     "Dernier"
 				},
 				"fnInfoCallback": null
 			};

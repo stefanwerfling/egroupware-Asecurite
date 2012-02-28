@@ -195,7 +195,7 @@ table.display tr.heading2 td {
 }
 
 table.display td {
-	padding: 3px 10px;
+	padding: 3px 10px;        
 }
 
 table.display td.center {
@@ -512,10 +512,10 @@ tr.even.gradeU td.sorting_3 {
 /*
  * Row highlighting example
  */
-.ex_highlight #example tbody tr.even:hover, #example tbody tr.even td.highlighted {
+.ex_highlight #tableContent tbody tr.even:hover, #tableContent tbody tr.even td.highlighted {
 	background-color: #ECFFB3;
 }
 
-.ex_highlight #example tbody tr.odd:hover, #example tbody tr.odd td.highlighted {
+.ex_highlight #tableContent tbody tr.odd:hover, #tableContent tbody tr.odd td.highlighted {
 	background-color: #E6FF99;
 }
