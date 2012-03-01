@@ -26,12 +26,15 @@ class bo_agent extends bo_asecurite {
      */
     public function delete_agent($id_agent) {
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
+
         if (!$this->delete(array('idasecurite_agent' => $id_agent))) {
             throw new Exception(lang('Enable to delete the agent'));
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
-        if (!$this->delete(array('idasecurite_agent' => $id_agent))) {
-            throw new Exception(lang("Enable to delete agent's plannings"));
+        if ($this->search(array('idasecurite_agent' => $id_agent))) {
+            if (!$this->delete(array('idasecurite_agent' => $id_agent))) {
+                throw new Exception(lang("Enable to delete agent's plannings"));
+            }
         }
     }
 

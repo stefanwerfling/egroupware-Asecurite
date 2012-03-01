@@ -30,16 +30,22 @@ class bo_ville extends bo_asecurite {
             throw new Exception(lang('Enable to delete the city'));
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_site');
-        if (!$this->delete(array('idasecurite_ville' => $id_ville))) {
-            throw new Exception(lang("Enable to delete sites of the city"));
+        if ($this->search(array('idasecurite_ville' => $id_ville))) {
+            if (!$this->delete(array('idasecurite_ville' => $id_ville))) {
+                throw new Exception(lang("Enable to delete sites of the city"));
+            }
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
-        if (!$this->delete(array('idasecurite_ville' => $id_ville))) {
-            throw new Exception(lang("Enable to delete agents of the city"));
+        if ($this->search(array('idasecurite_ville' => $id_ville))) {
+            if (!$this->delete(array('idasecurite_ville' => $id_ville))) {
+                throw new Exception(lang("Enable to delete agents of the city"));
+            }
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
-        if (!$this->delete(array('idasecurite_ville' => $id_ville))) {
-            throw new Exception(lang("Enable to delete plannings of the city"));
+        if ($this->search(array('idasecurite_ville' => $id_ville))) {
+            if (!$this->delete(array('idasecurite_ville' => $id_ville))) {
+                throw new Exception(lang("Enable to delete plannings of the city"));
+            }
         }
     }
 

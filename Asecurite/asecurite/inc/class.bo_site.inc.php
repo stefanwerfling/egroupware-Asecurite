@@ -30,8 +30,10 @@ class bo_site extends bo_asecurite {
             throw new Exception(lang('Enable to delete site'));
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
-        if (!$this->delete(array('idasecurite_site' => $id_site))) {
-            throw new Exception(lang("Enable to delete plannings of the site"));
+        if ($this->search(array('idasecurite_site' => $id_site))) {
+            if (!$this->delete(array('idasecurite_site' => $id_site))) {
+                throw new Exception(lang("Enable to delete plannings of the site"));
+            }
         }
     }
 
