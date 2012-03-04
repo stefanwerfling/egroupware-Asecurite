@@ -70,7 +70,7 @@ class ui_agent extends bo_agent {
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_data'));
         $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/agents.html');
         $tpl_content = str_replace('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js', $tpl_content);
-        $tpl_content = str_replace('LINK', $data_link, $tpl_content);
+        $tpl_content = str_replace('DATA_LINK', $data_link, $tpl_content);
         $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Voulez vous supprimer les agents sélectionnés?')), $tpl_content);
         $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Voulez vous supprimer les agents sélectionnés?'), 'onclick="push_toggle_all(form::name(\'nm[rows][checkbox][]\'),true); return false;"'), $tpl_content);
         $content['data'] = $tpl_content;
@@ -159,17 +159,16 @@ class ui_agent extends bo_agent {
             $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '--' : $this->format_date($row['date_debut_contrat']);
             $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '--' : $this->format_date($row['date_fin_contrat']);
 
-            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id));
+            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id,'current'=>true));
             $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
             $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent', 'id' => $id));
-            
-            $row['nom'] = '<span style="cursor:pointer">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
-            $row['nom'] .= '<a href="" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;"><img style="float:right" src="' . $GLOBALS['egw']->common->image(APP_NAME, 'view') . '" border="0" title="' . lang("Afficher le planning de l'agent") . '"></a>';
+            $current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.index'));
+            $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
+            //$row['nom'] .= '<a href="" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;"><img style="float:right" src="' . $GLOBALS['egw']->common->image(APP_NAME, 'view') . '" border="0" title="' . lang("Afficher le planning de l'agent") . '"></a>';
 
             $row['operation'] = '<span style="float:right">';            
             $row['operation'] .= $this->html->image(APP_NAME, 'edit',lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
-            $row['operation'] .='&nbsp;'.$this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" onclick="if (confirm(\'' . lang('Voulez vous supprimer cet agent?') . '\')){ ajax_request(\'' .$delete_link. '\');} return false;}"');
-            //$row['operation'] .='&nbsp;'.$this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" onclick="if (confirm(\'' . lang('Voulez vous supprimer cet agent?') . '\')){ ajax_request(\'' .$delete_link. '\'); return submitit(eTemplate,\'exec[nm][rows][delete][' . $id . ']\'); return false;}"');
+            $row['operation'] .='&nbsp;'.$this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" onclick="if (confirm(\'' . lang('Voulez vous supprimer cet agent?') . '\')){ ajax_request(\'' .$delete_link. '\'); document.location.href=\''.$current_link.'\';}"');
             $row['operation'] .= '&nbsp;'. $this->html->input('exec[nm][rows][checkbox][]', $id, 'checkbox', 'id="exec[nm][rows][checkbox][' . $id . ']"'). '</span>';
             
             $output['aaData'][] = $rows[$i];
