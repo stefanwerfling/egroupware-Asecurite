@@ -30,6 +30,7 @@ class ui_agent extends bo_agent {
         'get_stream_data' => True,
         'get_data' => True
     );
+    var $current_link;
 
     function __construct() {
 
@@ -40,51 +41,32 @@ class ui_agent extends bo_agent {
             'CDD' => 'CDD',
             'CDI' => 'CDI',
         );
+        $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.index'));
     }
 
+    
     /**
      * Display the application home content
      */
     public function index($content = NULL) {
+        $this->createHeader();
+        
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
-
-        if (isset($content['nm']['rows']['delete'])) {
-            list($id_agent) = each($content['nm']['rows']['delete']);
-            try {
-                // $this->delete_agent($id_agent);
-            } catch (Exception $e) {
-                $msg = $e->getMessage();
-                $save = 'error';
-            }
-        } elseif (isset($content['delete_selected'])) {
-            for ($i = 0; $i < count($content['nm']['rows']['checkbox']); $i++) {
-                try {
-                    $this->delete_agent($content['nm']['rows']['checkbox'][$i]);
-                } catch (Exception $e) {
-                    $msg = $e->getMessage();
-                    $save = 'error';
-                }
-            }
-        }
+        $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.redirect_to_edit'));
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
-        $current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.index'));
         $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/agents.html');
+        $tpl_content = str_replace('ADD_LINK', $add_link, $tpl_content);
         $tpl_content = str_replace('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js', $tpl_content);
         $tpl_content = str_replace('DATA_LINK', $data_link, $tpl_content);
+        $tpl_content = str_replace('MSG', "<span id=\"$save\">" . lang($msg) . " </span>", $tpl_content);
         $tpl_content = str_replace('DELETE_LINK', $delete_link, $tpl_content);
-        $tpl_content = str_replace('INDEX_LINK', $current_link, $tpl_content);
+        $tpl_content = str_replace('INDEX_LINK', $this->current_link, $tpl_content);
         $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Voulez vous supprimer les agents sélectionnés?')), $tpl_content);
-        $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Voulez vous supprimer les agents sélectionnés?'), 'onclick="check_all(); return false;"'), $tpl_content);
-        $content['data'] = $tpl_content;
-
-        $this->setup_table(APP_NAME, 'egw_asecurite_agent');
-        $content['msg'] = "<span id=\"$save\">" . lang($msg) . " </span>";
-        $readonlys['nm']['export'] = true;
-        // $content['nm'] = $this->nm + array('get_rows' => APP_NAME . '.ui_agent.get_rows', 'order' => 'nom');
-        $this->tmpl->read(APP_NAME . '.agent'); //APP_NAME defined in asecurite/inc/class.bo_agent.inc.php
-        $this->tmpl->exec(APP_NAME . '.ui_agent.index', $content, '', $readonlys);
+        $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'), $tpl_content);
+        echo $tpl_content;
+       
     }
 
     /**
@@ -174,14 +156,11 @@ class ui_agent extends bo_agent {
             $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => true));
             $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
             $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent', 'id' => $id));
-            $current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.index'));
             $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
-            //$row['nom'] .= '<a href="" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;"><img style="float:right" src="' . $GLOBALS['egw']->common->image(APP_NAME, 'view') . '" border="0" title="' . lang("Afficher le planning de l'agent") . '"></a>';
 
             $row['operation'] = '<span style="float:right">';
             $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
-            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" onclick="if (confirm(\'' . lang('Voulez vous supprimer cet agent?') . '\')){ ajax_request(\'' . $delete_link . '\'); document.location.href=\'' . $current_link . '\';}"');
-            //$row['operation'] .= '&nbsp;'. $this->html->input('exec[nm][rows][checkbox][]', $id, 'checkbox', 'id="exec[nm][rows][checkbox][' . $id . ']"'). '</span>';
+            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" onclick="if (confirm(\'' . lang('Voulez vous supprimer cet agent?') . '\')){ ajax_request(\'' . $delete_link . '\'); document.location.href=\'' .  $this->current_link . '\';}"');
             $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
             $output['aaData'][] = $rows[$i];

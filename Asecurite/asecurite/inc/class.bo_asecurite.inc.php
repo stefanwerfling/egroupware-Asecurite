@@ -596,6 +596,15 @@ class bo_asecurite extends so_sql {
     }
 
     /**
+     * Creation of the header page if need be
+     * (Avoid it with a nexmatch widget)
+     */
+    public function createHeader() {
+        $GLOBALS['egw']->common->egw_header();
+        echo parse_navbar();
+    }
+
+    /**
      * 
      * create application's footer
      */

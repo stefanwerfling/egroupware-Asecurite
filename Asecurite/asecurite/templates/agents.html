@@ -11,7 +11,7 @@
                         url: "DELETE_LINK",
                         data: "id="+checkedId,
                         success: function(){
-                            document.location.href= "INDEX_LINK&msg"+"Suppression OK&save=success";
+                            document.location.href= "INDEX_LINK&msg="+"La suppression a été effectuée avec succès&save=success";
                         }
                     } );
                 }
@@ -40,21 +40,15 @@
             ]
         });
         
-     
-                        
-        $('td', oTable.fnGetNodes()).hover( function() {
-            var iCol = $('td').index(this) % 5;
-            var nTrs = oTable.fnGetNodes();
-            $('td:nth-child('+(iCol+1)+')', nTrs).addClass( 'highlighted' );
-        }, function() {
-            $('td.highlighted', oTable.fnGetNodes()).removeClass('highlighted');
-        } );
-          
+      //  initHighlight(oTable);
+       
     } );
 </script>
 <div class="ex_highlight">
     <div id="dynamic">
-        <form id="form">
+        <form name="form" id="form">
+            <div>MSG</div>
+            <div style="float: right"><button onclick="egw_openWindowCentered2('ADD_LINK', '_blank', 450, 400, 'yes'); return false;">Ajouter un nouvel agent</button></div>
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
                 <thead>
                     <tr>
@@ -70,7 +64,6 @@
                     </tr>
                 </thead>
                 <tbody>
-
                 </tbody>               
             </table>
             <div style="float: right"><a href="javascript:void(0)" id="delete">DELETE_BUTTON</a><span style="cursor: pointer">SELECT_ALL</span></div>
