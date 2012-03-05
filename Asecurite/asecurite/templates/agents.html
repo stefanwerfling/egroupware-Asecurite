@@ -20,14 +20,6 @@
             }
         });
                                 
-        /* Add a click handler to the rows - this could be used as a callback */
-        $("#tableContent tbody").click(function(event) {
-            $(oTable.fnSettings().aoData).each(function (){
-                $(this.nTr).removeClass('row_selected');
-            });
-            $(event.target.parentNode).addClass('row_selected');
-        });
-           
         oTable = $('#tableContent').dataTable({
             "bJQueryUI": true,
             "bSortClasses": false,
@@ -81,7 +73,7 @@
 
                 </tbody>               
             </table>
-            <div style="float: right"><a href="javascript:void(0)" id="delete">DELETE_BUTTON</a><span>SELECT_ALL</span></div>
+            <div style="float: right"><a href="javascript:void(0)" id="delete">DELETE_BUTTON</a><span style="cursor: pointer">SELECT_ALL</span></div>
         </form>
     </div>
 </div>

@@ -165,7 +165,7 @@ class ui_agent extends bo_agent {
             $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
 
             if (count($f_city_name) == 1) {
-                $row['idasecurite_ville'] = $f_city_name[0]['nom'];
+                $row['idasecurite_ville'] = '<span id="ville">'.$f_city_name[0]['nom'].'</span>';
             }
             $id = $row['idasecurite_agent'];
             $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '--' : $this->format_date($row['date_debut_contrat']);
