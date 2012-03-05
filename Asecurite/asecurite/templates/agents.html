@@ -2,6 +2,24 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var oTable;
+        $('#delete').click(function() {            
+            var checkedId = getChecked(); // in app.js
+            if(checkedId){
+                if(confirm("Voulez vous supprimer les agents sélectionnés")){
+                    $.ajax({
+                        type: "POST",
+                        url: "DELETE_LINK",
+                        data: "id="+checkedId,
+                        success: function(){
+                            document.location.href= "INDEX_LINK&msg"+"Suppression OK&save=success";
+                        }
+                    } );
+                }
+            }else{
+                alert("Aucune ligne n'a été cochée");
+            }
+        });
+                                
         /* Add a click handler to the rows - this could be used as a callback */
         $("#tableContent tbody").click(function(event) {
             $(oTable.fnSettings().aoData).each(function (){
@@ -44,24 +62,26 @@
 </script>
 <div class="ex_highlight">
     <div id="dynamic">
-        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
-            <thead>
-                <tr>
-                    <th width="15%">Agent</th>
-                    <th width="10%">Type de contrat</th>
-                    <th width="16%">Adresse</th>
-                    <th width="10%">Code postal</th>
-                    <th width="10%">Ville</th>
-                    <th width="12%">Téléphone</th>
-                    <th width="12%">Date de début de contrat</th>
-                    <th width="12%">Date de fin de contrat</th>
-                    <th>Opérations</th>
-                </tr>
-            </thead>
-            <tbody>
+        <form id="form">
+            <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
+                <thead>
+                    <tr>
+                        <th width="15%">Agent</th>
+                        <th width="10%">Type de contrat</th>
+                        <th width="16%">Adresse</th>
+                        <th width="10%">Code postal</th>
+                        <th width="10%">Ville</th>
+                        <th width="12%">Téléphone</th>
+                        <th width="12%">Date de début de contrat</th>
+                        <th width="12%">Date de fin de contrat</th>
+                        <th>Opérations</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-            </tbody>                
-        </table>
-        <div><span><a href="javascript:void(0)" id="delete">DELETE_BUTTON</a><span>SELECT_ALL</span></span></div>
+                </tbody>               
+            </table>
+            <div style="float: right"><a href="javascript:void(0)" id="delete">DELETE_BUTTON</a><span>SELECT_ALL</span></div>
+        </form>
     </div>
 </div>
