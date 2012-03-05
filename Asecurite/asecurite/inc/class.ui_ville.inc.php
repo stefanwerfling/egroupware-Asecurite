@@ -24,49 +24,88 @@ class ui_ville extends bo_ville {
         'index' => True,
         'redirect_to_edit' => True,
         'edit' => True,
+        'delete_ville' => True,
+        'get_data' => True
     );
+    var $current_link;
 
     function __construct() {
 
         parent::__construct();
         $this->init_template(lang('Gestion des villes de travail'));
+        $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.index'));
     }
 
     /**
      * Display the application home content
      */
     public function index($content = NULL) {
+        $this->createHeader();
+
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
+        $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.redirect_to_edit'));
+        $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.get_data'));
+        $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.delete_ville'));
+        $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/villes.html');
+        $tpl_content = str_replace('ADD_LINK', $add_link, $tpl_content);
+        $tpl_content = str_replace('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js', $tpl_content);
+        $tpl_content = str_replace('DATA_LINK', $data_link, $tpl_content);
+        $tpl_content = str_replace('MSG', "<span id=\"$save\">" . lang($msg) . " </span>", $tpl_content);
+        $tpl_content = str_replace('DELETE_LINK', $delete_link, $tpl_content);
+        $tpl_content = str_replace('INDEX_LINK', $this->current_link, $tpl_content);
+        $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Voulez vous supprimer les villes sélectionnées?')), $tpl_content);
+        $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'), $tpl_content);
+        echo $tpl_content;      
+    }
 
-        if (isset($content['nm']['rows']['delete'])) {
-            list($id_ville) = each($content['nm']['rows']['delete']);
-            try {
-                $this->delete_ville($id_ville);
-            } catch (Exception $e) {
-                $msg = $e->getMessage();
-                $save = 'error';
-            }
-        } elseif (isset($content['delete_selected'])) {
-
-            for ($i = 0; $i < count($content['nm']['rows']['checkbox']); $i++) {
-                try {
-                    $this->delete_ville($content['nm']['rows']['checkbox'][$i]);
-                } catch (Exception $e) {
-                    $msg = $e->getMessage();
-                    $save = 'error';
+    /**
+     * delete an ville
+     */
+    public function delete_ville() {
+        $id_ville = get_var('id');
+        if ($id_ville !== '') {
+            $explode = explode('-', $id_ville);
+            $count = count($explode);
+            if ($count == 1) {
+                parent::delete_ville($id_ville);
+            } else {
+                for ($i = 0; $i < $count; $i++) {
+                    parent::delete_ville($explode[$i]);
                 }
             }
         }
-        $this->setup_table(APP_NAME, 'egw_asecurite_ville');
-        $content['msg'] = "<span id=\"$save\">" . lang($msg) . " </span>";
-        $content['nm'] = $this->nm + array('get_rows' => APP_NAME . '.ui_ville' . '.get_rows', 'order' => 'nom');
-        $select_option = array(
-            'idasecurite_ville' => $this->cities,
+    }
+
+    /**
+     * get all city to display 
+     */
+    public function get_data() {
+        $rows = $this->search('', false);
+        $output = array(
+            "sEcho" => intval($_GET['sEcho']),
+            "iTotalRecords" => count($rows),
+            "iTotalDisplayRecords" => count($rows),
+            "aaData" => array()
         );
-        $readonlys['nm']['export'] = true;
-        $this->tmpl->read(APP_NAME . '.ville'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
-        $this->tmpl->exec(APP_NAME . '.ui_ville.index', $content, $select_option, $readonlys);
+        foreach ($rows as $i => &$row) {
+
+            $id = $row['idasecurite_ville'];
+            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $id, 'current' => true));
+            $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.edit', 'id' => $id));
+            $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.delete_ville', 'id' => $id));
+            $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom']. '</span>';
+
+            $row['operation'] = '<span style="float:right">';
+            $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier la ville"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 400, 150, \'yes\'); return false;"');
+            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ville"), 'style="cursor:pointer" onclick="if (confirm(\'' . lang('Voulez vous supprimer cette ville?') . '\')){ ajax_request(\'' . $delete_link . '\'); document.location.href=\'' . $this->current_link . '\';}"');
+            $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
+
+            $output['aaData'][] = $rows[$i];
+        }
+        $return = json_encode($output);
+        echo $return;
+        
     }
 
     /**
@@ -104,7 +143,7 @@ class ui_ville extends bo_ville {
         parent::edit($content, $no_button, 'idasecurite_ville', 'City', 'egw_asecurite_ville', array('nom'), array('menuaction' => APP_NAME . '.ui_ville.index'));
 
         $this->tmpl->read(APP_NAME . '.ville.edit');
-        $this->tmpl->exec(APP_NAME . '.ui_ville.edit', $content, $sel_options, $no_button, '', 2);
+        $this->tmpl->exec(APP_NAME . '.ui_ville.edit', $content, '', $no_button, '', 2);
     }
 
 }

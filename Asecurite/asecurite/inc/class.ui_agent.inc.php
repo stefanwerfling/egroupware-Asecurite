@@ -27,7 +27,6 @@ class ui_agent extends bo_agent {
         'redirect_to_edit' => True,
         'edit' => True,
         'delete_agent' => True,
-        'get_stream_data' => True,
         'get_data' => True
     );
     var $current_link;
@@ -86,51 +85,7 @@ class ui_agent extends bo_agent {
             }
         }
     }
-
-    /**
-     * get a file as a stream
-     * @param string $file filepath
-     * @throws Exception if file's not found
-     */
-    function get_stream_data($file) {
-        $file = get_var('file');
-        if (!file_exists($file))
-            throw new Exception("File not found");
-        ob_end_clean();
-        header("Content-type:text/html;charset=utf-8");
-        header("Content-Transfer-Encoding: binary");
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        echo file_get_contents($file);
-        exit;
-    }
-
-    /**
-     * query rows for the nextmatch widget
-     *
-     * @param array $query with keys 'start', 'search', 'order', 'sort', 'col_filter'
-     * 	For other keys like 'filter', 'cat_id' you have to reimplement this method in a derived class.
-     * @param array &$rows returned rows/competitions
-     * @param array &$readonlys eg. to disable buttons based on acl, not use here, maybe in a derived class
-     * @return int total number of rows
-     */
-    public function get_rows($query, &$rows, &$readonlys) {
-        $total = parent::get_rows($query, $rows, $readonlys);
-        $this->setup_table(APP_NAME, 'egw_asecurite_ville');
-        foreach ($rows as $i => &$row) {
-            $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
-
-            if (count($f_city_name) == 1) {
-                $row['idasecurite_ville'] = $f_city_name[0]['nom'];
-            }
-            $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '--' : $this->format_date($row['date_debut_contrat']);
-            $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '--' : $this->format_date($row['date_fin_contrat']);
-            $row['nom'] = '<span style="cursor:pointer">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
-        }
-
-        return $total;
-    }
-
+  
     /**
      * get all agent to display 
      */

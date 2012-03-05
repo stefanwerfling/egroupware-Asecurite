@@ -1165,4 +1165,22 @@ class bo_asecurite extends so_sql {
         $row['heure_depart'] = $this->datetime($row['heure_depart'], true) . ' ' . $ferieD;
     }
 
+    /**
+     * get a file as a stream
+     * @param string $file filepath
+     * @throws Exception if file's not found
+     */
+    function get_stream_data($file) {
+        $file = get_var('file');
+        if (!file_exists($file))
+            throw new Exception("File not found");
+        ob_end_clean();
+        header("Content-type:text/html;charset=utf-8");
+        header("Content-Transfer-Encoding: binary");
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        echo file_get_contents($file);
+        exit;
+    }
+
 }
