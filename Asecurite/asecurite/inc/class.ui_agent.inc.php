@@ -62,7 +62,7 @@ class ui_agent extends bo_agent {
         $tpl_content = str_replace('MSG', "<span id=\"$save\">" . lang($msg) . " </span>", $tpl_content);
         $tpl_content = str_replace('DELETE_LINK', $delete_link, $tpl_content);
         $tpl_content = str_replace('INDEX_LINK', $this->current_link, $tpl_content);
-        $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Voulez vous supprimer les agents sélectionnés?')), $tpl_content);
+        $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Supprimer les agents sélectionnés?')), $tpl_content);
         $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'), $tpl_content);
         echo $tpl_content;
        
