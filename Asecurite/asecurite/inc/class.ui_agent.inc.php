@@ -100,7 +100,6 @@ class ui_agent extends bo_agent {
         );
         foreach ($rows as $i => &$row) {
             $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
-
             if (count($f_city_name) == 1) {
                 $row['idasecurite_ville'] = '<span id="ville">'.$f_city_name[0]['nom'].'</span>';
             }
@@ -110,12 +109,13 @@ class ui_agent extends bo_agent {
 
             $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => true));
             $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
-            $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent', 'id' => $id));
+            //$delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent', 'id' => $id));
+            $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
             $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
 
             $row['operation'] = '<span style="float:right">';
             $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
-            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" onclick="if (confirm(\'' . lang('Voulez vous supprimer cet agent?') . '\')){ ajax_request(\'' . $delete_link . '\'); document.location.href=\'' .  $this->current_link . '\';}"');
+            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="'.$id.'" onclick="if (confirm(\'' . lang('Voulez vous supprimer cet agent?') . '\')){ ajax_request(\'' . $delete_link . '\'); document.location.href=\'' .  $this->current_link . '\';}"');
             $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
             $output['aaData'][] = $rows[$i];
@@ -129,7 +129,6 @@ class ui_agent extends bo_agent {
      * @return void
      */
     function redirect_to_edit() {
-
         parent::redirect_to_edit('idasecurite_agent', array('menuaction' => APP_NAME . '.ui_agent.edit'));
     }
 
@@ -156,8 +155,6 @@ class ui_agent extends bo_agent {
             $content['no_ville_msg'] = "<span id='error'>" . lang('Aucune ville trouvée') . ' <a><button onclick="' . $js . '">' . lang('Créer en ici') . '</button></a>' . " </span>";
         }
         parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('nom', 'prenom', 'date_naissance', 'adresse', 'code_postal', 'idasecurite_ville', 'type_contrat', 'telephone', 'date_debut_contrat', 'date_fin_contrat'), array('menuaction' => APP_NAME . '.ui_agent.index'));
-
-
         $this->tmpl->read(APP_NAME . '.agent.edit');
         $this->tmpl->exec(APP_NAME . '.ui_agent.edit', $content, $sel_options, $no_button, '', 2);
     }
