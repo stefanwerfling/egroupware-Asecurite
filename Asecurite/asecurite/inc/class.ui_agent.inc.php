@@ -29,7 +29,6 @@ class ui_agent extends bo_agent {
         'delete_agent' => True,
         'get_data' => True
     );
-    var $current_link;
 
     function __construct() {
 
@@ -87,7 +86,7 @@ class ui_agent extends bo_agent {
     }
   
     /**
-     * get all agent to display 
+     * get all agents to display 
      */
     public function get_data() {
         $rows = $this->search('', false);
@@ -109,13 +108,12 @@ class ui_agent extends bo_agent {
 
             $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => true));
             $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
-            //$delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent', 'id' => $id));
             $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
             $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
 
             $row['operation'] = '<span style="float:right">';
             $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');            
-            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="'.$id.'" onclick=" deleteElement(\'' . $id . '\', \''.lang('Voulez vous supprimer cet agent?').'\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
+            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="'.$id.'" onclick="deleteElement(\'' . $id . '\', \''.lang('Voulez vous supprimer cet agent?').'\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
             $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
             $output['aaData'][] = $rows[$i];

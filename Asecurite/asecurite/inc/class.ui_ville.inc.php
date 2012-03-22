@@ -27,7 +27,6 @@ class ui_ville extends bo_ville {
         'delete_ville' => True,
         'get_data' => True
     );
-    var $current_link;
 
     function __construct() {
 
@@ -39,7 +38,7 @@ class ui_ville extends bo_ville {
     /**
      * Display the application home content
      */
-    public function index($content = NULL) {
+    public function index() {
         $this->createHeader();
 
         $msg = get_var('msg', array('GET'));
@@ -60,7 +59,7 @@ class ui_ville extends bo_ville {
     }
 
     /**
-     * delete an ville
+     * delete a city
      */
     public function delete_ville() {
         $id_ville = get_var('id');
@@ -78,7 +77,7 @@ class ui_ville extends bo_ville {
     }
 
     /**
-     * get all city to display 
+     * get all cities to display 
      */
     public function get_data() {
         $rows = $this->search('', false);
@@ -98,7 +97,7 @@ class ui_ville extends bo_ville {
 
             $row['operation'] = '<span style="float:right">';
             $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier la ville"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 400, 150, \'yes\'); return false;"');
-            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ville"), 'style="cursor:pointer" onclick="if (confirm(\'' . lang('Voulez vous supprimer cette ville?') . '\')){ ajax_request(\'' . $delete_link . '\'); document.location.href=\'' . $this->current_link . '\';}"');
+            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ville"), 'style="cursor:pointer" onclick="deleteElement(\'' . $id . '\', \''.lang('Voulez vous supprimer cette ville?').'\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
             $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
             $output['aaData'][] = $rows[$i];

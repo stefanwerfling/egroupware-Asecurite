@@ -80,7 +80,7 @@ class bo_asecurite extends so_sql {
     var $current_year;
     var $img_src;
     var $nb_baskets = 0;
-
+    var $current_link;
     /**
      * Constructor
      * @param string default table name
