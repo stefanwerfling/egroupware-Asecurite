@@ -114,8 +114,8 @@ class ui_agent extends bo_agent {
             $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
 
             $row['operation'] = '<span style="float:right">';
-            $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
-            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="'.$id.'" onclick="if (confirm(\'' . lang('Voulez vous supprimer cet agent?') . '\')){ ajax_request(\'' . $delete_link . '\'); document.location.href=\'' .  $this->current_link . '\';}"');
+            $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');            
+            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="'.$id.'" onclick=" deleteElement(\'' . $id . '\', \''.lang('Voulez vous supprimer cet agent?').'\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
             $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
             $output['aaData'][] = $rows[$i];

@@ -36,6 +36,7 @@ class bo_agent extends bo_asecurite {
                 throw new Exception(lang("Enable to delete agent's plannings"));
             }
         }
+        return true;
     }
 
 }

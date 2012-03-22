@@ -207,6 +207,7 @@ class bo_asecurite extends so_sql {
                     'flexigrid' => 'flexigrid', // file name: asecurite/js/flexigrid/flexigrid.js
                     'thickbox' => 'thickbox', // file name: asecurite/js/flexigrid/flexigrid.js
             )));
+        $GLOBALS['egw_info']['flags']['include_xajax'] = true;
     }
 
     /**
