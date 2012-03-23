@@ -80,7 +80,7 @@ class ui_site extends bo_site {
      * get all sites to display 
      */
     public function get_data() {
-        $rows = $this->search('', false);
+        $rows = $this->search('', false, 'idasecurite_site DESC');
         $this->setup_table(APP_NAME, 'egw_asecurite_ville');
         $output = array(
             "sEcho" => intval($_GET['sEcho']),
@@ -95,7 +95,7 @@ class ui_site extends bo_site {
             }
             $id = $row['idasecurite_site'];
 
-            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $id, 'current' => true));
+            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $id, 'current' => 'true'));
             $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.edit', 'id' => $id));
             $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.delete_site'));
             $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . '</span>';

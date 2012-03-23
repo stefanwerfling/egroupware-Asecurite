@@ -90,7 +90,7 @@ class ui_ville extends bo_ville {
         foreach ($rows as $i => &$row) {
 
             $id = $row['idasecurite_ville'];
-            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $id, 'current' => true));
+            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $id, 'current' => 'true'));
             $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.edit', 'id' => $id));
             $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.delete_ville', 'id' => $id));
             $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom']. '</span>';

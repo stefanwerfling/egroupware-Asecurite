@@ -1184,4 +1184,23 @@ class bo_asecurite extends so_sql {
         exit;
     }
 
+    
+    /**
+     * delete a site
+     */
+    public function delete_planning() {
+        $id = get_var('id');
+        if ($id !== '') {
+            $explode = explode('-', $id);
+            $count = count($explode);
+            if ($count == 1) {
+                $this->delete(array('idasecurite_horaires_agent' => $id));
+            } else {
+                for ($i = 0; $i < $count; $i++) {
+                    $this->delete(array('idasecurite_horaires_agent' => $explode[$i]));
+                }
+            }
+        }
+    }
+    
 }

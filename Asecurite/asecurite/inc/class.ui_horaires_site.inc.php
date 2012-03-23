@@ -22,13 +22,16 @@ class ui_horaires_site extends bo_horaires_site {
      */
     var $public_functions = array(
         'index' => True,
-        'get_rows' => True
+        'get_rows' => True,
+        'delete_planning_agent' => True,
+        'get_data' => True
     );
 
     function __construct() {
 
         parent::__construct();
         $this->init_template(lang('Gestion des horaires'));
+        $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $GLOBALS['egw']->session->appsession('idasecurite_site', APP_NAME), 'current' => 'true'));
     }
 
     /**
@@ -91,16 +94,33 @@ class ui_horaires_site extends bo_horaires_site {
 
         $content['stat'] = '<div class="stat">' . $this->draw_stat($GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME)) . '</div>';
         //$content['nm'] = $this->get_rows();
-        $content['data'] = '<table class="planning_site" style="display: none"></table>';
+        //$content['data'] = '<table class="planning_site" style="display: none"></table>';
+
+        $msg = get_var('msg', array('GET'));
+        $save = get_var('save', array('GET'));
+        $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.get_data'));
+        $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.delete_planning'));
+        $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/planning_sites.html');
+        $tpl_content = str_replace('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js', $tpl_content);
+        $tpl_content = str_replace('DATA_LINK', $data_link, $tpl_content);
+        $tpl_content = str_replace('MSG', "<span id=\"$save\">" . lang($msg) . " </span>", $tpl_content);
+        $tpl_content = str_replace('DELETE_LINK', $delete_link, $tpl_content);
+        $tpl_content = str_replace('INDEX_LINK', $this->current_link, $tpl_content);
+        $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Supprimer les plannings sélectionnés?')), $tpl_content);
+        $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'), $tpl_content);
+        $content['data'] = $tpl_content;
+
         $content['paniers'] = $this->nb_baskets;
         $this->tmpl->read(APP_NAME . '.site.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
 
         $this->tmpl->exec(APP_NAME . '.ui_horaires_site.index', $content, $select_option, $readonlys, '', 2);
-        $script = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/planning_site.php');
-        $link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.get_rows'));
-        $this->js_content .= str_replace('LINK_TO_REPLACE', $link, $script);
+//        $script = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/planning_site.php');
+//        $link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.get_rows'));
+//        $this->js_content .= str_replace('LINK_TO_REPLACE', $link, $script);
         $this->create_footer();
     }
+
+    
 
     /**
      * query rows for the nextmatch widget
@@ -112,9 +132,11 @@ class ui_horaires_site extends bo_horaires_site {
      * @return int total number of rows
      */
     public function get_rows() {
+
         $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
+        $this->setup_table(APP_NAME, 'egw_asecurite_agent');
+
         foreach ($rows as $i => &$row) {
-            $this->setup_table(APP_NAME, 'egw_asecurite_agent');
             if ($row['idasecurite_agent'] != '') {
                 $f_agent_name = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
                 if (count($f_agent_name) == 1) {
@@ -123,65 +145,42 @@ class ui_horaires_site extends bo_horaires_site {
                 $this->manage_display($row);
             }
         }
-        $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
-        @array_unshift($rows, false);
-        /* beginning of flexgrid  */
+        return count($rows);
+    }
 
-        $page = isset($_POST['page']) ? $_POST['page'] : 1;
-        $rp = isset($_POST['rp']) ? $_POST['rp'] : 10;
-        $sortname = isset($_POST['sortname']) ? $_POST['sortname'] : 'agent';
-        $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
-        $query = isset($_POST['query']) ? $_POST['query'] : false;
-        $qtype = isset($_POST['qtype']) ? $_POST['qtype'] : false;
+    /**
+     * get all planning for agent
+     */
+    public function get_data() {
+        $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
+        $this->setup_table(APP_NAME, 'egw_asecurite_agent');
 
-        if ($qtype && $query) {
-            $query = strtolower(trim($query));
-            foreach ($rows AS $key => $row) {
-                if (strpos(strtolower($row[$qtype]), $query) === false) {
-                    unset($rows[$key]);
+        $output = array(
+            "sEcho" => intval($_GET['sEcho']),
+            "iTotalRecords" => count($rows),
+            "iTotalDisplayRecords" => count($rows),
+            "aaData" => array()
+        );
+
+        foreach ($rows as $i => &$row) {
+            if ($row['idasecurite_agent'] != '') {
+                $f_agent_name = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
+                if (count($f_agent_name) == 1) {
+                    $row['agent'] = $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'];
                 }
+                $id = $row['idasecurite_horaires_agent'];
+                $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.delete_planning'));
+                
+                $row['operation'] = '<span style="float:right">';
+                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous les planning sélectionnés?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
+                $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
+
+                $this->manage_display($row);
+                $output['aaData'][] = $rows[$i];
             }
         }
-        //Make PHP handle the sorting
-        $sortArray = array();
-        foreach ($rows AS $key => $row) {
-            $sortArray[$key] = $row[$sortname];
-        }
-        $sortMethod = SORT_ASC;
-        if ($sortorder == 'desc') {
-            $sortMethod = SORT_DESC;
-        }
-        array_multisort($sortArray, $sortMethod, $rows);
-        $total = count($rows)-1; // without false;
-        $rows = array_slice($rows, ($page - 1) * $rp, $rp);
-
-
-        header("Content-type: text/xml");
-        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-        $xml .= "<rows>";
-        $xml .= "<page>$page</page>";
-        $xml .= "<total>$total</total>";
-        foreach ($rows AS $row) {
-            if ($row) {
-                $xml .= "<row id='" . $row['idasecurite_horaires_agent'] . "'>";
-                $xml .= "<cell><![CDATA[" . $row['agent'] . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['heure_arrivee']) . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['pause']) . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['heure_depart']) . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['nombre_heures']) . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['panier']) . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['heures_jour']) . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['heures_nuit']) . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['heures_jour_dimanche']) . "]]></cell>";
-                $xml .= "<cell><![CDATA[" . utf8_encode($row['heures_nuit_dimanche']) . "]]></cell>";
-                $xml .= "</row>";
-            }
-        }
-
-        $xml .= "</rows>";
-        echo $xml;
-        /* end of flexgrid  */
-        // return $rows;
+        $return = json_encode($output);
+        echo $return;
     }
 
 }
