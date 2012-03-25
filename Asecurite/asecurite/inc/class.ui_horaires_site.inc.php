@@ -109,7 +109,6 @@ class ui_horaires_site extends bo_horaires_site {
         $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Supprimer les plannings sélectionnés?')), $tpl_content);
         $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'), $tpl_content);
         $content['data'] = $tpl_content;
-
         $content['paniers'] = $this->nb_baskets;
         $this->tmpl->read(APP_NAME . '.site.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
 
@@ -132,11 +131,9 @@ class ui_horaires_site extends bo_horaires_site {
      * @return int total number of rows
      */
     public function get_rows() {
-
         $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
-        $this->setup_table(APP_NAME, 'egw_asecurite_agent');
-
         foreach ($rows as $i => &$row) {
+            $this->setup_table(APP_NAME, 'egw_asecurite_agent');
             if ($row['idasecurite_agent'] != '') {
                 $f_agent_name = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
                 if (count($f_agent_name) == 1) {
@@ -152,17 +149,15 @@ class ui_horaires_site extends bo_horaires_site {
      * get all planning for agent
      */
     public function get_data() {
-        $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
-        $this->setup_table(APP_NAME, 'egw_asecurite_agent');
-
+        $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);        
         $output = array(
             "sEcho" => intval($_GET['sEcho']),
             "iTotalRecords" => count($rows),
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
-
         foreach ($rows as $i => &$row) {
+            $this->setup_table(APP_NAME, 'egw_asecurite_agent');
             if ($row['idasecurite_agent'] != '') {
                 $f_agent_name = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
                 if (count($f_agent_name) == 1) {

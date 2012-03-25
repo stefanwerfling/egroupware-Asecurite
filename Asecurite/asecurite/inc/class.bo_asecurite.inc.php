@@ -123,50 +123,34 @@ class bo_asecurite extends so_sql {
 
         $this->current_year = intval(date('Y'));
         $this->current_month = intval(date('m'));
-
         $this->years[0] = lang('Toutes les années');
-
         for ($i = 2011; $i <= $this->current_year + 1; $i++) {
-
             $this->years[$i] = $i;
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_site');
-
         $f_sites = $this->search('', false);
-
         if ($f_sites) {
             $this->sites[''] = lang('Tous les sites');
-
             foreach ($f_sites as $key => $value) {
-
                 $this->sites[$value['idasecurite_site']] = $value['nom'];
             }
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
-
         $f_agents = $this->search('', false);
-
         if ($f_agents) {
             $this->agents[''] = lang('Tous les agents');
-
             foreach ($f_agents as $key => $value) {
-
                 $this->agents[$value['idasecurite_agent']] = $value['nom'] . ' ' . $value['prenom'];
             }
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_ville');
-
         $f_cities = $this->search('', false);
-
         if ($f_cities) {
             $this->cities[''] = lang('Toutes les villes');
-
             foreach ($f_cities as $key => $value) {
-
                 $this->cities[$value['idasecurite_ville']] = $value['nom'];
             }
         }
-
         $this->setup_table(APP_NAME, $table);
         $this->img_src = $GLOBALS['egw']->accounts->config['webserver_url'] . '/' . APP_NAME . '/templates/images';
     }
@@ -188,9 +172,7 @@ class bo_asecurite extends so_sql {
         if ($pagename != "")
             $pagename = " - " . $pagename;
         $GLOBALS['egw_info']['flags']['app_header'] = lang(APP_NAME) . $pagename;
-
         $this->tmpl = new etemplate();
-
         $this->html = & $GLOBALS['egw']->html;
         if (!@is_object($GLOBALS['egw']->js)) {
             $GLOBALS['egw']->js = & CreateObject('phpgwapi.javascript');
@@ -1145,7 +1127,7 @@ class bo_asecurite extends so_sql {
         $total_hour = ($row['heure_depart'] - $row['heure_arrivee']) - $row['pause'];
         $row['nombre_heures'] = '<span id="hour">' . $this->get_time($total_hour) . '</span>';
         $row['pause'] = $this->get_time($row['pause']);
-
+        $row['panier'] = 0;
         if ($total_hour >= (3600 * 6)) {
             $row['panier'] = 1;
             $this->nb_baskets++;
@@ -1183,7 +1165,6 @@ class bo_asecurite extends so_sql {
         echo file_get_contents($file);
         exit;
     }
-
     
     /**
      * delete a site
@@ -1202,5 +1183,4 @@ class bo_asecurite extends so_sql {
             }
         }
     }
-    
 }
