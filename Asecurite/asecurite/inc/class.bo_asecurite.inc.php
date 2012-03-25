@@ -1153,12 +1153,12 @@ class bo_asecurite extends so_sql {
      * @param string $file filepath
      * @throws Exception if file's not found
      */
-    function get_stream_data($file) {
+    function get_stream_data($file, $mime_type) {
         $file = get_var('file');
         if (!file_exists($file))
             throw new Exception("File not found");
         ob_end_clean();
-        header("Content-type:text/html;charset=utf-8");
+        header("Content-type:$mime_type;charset=utf-8");
         header("Content-Transfer-Encoding: binary");
         header('Pragma: no-cache');
         header('Expires: 0');

@@ -46,29 +46,6 @@
         //  initHighlight(oTable);
        
     } );
-    function check_all(){
-    
-    var all_set = true;
-    var el = form.getElementsByTagName("input");
-    var l = el.length;
-    for(var i=0; i<l; i++){
-        if(el[i].name.length >= 8){
-            if(el[i].name.substr(0, 8) == 'checkbox' && el[i].checked){
-                all_set = false;
-                break;
-            }
-        }
-    }
-    for (var i = 0; i < l; i++)
-    {
-        if(el[i].name.length >= 8){
-            if(el[i].name.substr(0, 8) == 'checkbox')
-            {
-                el[i].checked = all_set;
-            }
-        }
-    }
-}
 </script>
 <div class="ex_highlight">
     <div id="dynamic">

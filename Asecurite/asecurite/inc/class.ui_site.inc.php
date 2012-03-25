@@ -47,7 +47,7 @@ class ui_site extends bo_site {
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.delete_site'));
         $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/sites.html');
-        $tpl_content = str_replace('ADD_LINK', $add_link, $tpl_content);
+        $tpl_content = str_replace('ADD_LINK', $add_link, $tpl_content);        
         $tpl_content = str_replace('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js', $tpl_content);
         $tpl_content = str_replace('DATA_LINK', $data_link, $tpl_content);
         $tpl_content = str_replace('MSG', "<span id=\"$save\">" . lang($msg) . " </span>", $tpl_content);
