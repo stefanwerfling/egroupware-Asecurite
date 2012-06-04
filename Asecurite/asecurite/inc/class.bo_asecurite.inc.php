@@ -81,6 +81,7 @@ class bo_asecurite extends so_sql {
     var $img_src;
     var $nb_baskets = 0;
     var $current_link;
+
     /**
      * Constructor
      * @param string default table name
@@ -182,7 +183,9 @@ class bo_asecurite extends so_sql {
             APP_NAME => array(
                 '' => array(
                     'app' => '', // file name: asecurite/js/app.js
-                    'jquery-1.7' => '', // file name: asecurite/js/jquery-1.5.min.js
+                    'jquery' => '', // file name: asecurite/js/jquery.js
+                    'jquery.lightbox' => '', // file name: asecurite/js/jquery-lightbox.js
+                    'jquery-ui' => '', // file name: asecurite/js/jquery-ui.js
                     'tooltip' => '', // file name: asecurite/js/jquery.js
                     'dataTables' => 'dataTables', // file name: asecurite/js//dataTables/dataTables.js
                     'jscharts' => '', // file name: asecurite/js/jscharts.js
@@ -1165,7 +1168,7 @@ class bo_asecurite extends so_sql {
         echo file_get_contents($file);
         exit;
     }
-    
+
     /**
      * delete a site
      */
@@ -1183,4 +1186,5 @@ class bo_asecurite extends so_sql {
             }
         }
     }
+
 }

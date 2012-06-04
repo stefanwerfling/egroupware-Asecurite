@@ -18,6 +18,8 @@
 @import "dataTables/table_jui.css";
 @import "dataTables/jquery-ui-1.8.4.custom.css";
 @import "thickbox/thickbox.css";
+@import "jquery-ui.css";
+@import "jquery.lightbox.css";
 
 #ville {
     color: red;

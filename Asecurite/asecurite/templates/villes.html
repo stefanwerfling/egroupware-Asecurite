@@ -1,5 +1,5 @@
-<script type="text/javascript" src="SCRIPT_JS"></script>
-<script type="text/javascript">
+<!--<script type="text/javascript" src="SCRIPT_JS"></script>-->
+<script type="text/javascript">  
     $(document).ready(function() {
         var oTable;
         $('#delete').click(function() {            
@@ -31,10 +31,15 @@
                 {"mDataProp": "nom" },
                 {"mDataProp": "operation"}
                     
-            ]
+            ],
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [ 2 ] },
+                { "asSorting": [ "desc" ], "aTargets": [ 0 ] },
+                { "bVisible": false, "aTargets": [ 0 ] }
+            ] 
         });
         
-      //  initHighlight(oTable);
+        //  initHighlight(oTable);
        
     } );
 </script>
@@ -46,7 +51,7 @@
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
                 <thead>
                     <tr>
-                         <th width="3%">Id</th>
+                        <th width="3%">Id</th>
                         <th width="90%">Ville</th>
                         <th>Opérations</th>
                     </tr>

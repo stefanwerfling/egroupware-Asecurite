@@ -1,4 +1,4 @@
-<script type="text/javascript" src="SCRIPT_JS"></script>
+<!--<script type="text/javascript" src="SCRIPT_JS"></script>-->
 <script type="text/javascript">
     $(document).ready(function() {
         var oTable;
@@ -38,7 +38,12 @@
                 {"mDataProp": "date_fin_contrat"},
                 {"mDataProp": "operation"}
                     
-            ]
+            ],
+             "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [ 9 ] },
+                { "asSorting": [ "desc" ], "aTargets": [ 0 ] },
+                { "bVisible": false, "aTargets": [ 0 ] }
+            ] 
         });
         
       //  initHighlight(oTable);

@@ -1,5 +1,5 @@
 
-function check_all(){
+function check_all(){    
     var all_set = true;
     var el = form.getElementsByTagName("input");
     var l = el.length;

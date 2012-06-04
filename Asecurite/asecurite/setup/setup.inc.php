@@ -15,12 +15,12 @@ $setup_info['asecurite']['hooks'][] = 'sidebox_menu';
 /* Dependencies for this app to work */
 $setup_info['asecurite']['depends'][] = array(
 'appname' => 'phpgwapi',
-'versions' => Array('1.8')
+'versions' => Array('1.8','1.9')
 );
 
 $setup_info['asecurite']['depends'][] = array(
 'appname' => 'etemplate',
-'versions' => Array('1.8')
+'versions' => Array('1.8','1.9')
 );
 
 	$setup_info['asecurite']['tables'] = array('egw_asecurite_agent','egw_asecurite_site','egw_asecurite_horaires_agent','egw_asecurite_ville','egw_asecurite_ferie');
