@@ -48,23 +48,27 @@ class ui_agent extends bo_agent {
      */
     public function index($content = NULL) {
         $this->createHeader();
+         $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
+        $t->set_file(array(
+            'T_agents' => 'agents.tpl'
+        ));
+        $t->set_block('T_agents', 'agents');
         
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
         $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.redirect_to_edit'));
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
-        $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/agents.html');
-        $tpl_content = str_replace('ADD_LINK', $add_link, $tpl_content);
-        $tpl_content = str_replace('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js', $tpl_content);
-        $tpl_content = str_replace('DATA_LINK', $data_link, $tpl_content);
-        $tpl_content = str_replace('MSG', "<span id=\"$save\">" . lang($msg) . " </span>", $tpl_content);
-        $tpl_content = str_replace('DELETE_LINK', $delete_link, $tpl_content);
-        $tpl_content = str_replace('INDEX_LINK', $this->current_link, $tpl_content);
-        $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Supprimer les agents sélectionnés?')), $tpl_content);
-        $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'), $tpl_content);
-        echo $tpl_content;
-       
+        
+        $t->set_var('ADD_LINK', $add_link, $tpl_content);
+        $t->set_var('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js');
+        $t->set_var('DATA_LINK', $data_link, $tpl_content);
+        $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
+        $t->set_var('DELETE_LINK', $delete_link);
+        $t->set_var('INDEX_LINK', $this->current_link);
+        $t->set_var('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Supprimer les agents sélectionnés?')));
+        $t->set_var('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'));
+        $t->pparse('out', 'agents');
     }
 
     /**

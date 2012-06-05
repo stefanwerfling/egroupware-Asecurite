@@ -40,22 +40,27 @@ class ui_site extends bo_site {
      */
     public function index() {
         $this->createHeader();
-
+        $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
+        $t->set_file(array(
+            'T_sites' => 'sites.tpl'
+        ));
+        $t->set_block('T_sites', 'sites');
+        
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
         $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.redirect_to_edit'));
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.delete_site'));
-        $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/sites.html');
-        $tpl_content = str_replace('ADD_LINK', $add_link, $tpl_content);        
-        $tpl_content = str_replace('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js', $tpl_content);
-        $tpl_content = str_replace('DATA_LINK', $data_link, $tpl_content);
-        $tpl_content = str_replace('MSG', "<span id=\"$save\">" . lang($msg) . " </span>", $tpl_content);
-        $tpl_content = str_replace('DELETE_LINK', $delete_link, $tpl_content);
-        $tpl_content = str_replace('INDEX_LINK', $this->current_link, $tpl_content);
-        $tpl_content = str_replace('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Voulez vous supprimer les sites sélectionnés?')), $tpl_content);
-        $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'), $tpl_content);
-        echo $tpl_content;
+
+        $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js');
+        $t->set_var('DATA_LINK', $data_link);
+        $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
+        $t->set_var('DELETE_LINK', $delete_link);
+        $t->set_var('INDEX_LINK', $this->current_link);
+        $t->set_var('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Voulez vous supprimer les sites sélectionnés?')));
+        $t->set_var('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'));
+        $t->pparse('out', 'sites');
     }
 
     /**
@@ -91,7 +96,7 @@ class ui_site extends bo_site {
         foreach ($rows as $i => &$row) {
             $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
             if (count($f_city_name) == 1) {
-                $row['idasecurite_ville'] ='<span id="ville">'.$f_city_name[0]['nom'].'</span>';
+                $row['idasecurite_ville'] = '<span id="ville">' . $f_city_name[0]['nom'] . '</span>';
             }
             $id = $row['idasecurite_site'];
 
