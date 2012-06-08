@@ -89,7 +89,7 @@ class bo_asecurite extends so_sql {
     public function __construct($table = '') {
 
         parent::__construct(APP_NAME, $table);
-
+        $GLOBALS['egw_info']['flags']['include_xajax'] = true;
         //$_main_conf = bo_var_setting::get_all_conf_var();
 
         $this->nm = array(
@@ -668,7 +668,6 @@ class bo_asecurite extends so_sql {
                 }
             }
         }
-
         return $result;
     }
 
@@ -1173,6 +1172,7 @@ class bo_asecurite extends so_sql {
      * delete a site
      */
     public function delete_planning() {
+        $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
         $id = get_var('id');
         if ($id !== '') {
             $explode = explode('-', $id);

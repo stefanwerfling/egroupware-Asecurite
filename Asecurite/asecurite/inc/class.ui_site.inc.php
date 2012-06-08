@@ -53,7 +53,6 @@ class ui_site extends bo_site {
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.delete_site'));
 
         $t->set_var('ADD_LINK', $add_link);
-        $t->set_var('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js');
         $t->set_var('DATA_LINK', $data_link);
         $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
         $t->set_var('DELETE_LINK', $delete_link);
@@ -93,7 +92,7 @@ class ui_site extends bo_site {
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
-        foreach ($rows as $i => &$row) {
+        foreach ($rows as &$row) {
             $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
             if (count($f_city_name) == 1) {
                 $row['idasecurite_ville'] = '<span id="ville">' . $f_city_name[0]['nom'] . '</span>';
@@ -110,7 +109,7 @@ class ui_site extends bo_site {
             $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer le site"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer ce site?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
             $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
-            $output['aaData'][] = $rows[$i];
+            $output['aaData'][] = $row;
         }
         $return = json_encode($output);
         echo $return;

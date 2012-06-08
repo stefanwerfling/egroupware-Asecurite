@@ -21,10 +21,10 @@ class ui_horaires_site extends bo_horaires_site {
      * @var array
      */
     var $public_functions = array(
-        'index' => True,
-        'get_rows' => True,
-        'delete_planning_agent' => True,
-        'get_data' => True
+        'index' => true,
+        'get_rows' => true,
+        'delete_planning' => true,
+        'get_data' => true
     );
 
     function __construct() {
@@ -93,15 +93,12 @@ class ui_horaires_site extends bo_horaires_site {
         $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME, $this->get_mensual_planning($content['mois'], $content['annee'], $content['idasecurite_agent'], $GLOBALS['egw']->session->appsession('idasecurite_site', APP_NAME), $content['idasecurite_ville']));
 
         $content['stat'] = '<div class="stat">' . $this->draw_stat($GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME)) . '</div>';
-        //$content['nm'] = $this->get_rows();
-        //$content['data'] = '<table class="planning_site" style="display: none"></table>';
 
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.delete_planning'));
-        $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/planning_sites.html');
-        $tpl_content = str_replace('SCRIPT_JS', EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/dataTables/script.js', $tpl_content);
+        $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/default/planning_sites.html');
         $tpl_content = str_replace('DATA_LINK', $data_link, $tpl_content);
         $tpl_content = str_replace('MSG', "<span id=\"$save\">" . lang($msg) . " </span>", $tpl_content);
         $tpl_content = str_replace('DELETE_LINK', $delete_link, $tpl_content);
@@ -110,16 +107,11 @@ class ui_horaires_site extends bo_horaires_site {
         $tpl_content = str_replace('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'), $tpl_content);
         $content['data'] = $tpl_content;
         $content['paniers'] = $this->nb_baskets;
+        
         $this->tmpl->read(APP_NAME . '.site.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
-
         $this->tmpl->exec(APP_NAME . '.ui_horaires_site.index', $content, $select_option, $readonlys, '', 2);
-//        $script = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/planning_site.php');
-//        $link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.get_rows'));
-//        $this->js_content .= str_replace('LINK_TO_REPLACE', $link, $script);
         $this->create_footer();
     }
-
-    
 
     /**
      * query rows for the nextmatch widget
@@ -149,33 +141,46 @@ class ui_horaires_site extends bo_horaires_site {
      * get all planning for agent
      */
     public function get_data() {
-        $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);        
+        $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
         $output = array(
             "sEcho" => intval($_GET['sEcho']),
             "iTotalRecords" => count($rows),
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
+        
         foreach ($rows as $i => &$row) {
             $this->setup_table(APP_NAME, 'egw_asecurite_agent');
             if ($row['idasecurite_agent'] != '') {
+                
                 $f_agent_name = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
                 if (count($f_agent_name) == 1) {
-                    $row['agent'] = $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'];
+                    $row['idasecurite_agent'] = $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'];
                 }
                 $id = $row['idasecurite_horaires_agent'];
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.delete_planning'));
-                
+
                 $row['operation'] = '<span style="float:right">';
-                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous les planning sélectionnés?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
+                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ligne"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous les planning sélectionnés?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
                 $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
                 $this->manage_display($row);
-                $output['aaData'][] = $rows[$i];
+                $planning_row['idasecurite_horaires_agent'] = $row['idasecurite_horaires_agent'];
+                $planning_row['idasecurite_agent'] = $row['idasecurite_agent'];
+                $planning_row['heure_arrivee'] = $row['heure_arrivee'];
+                $planning_row['pause'] = $row['pause'];
+                $planning_row['heure_depart'] = $row['heure_depart'];
+                $planning_row['nombre_heures'] = $row['nombre_heures'];
+                $planning_row['panier'] = $row['panier'];
+                $planning_row['heures_jour'] = $row['heures_jour'];
+                $planning_row['heures_nuit'] = $row['heures_nuit'];
+                $planning_row['heures_jour_dimanche'] = $row['heures_jour_dimanche'];
+                $planning_row['heures_nuit_dimanche'] = $row['heures_nuit_dimanche'];
+                $planning_row['operation'] = $row['operation'];
+                $output['aaData'][] = $planning_row;
             }
         }
         $return = json_encode($output);
         echo $return;
-    }
-
+    }  
 }
