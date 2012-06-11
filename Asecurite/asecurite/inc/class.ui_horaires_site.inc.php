@@ -138,7 +138,7 @@ class ui_horaires_site extends bo_horaires_site {
     }
 
     /**
-     * get all planning for agent
+     * get all planning for site
      */
     public function get_data() {
         $rows = $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME);
@@ -149,13 +149,13 @@ class ui_horaires_site extends bo_horaires_site {
             "aaData" => array()
         );
         
-        foreach ($rows as $i => &$row) {
+        foreach ($rows as &$row) {
             $this->setup_table(APP_NAME, 'egw_asecurite_agent');
             if ($row['idasecurite_agent'] != '') {
                 
                 $f_agent_name = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
                 if (count($f_agent_name) == 1) {
-                    $row['idasecurite_agent'] = $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'];
+                    $row['agent'] = $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'];
                 }
                 $id = $row['idasecurite_horaires_agent'];
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.delete_planning'));
@@ -166,7 +166,7 @@ class ui_horaires_site extends bo_horaires_site {
 
                 $this->manage_display($row);
                 $planning_row['idasecurite_horaires_agent'] = $row['idasecurite_horaires_agent'];
-                $planning_row['idasecurite_agent'] = $row['idasecurite_agent'];
+                $planning_row['agent'] = $row['agent'];
                 $planning_row['heure_arrivee'] = $row['heure_arrivee'];
                 $planning_row['pause'] = $row['pause'];
                 $planning_row['heure_depart'] = $row['heure_depart'];
