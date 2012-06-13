@@ -30,13 +30,30 @@ class ui_horaires_ville extends bo_horaires_ville {
 
         parent::__construct();
         $this->init_template(lang('Gestion des horaires'));
-        $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME), 'current' => 'true'));
+        $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index',
+            'id' => $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME),
+            'current' => 'true',
+            'month' => $GLOBALS['egw']->session->appsession('current_month', APP_NAME),
+            'year' => $GLOBALS['egw']->session->appsession('current_year', APP_NAME),
+            'agent' => $GLOBALS['egw']->session->appsession('current_agent', APP_NAME),
+            'site' => $GLOBALS['egw']->session->appsession('current_site', APP_NAME)));
     }
 
     /**
      * Display the application home content
      */
     public function index($content = NULL) {
+
+        $id = get_var('id');
+        if ($id != '') {
+            $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME, $id);
+        }
+        if (get_var('month')) {
+            $this->current_month = get_var('month');
+            $this->current_year = get_var('year');
+            $content['idasecurite_agent'] = get_var('agent');
+            $content['idasecurite_site'] = get_var('site');
+        }
 
         if (isset($content['nm']['delete'])) {
             list($del) = each($content['nm']['delete']);
@@ -48,7 +65,7 @@ class ui_horaires_ville extends bo_horaires_ville {
 
                 $this->delete(array('idasecurite_horaires_agent' => $content['nm']['checkbox'][$i]));
             }
-        } elseif (isset($content['print'])) {
+        } /*elseif (isset($content['print'])) {
 
             $link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_imprime.print_planning_global'));
             $this->js_content .= '<script type="text/javascript">
@@ -61,12 +78,8 @@ class ui_horaires_ville extends bo_horaires_ville {
             $GLOBALS['egw']->session->appsession('current_ville', APP_NAME, $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME));
             $GLOBALS['egw']->session->appsession('current_site', APP_NAME, $content['idasecurite_site']);
             $GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME, $GLOBALS['egw']->session->appsession('all_planning_city', APP_NAME));
-        }
+        }*/
 
-        $id = get_var('id');
-        if ($id != '') {
-            $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME, $id);
-        }
         $this->setup_table(APP_NAME, 'egw_asecurite_ville');
 
         $f_city = $this->search(array('idasecurite_ville' => $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME)), false);
@@ -107,6 +120,13 @@ class ui_horaires_ville extends bo_horaires_ville {
         $content['paniers'] = $this->nb_baskets;
         $this->tmpl->read(APP_NAME . '.ville.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
 
+        $GLOBALS['egw']->session->appsession('current_month', APP_NAME, $content['mois']);
+        $GLOBALS['egw']->session->appsession('current_year', APP_NAME, $content['annee']);
+        $GLOBALS['egw']->session->appsession('current_agent', APP_NAME, $content['idasecurite_agent']);
+        $GLOBALS['egw']->session->appsession('current_ville', APP_NAME, $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME));
+        $GLOBALS['egw']->session->appsession('current_site', APP_NAME, $content['idasecurite_site']);
+        $GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME, $GLOBALS['egw']->session->appsession('all_planning_city', APP_NAME));
+        
         $this->tmpl->exec(APP_NAME . '.ui_horaires_ville.index', $content, $select_option, $readonlys, '', 2);
         $this->create_footer();
     }
@@ -163,7 +183,7 @@ class ui_horaires_ville extends bo_horaires_ville {
                 $f_site_name = $this->search(array('idasecurite_site' => $row['idasecurite_site']), false);
                 if (count($f_site_name) == 1) {
                     $planning_site_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $row['idasecurite_site'], 'current' => 'true'));
-                    $row['site'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_site_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $f_site_name[0]['nom']. '</span>';
+                    $row['site'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_site_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $f_site_name[0]['nom'] . '</span>';
                 }
             }
             $this->setup_table(APP_NAME, 'egw_asecurite_agent');
@@ -171,7 +191,7 @@ class ui_horaires_ville extends bo_horaires_ville {
                 $f_agent = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
                 if (count($f_agent) == 1) {
                     $planning_agent_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $row['idasecurite_agent'], 'current' => 'true'));
-                    $row['agent'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_agent_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' .$f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'] .'</span>';
+                    $row['agent'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_agent_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'] . '</span>';
                 }
             }
             $id = $row['idasecurite_horaires_agent'];

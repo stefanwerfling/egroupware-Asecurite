@@ -187,9 +187,10 @@ class bo_asecurite extends so_sql {
                     'jquery.lightbox' => '', // file name: asecurite/js/jquery-lightbox.js
                     'jquery-ui' => '', // file name: asecurite/js/jquery-ui.js
                     'tooltip' => '', // file name: asecurite/js/jquery.js
-                    'dataTables' => 'dataTables', // file name: asecurite/js//dataTables/dataTables.js
+                    'dataTables' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.js
+                    //'TableTools' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.editor.js
+                    //'dataTables.editor' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.editor.js
                     'jscharts' => '', // file name: asecurite/js/jscharts.js
-                    'flexigrid' => 'flexigrid', // file name: asecurite/js/flexigrid/flexigrid.js
                     'thickbox' => 'thickbox', // file name: asecurite/js/flexigrid/flexigrid.js
             )));
         $GLOBALS['egw_info']['flags']['include_xajax'] = true;
