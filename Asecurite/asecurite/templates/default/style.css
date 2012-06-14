@@ -21,11 +21,11 @@
     font-size: 20px;
     font-weight: bold;   
 }
-.addHoraire{
+/*.addHoraire{
     border: solid 1px #5F6565;
     background-color: #5793ff;
-}
-.addHorairePlanningGlobal{
+}*/
+.addHorairePlanningGlobal, .addHoraire{
     background-color: #D8D8D8;
     border: solid 1px #5F6565;
     color: black;
@@ -33,11 +33,11 @@
 .content{
     border: solid 1px #5F6565;
 }
-.planningTitle{
+/*.planningTitle{
     color:white;
     font-weight: bold;
-}
-.planningTitlePlanningGlobal{
+}*/
+.planningTitlePlanningGlobal, .planningTitle{
     font-weight: bold;
 }
 

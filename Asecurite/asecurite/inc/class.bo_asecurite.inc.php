@@ -356,7 +356,7 @@ class bo_asecurite extends so_sql {
                 $msg = lang('This') . ' ' . lang($name) . ' ' . lang('already exists');
                 return false;
             }
-        } else {// update            
+        } else {// update             
             if ($this->update($this->data, $where)) {
                 $msg = $name . ' entry modified';
                 $return_value = true;
@@ -478,6 +478,20 @@ class bo_asecurite extends so_sql {
             $content['mois'] = $this->current_month;
             $content['annee'] = $this->current_year;
         }
+        $editId = get_var('editId');
+        if ($editId) {
+            $GLOBALS['egw']->session->appsession('editId', APP_NAME, $editId);
+            $this->setup_table(APP_NAME, $table_name);
+            $f_planning = $this->search(array('idasecurite_horaires_agent' => $editId), false);
+            if ($f_planning) {
+                $content['idasecurite_ville'] = $f_planning[0]['idasecurite_ville'];
+                $content['idasecurite_agent'] = $f_planning[0]['idasecurite_agent'];
+                $content['idasecurite_site'] = $f_planning[0]['idasecurite_site'];
+                $content['heure_arrivee'] = $f_planning[0]['heure_arrivee'];
+                $content['heure_depart'] = $f_planning[0]['heure_depart'];
+                $content['pause'] = $f_planning[0]['pause'];
+            }
+        }        
         $save = get_var('save', array('GET'));
 
         if (isset($content['add_horaire'])) {
@@ -496,7 +510,6 @@ class bo_asecurite extends so_sql {
                     $content['heures_jour'] = $compute['day'] + $diff;
                 }
             }
-
             // sunday
             elseif ($compute['sunnight'] != 0) {
                 $diff = $compute['sunnight'] - $content['pause'];
@@ -521,14 +534,21 @@ class bo_asecurite extends so_sql {
             }
             //$content['heures_jour'] -= $content['heures_jour_dimanche'];
             //$content['heures_nuit'] -= $content['heures_nuit_dimanche'];
-            $save_ok = $this->save_data($name, $table_name, $content, $col, $msg);
-            $ave = $save_ok ? 'success' : 'error';
+            
+            if ($GLOBALS['egw']->session->appsession('editId', APP_NAME)) {
+                $save_ok = $this->save_data($name, $table_name, $content, $col, $msg, array('idasecurite_horaires_agent' => $GLOBALS['egw']->session->appsession('editId', APP_NAME)));
+                $content['heure_arrivee'] = '';
+                $content['heure_depart'] = '';
+                $content['pause'] = '';
+            } else {
+                $save_ok = $this->save_data($name, $table_name, $content, $col, $msg);
+            }
+            $GLOBALS['egw']->session->appsession('editId', APP_NAME, '');
+            
+            $save = $save_ok ? 'success' : 'error';
 
             if ($save_ok) {
-                $content['add_edit'] = '<span class="title">' . $content['title'] . '<span> - <span id="edit">Modifier</span>';
                 $content['msg_horaire'] = "<span id='success'>" . lang($msg) . " </span>";
-                $no_button['add'] = true;
-                $no_button['edit'] = false;
             } else {
                 $content['msg_horaire'] = "<span id='error'>" . lang($msg) . " </span>";
             }

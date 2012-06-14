@@ -60,8 +60,8 @@ class ui_agent extends bo_agent {
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
         
-        $t->set_var('ADD_LINK', $add_link, $tpl_content);
-        $t->set_var('DATA_LINK', $data_link, $tpl_content);
+        $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('DATA_LINK', $data_link);
         $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
         $t->set_var('DELETE_LINK', $delete_link);
         $t->set_var('INDEX_LINK', $this->current_link);

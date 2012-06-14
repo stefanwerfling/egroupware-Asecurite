@@ -53,7 +53,7 @@ class ui_horaires_agent extends bo_horaires_agent {
             $this->current_month = get_var('month');
             $this->current_year = get_var('year');
             $content['idasecurite_site'] = get_var('site');
-        }
+        }       
 
         if (isset($content['nm']['delete'])) {
             list($del) = each($content['nm']['delete']);
@@ -96,7 +96,7 @@ class ui_horaires_agent extends bo_horaires_agent {
             'mois' => $this->monthes,
             'annee' => $this->years,
         );
-
+        
         parent::edit_planning($content, 'egw_asecurite_horaires_agent', 'Agent schedule', array('heure_arrivee', 'heure_depart', 'pause', 'heures_jour', 'heures_nuit', 'idasecurite_agent', 'idasecurite_site', 'idasecurite_ville', 'heures_jour_dimanche', 'heures_nuit_dimanche'), array('menuaction' => APP_NAME . '.ui_horaires_agent.index'));
 
         if (!$this->sites) {
@@ -142,7 +142,7 @@ class ui_horaires_agent extends bo_horaires_agent {
      * @param array &$readonlys eg. to disable buttons based on acl, not use here, maybe in a derived class
      * @return int total number of rows
      */
-    public function get_rows() {
+    /*public function get_rows() {
         $rows = $GLOBALS['egw']->session->appsession('all_planning_agent', APP_NAME);
         foreach ($rows as &$row) {
 
@@ -166,7 +166,7 @@ class ui_horaires_agent extends bo_horaires_agent {
         $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
         @array_unshift($rows, false);
         return $rows;
-    }
+    }*/
 
     /**
      * get all planning for agent
@@ -201,7 +201,8 @@ class ui_horaires_agent extends bo_horaires_agent {
                 $id = $row['idasecurite_horaires_agent'];
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.delete_planning'));
 
-                $row['operation'] = '<span style="float:right">';
+                $row['operation'] = '<span style="float:right">';                
+                $row['operation'] .='<a href="'.$this->current_link.'&editId='.$id.'">'. $this->html->image(APP_NAME, 'edit', lang("Modifier"), 'style="cursor:pointer"').'</a>';            
                 $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ligne"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous les planning sélectionnés?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
                 $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
                 $this->manage_display($row);

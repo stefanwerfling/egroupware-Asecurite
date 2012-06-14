@@ -119,10 +119,10 @@ class ui_ville extends bo_ville {
      * @param array &$readonlys eg. to disable buttons based on acl, not use here, maybe in a derived class
      * @return int total number of rows
      */
-    public function get_rows($query, &$rows, &$readonlys) {
+    /*public function get_rows($query, &$rows, &$readonlys) {
         $total = parent::get_rows($query, $rows, $readonlys);
         return $total;
-    }
+    }*/
 
     /**
      * redirect to edit page and unset session value in order to do add operation
