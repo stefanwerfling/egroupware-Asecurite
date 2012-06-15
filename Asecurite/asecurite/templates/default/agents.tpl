@@ -34,6 +34,7 @@
                 {"mDataProp": "code_postal"},
                 {"mDataProp": "idasecurite_ville"},
                 {"mDataProp": "telephone"},
+                {"mDataProp": "piece_identite"},
                 {"mDataProp": "date_debut_contrat"},
                 {"mDataProp": "date_fin_contrat"},
                 {"mDataProp": "operation"}
@@ -54,7 +55,7 @@
     <div id="dynamic">
         <form name="form" id="form">
             <div>{MSG}</div>
-            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', 450, 400, 'yes'); return false;">Ajouter un nouvel agent</button></div>
+            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', 600, 700, 'yes'); return false;">Ajouter un nouvel agent</button></div>
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
                 <thead>
                     <tr>
@@ -65,6 +66,7 @@
                         <th width="10%">Code postal</th>
                         <th width="10%">Ville</th>
                         <th width="12%">Téléphone</th>
+                        <th width="20%">Pièce d'identité</th>
                         <th width="12%">Date de début de contrat</th>
                         <th width="12%">Date de fin de contrat</th>
                         <th>Opérations</th>

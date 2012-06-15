@@ -414,3 +414,32 @@ function asecurite_upgrade1_023()
 	return $GLOBALS['setup_info']['asecurite']['currentver'] = '1.024';
 }
 
+
+function asecurite_upgrade1_024()
+{
+	$GLOBALS['egw_setup']->oProc->DropColumn('egw_asecurite_horaires_agent',array(
+		'fd' => array(
+			'idasecurite_horaires_agent' => array('type' => 'auto','nullable' => False),
+			'idasecurite_agent' => array('type' => 'int','precision' => '4'),
+			'heure_arrivee' => array('type' => 'varchar','precision' => '255'),
+			'heure_depart' => array('type' => 'varchar','precision' => '255'),
+			'pause' => array('type' => 'int','precision' => '4'),
+			'heures_jour' => array('type' => 'int','precision' => '4'),
+			'heures_nuit' => array('type' => 'int','precision' => '4'),
+			'idasecurite_site' => array('type' => 'int','precision' => '4'),
+			'date' => array('type' => 'date'),
+			'idasecurite_ville' => array('type' => 'int','precision' => '4'),
+			'heures_jour_dimanche' => array('type' => 'int','precision' => '5'),
+			'heures_nuit_dimanche' => array('type' => 'int','precision' => '5'),
+			'heures_jour_ferie' => array('type' => 'int','precision' => '5'),
+			'heures_nuit_ferie' => array('type' => 'int','precision' => '5')
+		),
+		'pk' => array('idasecurite_horaires_agent'),
+		'fk' => array(),
+		'ix' => array('idasecurite_agent','idasecurite_site','idasecurite_ville'),
+		'uc' => array()
+	),'nb_paniers');
+
+	return $GLOBALS['setup_info']['asecurite']['currentver'] = '1.025';
+}
+

@@ -60,8 +60,7 @@ $phpgw_baseline = array(
 			'heures_jour_dimanche' => array('type' => 'int','precision' => '5'),
 			'heures_nuit_dimanche' => array('type' => 'int','precision' => '5'),
 			'heures_jour_ferie' => array('type' => 'int','precision' => '5'),
-			'heures_nuit_ferie' => array('type' => 'int','precision' => '5'),
-			'nb_paniers' => array('type' => 'int','precision' => '5')
+			'heures_nuit_ferie' => array('type' => 'int','precision' => '5')
 		),
 		'pk' => array('idasecurite_horaires_agent'),
 		'fk' => array(),

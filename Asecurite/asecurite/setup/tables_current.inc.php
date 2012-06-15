@@ -24,7 +24,13 @@ $phpgw_baseline = array(
 			'date_fin_contrat' => array('type' => 'date'),
 			'type_contrat' => array('type' => 'varchar','precision' => '45'),
 			'code_postal' => array('type' => 'varchar','precision' => '45'),
-			'idasecurite_ville' => array('type' => 'int','precision' => '4')
+			'idasecurite_ville' => array('type' => 'int','precision' => '4'),
+			'type_piece_identite' => array('type' => 'varchar','precision' => '45'),
+			'numero_piece_identite' => array('type' => 'varchar','precision' => '45'),
+			'date_debut_piece_identite' => array('type' => 'date'),
+			'date_fin_piece_identite' => array('type' => 'date'),
+			'commune_piece_identite' => array('type' => 'varchar','precision' => '45'),
+			'pays_piece_identite' => array('type' => 'varchar','precision' => '45')
 		),
 		'pk' => array('idasecurite_agent'),
 		'fk' => array(),
@@ -89,3 +95,4 @@ $phpgw_baseline = array(
 		'uc' => array()
 	)
 );
+

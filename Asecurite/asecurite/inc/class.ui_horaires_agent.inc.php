@@ -109,6 +109,8 @@ class ui_horaires_agent extends bo_horaires_agent {
 
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
+        
+        $this->compute_paniers($GLOBALS['egw']->session->appsession('all_planning_agent', APP_NAME));        
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.delete_planning'));
         $tpl_content = file_get_contents(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/default/planning_agents.html');

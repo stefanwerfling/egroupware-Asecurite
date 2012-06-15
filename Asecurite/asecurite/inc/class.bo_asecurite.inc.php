@@ -491,7 +491,7 @@ class bo_asecurite extends so_sql {
                 $content['heure_depart'] = $f_planning[0]['heure_depart'];
                 $content['pause'] = $f_planning[0]['pause'];
             }
-        }        
+        }
         $save = get_var('save', array('GET'));
 
         if (isset($content['add_horaire'])) {
@@ -534,7 +534,7 @@ class bo_asecurite extends so_sql {
             }
             //$content['heures_jour'] -= $content['heures_jour_dimanche'];
             //$content['heures_nuit'] -= $content['heures_nuit_dimanche'];
-            
+
             if ($GLOBALS['egw']->session->appsession('editId', APP_NAME)) {
                 $save_ok = $this->save_data($name, $table_name, $content, $col, $msg, array('idasecurite_horaires_agent' => $GLOBALS['egw']->session->appsession('editId', APP_NAME)));
                 $content['heure_arrivee'] = '';
@@ -544,7 +544,7 @@ class bo_asecurite extends so_sql {
                 $save_ok = $this->save_data($name, $table_name, $content, $col, $msg);
             }
             $GLOBALS['egw']->session->appsession('editId', APP_NAME, '');
-            
+
             $save = $save_ok ? 'success' : 'error';
 
             if ($save_ok) {
@@ -1145,6 +1145,16 @@ class bo_asecurite extends so_sql {
         return false;
     }
 
+    function compute_paniers($rows) {
+        $this->nb_baskets = 0;
+        foreach ($rows as &$row) {
+            $total_hour = ($row['heure_depart'] - $row['heure_arrivee']) - $row['pause'];
+            if ($total_hour >= (3600 * 6)) {
+                $this->nb_baskets++;
+            }
+        }      
+    }
+
     function manage_display(&$row) {
 
         $total_hour = ($row['heure_depart'] - $row['heure_arrivee']) - $row['pause'];
@@ -1172,24 +1182,6 @@ class bo_asecurite extends so_sql {
     }
 
     /**
-     * get a file as a stream
-     * @param string $file filepath
-     * @throws Exception if file's not found
-     */
-    function get_stream_data($file, $mime_type) {
-        $file = get_var('file');
-        if (!file_exists($file))
-            throw new Exception("File not found");
-        ob_end_clean();
-        header("Content-type:$mime_type;charset=utf-8");
-        header("Content-Transfer-Encoding: binary");
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        echo file_get_contents($file);
-        exit;
-    }
-
-    /**
      * delete a site
      */
     public function delete_planning() {
@@ -1206,6 +1198,20 @@ class bo_asecurite extends so_sql {
                 }
             }
         }
+    }
+
+    /**
+     * test if a given date is expired
+     * @param int $date
+     * @return boolean 
+     */
+    public static function is_expired($date) {
+        if ($date != '') {
+            if (intval($date) < intval(mktime(0, 0, 0, date('m'), date('j'), date('Y')))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
