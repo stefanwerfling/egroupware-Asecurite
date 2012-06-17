@@ -35,7 +35,7 @@ class ui_imprime extends bo_asecurite {
 
     function print_planning_global($content = NULL) {
 
-        $content['logo'] = '<span ><img alt="logo" src="' . $this->img_src . '/asecurite.png' . '"/></span>';
+        $content['logo'] = $this->html->image(APP_NAME, 'asecurite', lang("Modifier l'agent"));
         //set month
         $content['mois'] = $this->monthes[$GLOBALS['egw']->session->appsession('current_month', APP_NAME)];
         // set year

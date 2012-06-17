@@ -78,7 +78,6 @@ class bo_asecurite extends so_sql {
      * @var int
      */
     var $current_year;
-    var $img_src;
     var $nb_baskets = 0;
     var $current_link;
 
@@ -153,7 +152,6 @@ class bo_asecurite extends so_sql {
             }
         }
         $this->setup_table(APP_NAME, $table);
-        $this->img_src = $GLOBALS['egw']->accounts->config['webserver_url'] . '/' . APP_NAME . '/templates/images';
     }
 
     /**
