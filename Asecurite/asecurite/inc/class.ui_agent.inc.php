@@ -100,40 +100,42 @@ class ui_agent extends bo_agent {
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
-        foreach ($rows as &$row) {
-            $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
-            if (count($f_city_name) == 1) {
-                $row['idasecurite_ville'] = '<span id="ville">' . $f_city_name[0]['nom'] . '</span>';
+        if ($rows) {
+            foreach ($rows as &$row) {
+                $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
+                if (count($f_city_name) == 1) {
+                    $row['idasecurite_ville'] = '<span id="ville">' . $f_city_name[0]['nom'] . '</span>';
+                }
+                $id = $row['idasecurite_agent'];
+                $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '--' : $this->format_date($row['date_debut_contrat']);
+                $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '--' : $this->format_date($row['date_fin_contrat']);
+
+                $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => 'true'));
+                $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
+                $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
+                $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
+
+                $row['date_fin_piece_identite'] = $row['date_fin_piece_identite'] == '' ? '' : $this->format_date($row['date_fin_piece_identite']);
+                $row['piece_identite'] = '--';
+
+                if ($row['type_piece_identite'] != '') {
+                    $style = 'success';
+                    /* if (self::is_expired($row['date_fin_piece_identite'])) {
+                      $style = 'error';
+                      } */
+                    $row['piece_identite'] = $row['type_piece_identite'] . '(' . $row['numero_piece_identite'] . ')<br>';
+                    $row['piece_identite'] .= '<span id="' . $style . '">Fin: ' . $row['date_fin_piece_identite'] . '</span>';
+                }
+                $agent_info_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_agent_info', 'id' => $id));
+                $agent_info = $this->html->image(APP_NAME, 'view', lang("Afficher les infos"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $agent_info_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
+                $row['piece_identite'] .= '&nbsp; ' . $agent_info;
+                $row['operation'] = '<span style="float:right">';
+                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 600, 700, \'yes\'); return false;"');
+                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cet agent?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
+                $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
+
+                $output['aaData'][] = $row;
             }
-            $id = $row['idasecurite_agent'];
-            $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '--' : $this->format_date($row['date_debut_contrat']);
-            $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '--' : $this->format_date($row['date_fin_contrat']);
-
-            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => 'true'));
-            $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
-            $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
-            $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
-
-            $row['date_fin_piece_identite'] = $row['date_fin_piece_identite'] == '' ? '' : $this->format_date($row['date_fin_piece_identite']);
-            $row['piece_identite'] = '--';
-
-            if ($row['type_piece_identite'] != '') {
-                $style = 'success';
-                /* if (self::is_expired($row['date_fin_piece_identite'])) {
-                  $style = 'error';
-                  } */
-                $row['piece_identite'] = $row['type_piece_identite'] . '(' . $row['numero_piece_identite'] . ')<br>';
-                $row['piece_identite'] .= '<span id="' . $style . '">Fin: ' . $row['date_fin_piece_identite'] . '</span>';
-            }
-            $agent_info_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_agent_info', 'id' => $id));
-            $agent_info = $this->html->image(APP_NAME, 'view', lang("Afficher les infos"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $agent_info_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
-            $row['piece_identite'] .= '&nbsp; '.$agent_info;
-            $row['operation'] = '<span style="float:right">';
-            $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 600, 700, \'yes\'); return false;"');
-            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cet agent?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
-            $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
-
-            $output['aaData'][] = $row;
         }
         $return = json_encode($output);
         echo $return;
@@ -153,14 +155,14 @@ class ui_agent extends bo_agent {
 
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $agent_id = get_var('id');
-        
+
         if ($agent_id) {
             $f_agent = $this->search(array('idasecurite_agent' => $agent_id), false);
             if ($f_agent) {
                 $this->setup_table(APP_NAME, 'egw_asecurite_ville');
                 $f_city_name = $this->search(array('idasecurite_ville' => $f_agent[0]['idasecurite_ville']), false);
                 if (count($f_city_name) == 1) {
-                    $f_agent[0]['idasecurite_ville'] =  $f_city_name[0]['nom'];
+                    $f_agent[0]['idasecurite_ville'] = $f_city_name[0]['nom'];
                 }
                 $t->set_var('agent_name', $f_agent[0]['nom'] . ' ' . $f_agent[0]['nom']);
                 $t->set_var('date_naissance', $f_agent[0]['date_naissance']);

@@ -19,5 +19,19 @@ class bo_ferie extends bo_asecurite {
     function __construct() {
         parent::__construct('egw_asecurite_ferie');
     }
+    
+    /**
+     * delete a agent
+     * @param int $id_agent agent id
+     * @throws Exception on error
+     */
+    public function delete_jour_ferie($id_ferie) {
+        $this->setup_table(APP_NAME, 'egw_asecurite_ferie');
+
+        if (!$this->delete(array('idasecurite_ferie' => $id_ferie))) {
+            throw new Exception(lang('Enable to delete this day'));
+        }
+        return true;
+    }
    
 }

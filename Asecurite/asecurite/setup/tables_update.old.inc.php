@@ -443,3 +443,32 @@ function asecurite_upgrade1_024()
 	return $GLOBALS['setup_info']['asecurite']['currentver'] = '1.025';
 }
 
+
+function asecurite_upgrade1_025()
+{
+	$GLOBALS['egw_setup']->oProc->AddColumn('egw_asecurite_agent','type_piece_identite',array(
+		'type' => 'varchar',
+		'precision' => '45'
+	));
+	$GLOBALS['egw_setup']->oProc->AddColumn('egw_asecurite_agent','numero_piece_identite',array(
+		'type' => 'varchar',
+		'precision' => '45'
+	));
+	$GLOBALS['egw_setup']->oProc->AddColumn('egw_asecurite_agent','date_debut_piece_identite',array(
+		'type' => 'date'
+	));
+	$GLOBALS['egw_setup']->oProc->AddColumn('egw_asecurite_agent','date_fin_piece_identite',array(
+		'type' => 'date'
+	));
+	$GLOBALS['egw_setup']->oProc->AddColumn('egw_asecurite_agent','commune_piece_identite',array(
+		'type' => 'varchar',
+		'precision' => '45'
+	));
+	$GLOBALS['egw_setup']->oProc->AddColumn('egw_asecurite_agent','pays_piece_identite',array(
+		'type' => 'varchar',
+		'precision' => '45'
+	));
+
+	return $GLOBALS['setup_info']['asecurite']['currentver'] = '1.026';
+}
+

@@ -91,20 +91,22 @@ class ui_ville extends bo_ville {
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
-        foreach ($rows as &$row) {
+        if ($rows) {
+            foreach ($rows as &$row) {
 
-            $id = $row['idasecurite_ville'];
-            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $id, 'current' => 'true'));
-            $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.edit', 'id' => $id));
-            $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.delete_ville', 'id' => $id));
-            $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . '</span>';
+                $id = $row['idasecurite_ville'];
+                $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $id, 'current' => 'true'));
+                $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.edit', 'id' => $id));
+                $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.delete_ville', 'id' => $id));
+                $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . '</span>';
 
-            $row['operation'] = '<span style="float:right">';
-            $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier la ville"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 400, 150, \'yes\'); return false;"');
-            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ville"), 'style="cursor:pointer" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cette ville?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
-            $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
+                $row['operation'] = '<span style="float:right">';
+                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier la ville"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 400, 150, \'yes\'); return false;"');
+                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ville"), 'style="cursor:pointer" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cette ville?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
+                $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
-            $output['aaData'][] = $row;
+                $output['aaData'][] = $row;
+            }
         }
         $return = json_encode($output);
         echo $return;
@@ -119,10 +121,10 @@ class ui_ville extends bo_ville {
      * @param array &$readonlys eg. to disable buttons based on acl, not use here, maybe in a derived class
      * @return int total number of rows
      */
-    /*public function get_rows($query, &$rows, &$readonlys) {
-        $total = parent::get_rows($query, $rows, $readonlys);
-        return $total;
-    }*/
+    /* public function get_rows($query, &$rows, &$readonlys) {
+      $total = parent::get_rows($query, $rows, $readonlys);
+      return $total;
+      } */
 
     /**
      * redirect to edit page and unset session value in order to do add operation

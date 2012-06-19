@@ -86,7 +86,7 @@ $phpgw_baseline = array(
 	'egw_asecurite_ferie' => array(
 		'fd' => array(
 			'idasecurite_ferie' => array('type' => 'auto','nullable' => False),
-			'jour' => array('type' => 'varchar','precision' => '255'),
+			'jour' => array('type' => 'date'),
 			'description' => array('type' => 'varchar','precision' => '255')
 		),
 		'pk' => array('idasecurite_ferie'),

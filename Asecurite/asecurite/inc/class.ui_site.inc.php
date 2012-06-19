@@ -45,7 +45,7 @@ class ui_site extends bo_site {
             'T_sites' => 'sites.tpl'
         ));
         $t->set_block('T_sites', 'sites');
-        
+
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
         $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.redirect_to_edit'));
@@ -92,24 +92,26 @@ class ui_site extends bo_site {
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
-        foreach ($rows as &$row) {
-            $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
-            if (count($f_city_name) == 1) {
-                $row['idasecurite_ville'] = '<span id="ville">' . $f_city_name[0]['nom'] . '</span>';
+        if ($rows) {
+            foreach ($rows as &$row) {
+                $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
+                if (count($f_city_name) == 1) {
+                    $row['idasecurite_ville'] = '<span id="ville">' . $f_city_name[0]['nom'] . '</span>';
+                }
+                $id = $row['idasecurite_site'];
+
+                $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $id, 'current' => 'true'));
+                $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.edit', 'id' => $id));
+                $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.delete_site'));
+                $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . '</span>';
+
+                $row['operation'] = '<span style="float:right">';
+                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier le site"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
+                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer le site"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer ce site?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
+                $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
+
+                $output['aaData'][] = $row;
             }
-            $id = $row['idasecurite_site'];
-
-            $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $id, 'current' => 'true'));
-            $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.edit', 'id' => $id));
-            $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.delete_site'));
-            $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . '</span>';
-
-            $row['operation'] = '<span style="float:right">';
-            $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier le site"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
-            $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer le site"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer ce site?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
-            $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
-
-            $output['aaData'][] = $row;
         }
         $return = json_encode($output);
         echo $return;
@@ -124,18 +126,18 @@ class ui_site extends bo_site {
      * @param array &$readonlys eg. to disable buttons based on acl, not use here, maybe in a derived class
      * @return int total number of rows
      */
-    /*public function get_rows($query, &$rows, &$readonlys) {
-        $total = parent::get_rows($query, $rows, $readonlys);
-        $this->setup_table(APP_NAME, 'egw_asecurite_ville');
-        foreach ($rows as $i => &$row) {
-            $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
+    /* public function get_rows($query, &$rows, &$readonlys) {
+      $total = parent::get_rows($query, $rows, $readonlys);
+      $this->setup_table(APP_NAME, 'egw_asecurite_ville');
+      foreach ($rows as $i => &$row) {
+      $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
 
-            if (count($f_city_name) == 1) {
-                $row['idasecurite_ville'] = $f_city_name[0]['nom'];
-            }
-        }
-        return $total;
-    }*/
+      if (count($f_city_name) == 1) {
+      $row['idasecurite_ville'] = $f_city_name[0]['nom'];
+      }
+      }
+      return $total;
+      } */
 
     /**
      * redirect to edit page and unset session value in order to do add operation
