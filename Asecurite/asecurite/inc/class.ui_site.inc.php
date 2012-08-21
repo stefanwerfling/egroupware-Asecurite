@@ -116,29 +116,6 @@ class ui_site extends bo_site {
         $return = json_encode($output);
         echo $return;
     }
-
-    /**
-     * query rows for the nextmatch widget
-     *
-     * @param array $query with keys 'start', 'search', 'order', 'sort', 'col_filter'
-     * 	For other keys like 'filter', 'cat_id' you have to reimplement this method in a derived class.
-     * @param array &$rows returned rows/competitions
-     * @param array &$readonlys eg. to disable buttons based on acl, not use here, maybe in a derived class
-     * @return int total number of rows
-     */
-    /* public function get_rows($query, &$rows, &$readonlys) {
-      $total = parent::get_rows($query, $rows, $readonlys);
-      $this->setup_table(APP_NAME, 'egw_asecurite_ville');
-      foreach ($rows as $i => &$row) {
-      $f_city_name = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
-
-      if (count($f_city_name) == 1) {
-      $row['idasecurite_ville'] = $f_city_name[0]['nom'];
-      }
-      }
-      return $total;
-      } */
-
     /**
      * redirect to edit page and unset session value in order to do add operation
      * @return void

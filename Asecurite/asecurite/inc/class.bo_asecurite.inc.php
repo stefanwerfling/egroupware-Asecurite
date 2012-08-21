@@ -944,43 +944,6 @@ class bo_asecurite extends so_sql {
                 }
             }
 
-            //******************///
-
-            /* if (6 <= $h_a && $h_a <= 21) {// day included in arrival
-              $explode_date_a = explode('/', $date_a);
-              $explode_date_d = explode('/', $date_d);
-
-              $ts_21 = mktime(21, 0, 0, $explode_date_a[1], $explode_date_a[0], $explode_date_a[2]);
-              $ts_00 = mktime(0, 0, 0, $explode_date_d[1], $explode_date_d[0], $explode_date_d[2]);
-
-              $nb_hour_day = $ts_21 - $arrival;
-
-              if ($this->is_sunday($arrival)) {
-              $sunday_nb_hour_day = $nb_hour_day;
-              $sunday_nb_hour_night = $ts_00 - $ts_21;
-              }
-              }
-
-              if (6 <= $h_d && $h_d <= 21) { // day included in departure
-              $explode_date_d = explode('/', $date_d);
-
-              $ts_6 = mktime(6, 0, 0, $explode_date_d[1], $explode_date_d[0], $explode_date_d[2]);
-
-              $nb_hour_day += $departure - $ts_6;
-
-              if ($this->is_sunday($departure)) {
-              $sunday_nb_hour_day = $departure - $ts_6;
-              $ts_00 = mktime(0, 0, 0, $explode_date_d[1], $explode_date_d[0], $explode_date_d[2]);
-              $sunday_nb_hour_night += $ts_6 - $ts_00;
-              }
-              }
-
-              if (0 <= $h_d && $h_d <= 6) {
-              if ($this->is_sunday($departure)) {
-              $ts_00 = mktime(0, 0, 0, $explode_date_d[1], $explode_date_d[0], $explode_date_d[2]);
-              $sunday_nb_hour_night += $departure - $ts_00;
-              }
-              } */
         } else { // same day 
             if (0 <= $h_a && $h_a <= 6) { // case 1 [0, 6]
                 if (0 <= $h_d && $h_d <= 6) {
@@ -1020,68 +983,8 @@ class bo_asecurite extends so_sql {
                 $nb_hour_night = 0;
                 $nb_hour_day = 0;
             }
-
-            /// ****************** ///
-
-            /* if (6 <= $h_a && $h_a <= 21) {
-              if (6 <= $h_d && $h_d <= 21) {// day included in departure
-              $nb_hour_day = $nb_total_hour;
-
-              if ($this->is_sunday($departure)) { // or arrival
-              $sunday_nb_hour_day = $nb_hour_day;
-              }
-              } else {
-              $explode_date_a = explode('/', $date_a);
-              $ts_21 = mktime(21, 0, 0, $explode_date_a[1], $explode_date_a[0], $explode_date_a[2]);
-              $nb_hour_day = $ts_21 - $arrival;
-
-              if ($this->is_sunday($departure)) { // or arrival
-              $sunday_nb_hour_day = $nb_hour_day;
-              $sunday_nb_hour_night = $departure - $ts_21;
-              }
-              }
-              } else {
-              if (6 <= $h_d && $h_d <= 21) {
-              $explode_date_d = explode('/', $date_d);
-
-              $ts_6 = mktime(6, 0, 0, $explode_date_d[1], $explode_date_d[0], $explode_date_d[2]);
-
-              $nb_hour_day = $departure - $ts_6;
-
-              if ($this->is_sunday($departure)) {
-              $sunday_nb_hour_day = $nb_hour_day;
-
-              //$ts_00 = mktime(0, 0, 0, $explode_date_d[1], $explode_date_d[0], $explode_date_d[2]);
-              $sunday_nb_hour_night = $ts_6 - $arrival;
-              }
-              } else {
-              if (0 <= $h_d && $h_d <= 6) {
-              if (0 <= $h_a && $h_a <= 6) {
-              if ($this->is_sunday($departure)) {
-              $sunday_nb_hour_day = 0;
-              $sunday_nb_hour_night = $nb_total_hour;
-              $nb_hour_day = 0;
-              }
-              } else {
-              if ($this->is_sunday($departure)) {
-              $ts_00 = mktime(0, 0, 0, $explode_date_d[1], $explode_date_d[0], $explode_date_d[2]);
-              $sunday_nb_hour_night = $departure - $ts_00;
-              }
-              }
-              } else {
-              if (22 <= $h_d && $h_d <= 23) {
-
-              }
-              }
-              $sunday_nb_hour_day = 0;
-              $nb_hour_day = 0;
-              }
-              } */
+            
         }
-
-
-        // $nb_hour_night = $nb_total_hour - $nb_hour_day;
-
         return array('total' => $nb_total_hour, 'day' => $nb_hour_day, 'night' => $nb_hour_night, 'sunday' => $sunday_nb_hour_day, 'sunnight' => $sunday_nb_hour_night);
     }
 
@@ -1132,12 +1035,9 @@ class bo_asecurite extends so_sql {
         //split hour (H:i)
         $explode_hi = explode(':', $explode_date_time[1]);
 
-        //get hour (H)
-        $h = intval($explode_hi[0]);
-
         $date = $date_time - ($explode_hi[0] * 3600 + (int) $explode_hi[1] * 60);
         $this->setup_table(APP_NAME, 'egw_asecurite_ferie');
-        if (count($this->search(array('jour' => "$date"), false)) == 1) {
+        if (count($this->search(array('jour' => $date), false)) == 1) {
             return true;
         }
         return false;
@@ -1164,11 +1064,11 @@ class bo_asecurite extends so_sql {
         }
         $ferieA = '';
         if ($this->is_ferie($row['heure_arrivee'])) {
-            $ferieA = lang('férié');
+            $ferieA = '<span id="error">'.lang('férié').'</span>';
         }
         $ferieD = '';
         if ($this->is_ferie($row['heure_depart'])) {
-            $ferieD = lang('férié');
+            $ferieD = '<span id="error">'.lang('férié').'</span>';
         }
         $row['heures_jour'] = '<span id="hour">' . $this->get_time($row['heures_jour']) . '</span>';
         $row['heures_nuit'] = '<span id="hour">' . $this->get_time($row['heures_nuit']) . '</span>';

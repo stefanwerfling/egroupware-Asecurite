@@ -118,41 +118,6 @@ class ui_horaires_ville extends bo_horaires_ville {
         $this->tmpl->exec(APP_NAME . '.ui_horaires_ville.index', $content, $select_option, $readonlys, '', 2);
         $this->create_footer();
     }
-
-    /**
-     * query rows for the nextmatch widget
-     *
-     * @param array $query with keys 'start', 'search', 'order', 'sort', 'col_filter'
-     * 	For other keys like 'filter', 'cat_id' you have to reimplement this method in a derived class.
-     * @param array &$rows returned rows/competitions
-     * @param array &$readonlys eg. to disable buttons based on acl, not use here, maybe in a derived class
-     * @return int total number of rows
-     */
-    /* public function get_rows() {
-      $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
-      $rows = $GLOBALS['egw']->session->appsession('all_planning_city', APP_NAME);
-      foreach ($rows as &$row) {
-
-      $this->setup_table(APP_NAME, 'egw_asecurite_site');
-      if ($row['idasecurite_site'] != '') {
-      $f_site_name = $this->search(array('idasecurite_site' => $row['idasecurite_site']), false);
-      if (count($f_site_name) == 1) {
-      $row['site'] = $f_site_name[0]['nom'];
-      }
-      }
-      $this->setup_table(APP_NAME, 'egw_asecurite_agent');
-      if ($row['idasecurite_agent'] != '') {
-      $f_agent = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
-      if (count($f_agent) == 1) {
-      $row['agent'] = $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'];
-      }
-      }
-
-      $this->manage_display($row);
-      }
-      return count($rows);
-      } */
-
     /**
      * get all planning for site
      */
