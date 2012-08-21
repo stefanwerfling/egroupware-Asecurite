@@ -1161,7 +1161,6 @@ class bo_asecurite extends so_sql {
         $row['panier'] = 0;
         if ($total_hour >= (3600 * 6)) {
             $row['panier'] = 1;
-            $this->nb_baskets++;
         }
         $ferieA = '';
         if ($this->is_ferie($row['heure_arrivee'])) {

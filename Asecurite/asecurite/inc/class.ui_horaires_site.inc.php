@@ -63,20 +63,7 @@ class ui_horaires_site extends bo_horaires_site {
 
                 $this->delete(array('idasecurite_horaires_agent' => $content['nm']['checkbox'][$i]));
             }
-        }/* elseif (isset($content['print'])) {
-          $link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_imprime.print_planning_global'));
-          $this->js_content .= '<script type="text/javascript">
-          open_popup(\'' . $link . '\', 800,700) ;
-          </script>';
-
-          $GLOBALS['egw']->session->appsession('current_month', APP_NAME, $content['mois']);
-          $GLOBALS['egw']->session->appsession('current_year', APP_NAME, $content['annee']);
-          $GLOBALS['egw']->session->appsession('current_agent', APP_NAME, $content['idasecurite_agent']);
-          $GLOBALS['egw']->session->appsession('current_ville', APP_NAME, $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME));
-          $GLOBALS['egw']->session->appsession('current_site', APP_NAME, $GLOBALS['egw']->session->appsession('idasecurite_site', APP_NAME));
-          $GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME, $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME));
-          } */
-
+        }
         $this->setup_table(APP_NAME, 'egw_asecurite_site');
 
         $f_site = $this->search(array('idasecurite_site' => $GLOBALS['egw']->session->appsession('idasecurite_site', APP_NAME)), false);
