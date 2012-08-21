@@ -12,6 +12,7 @@
  * @filesource  class.ui_imprime.inc.php
  */
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_asecurite.inc.php');
+include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.ui_imprime_pdf.inc.php');
 
 class ui_imprime extends bo_asecurite {
 
@@ -31,6 +32,11 @@ class ui_imprime extends bo_asecurite {
 
         parent::__construct('egw_asecurite_horaires_agent');
         $this->init_template();
+        /*$pdf = new ui_imprime_pdf();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 16);
+        $pdf->Cell(40, 10, 'Hello World!');
+        $pdf->Output();*/
     }
 
     function print_planning_global($content = NULL) {
@@ -138,11 +144,11 @@ class ui_imprime extends bo_asecurite {
 
 
         $content['planning'] .= '</table></div>';
-        $content['total'] = '<div id="total"><table><caption>Global</caption>' ;
+        $content['total'] = '<div id="total"><table><caption>Global</caption>';
         if (self::$preferences['isPanier']) {
-                $content['total'] .= '<tr><td>' . lang('Paniers') . '</td><td>' . $nb_paniers . '</td></tr>' ;
+            $content['total'] .= '<tr><td>' . lang('Paniers') . '</td><td>' . $nb_paniers . '</td></tr>';
         }
-                $content['total'] .= '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td>' . $this->get_time($total) . '</td></tr>' .
+        $content['total'] .= '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td>' . $this->get_time($total) . '</td></tr>' .
                 '<tr><td id="hour">' . lang('Total Heures de jour') . '</td><td>' . $this->get_time($total_day) . '</td></tr>' .
                 '<tr><td id="hour">' . lang('Total Heures de nuit') . '</td><td>' . $this->get_time($total_night) . '</td></tr>' .
                 '<tr><td id="sunday">' . lang('Heures jour dimanche') . '</td><td>' . $this->get_time($total_sun_day) . '</td></tr>' .
@@ -175,7 +181,6 @@ class ui_imprime extends bo_asecurite {
         $content['paniers'] = $nb_paniers;
         $content['adresse'] = '<span id="adresse"> <small>' . self::$preferences['address'] . '</small><span>';
         $this->tmpl->read(APP_NAME . '.imprime');
-
         $this->tmpl->exec(APP_NAME . '.ui_imprime.print_planning_global', $content, '', '', '', 2);
     }
 
