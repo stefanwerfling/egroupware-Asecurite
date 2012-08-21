@@ -5,7 +5,7 @@
  * asecurite's global planning user interface
  * @author N'faly KABA
  * @since   11/08/2011
- * @version 1.0
+ * @version 2.0
  * @copyright KABANFALY
  * @package egroupware
  * @subpackage asecurite/inc/

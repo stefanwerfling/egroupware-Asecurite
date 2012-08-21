@@ -5,7 +5,7 @@
  * asecurite's agent planning business-object
  * @author N'faly KABA
  * @since   6/08/2011
- * @version 1.0
+ * @version 2.0
  * @copyright KABANFALY
  * @package egroupware
  * @subpackage asecurite/inc/

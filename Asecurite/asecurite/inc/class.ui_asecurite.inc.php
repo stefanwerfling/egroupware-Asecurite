@@ -5,7 +5,7 @@
  * asecurite's business-object
  * @author N'faly KABA
  * @since   2/08/2011
- * @version 1.0
+ * @version 2.0
  * @copyright KABANFALY
  * @package egroupware
  * @subpackage asecurite/inc/

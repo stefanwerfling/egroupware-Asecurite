@@ -5,7 +5,7 @@
  * asecurite's business-object
  * @author N'faly KABA
  * @since   2/08/2011
- * @version 1.0
+ * @version 2.0
  * @copyright KABANFALY
  * @package egroupware
  * @subpackage asecurite/inc/
@@ -81,6 +81,9 @@ class bo_asecurite extends so_sql {
     var $nb_baskets = 0;
     var $current_link;
 
+    /** @var array . Preferences for the current application. */
+    public static $preferences;
+
     /**
      * Constructor
      * @param string default table name
@@ -103,7 +106,7 @@ class bo_asecurite extends so_sql {
             'sort' => 'DESC', // IO direction of the sort: 'ASC' or 'DESC'
             'col_filter' => array(), // IO array of column-name value pairs (optional for the filterheaders)
         );
-
+        self::$preferences=$GLOBALS['egw']->preferences->data[APP_NAME];
 
         $this->monthes = array(
             0 => lang('Tous les mois'),
@@ -943,7 +946,6 @@ class bo_asecurite extends so_sql {
                     $nb_hour_day += $departure - $ts_d_6;
                 }
             }
-
         } else { // same day 
             if (0 <= $h_a && $h_a <= 6) { // case 1 [0, 6]
                 if (0 <= $h_d && $h_d <= 6) {
@@ -983,7 +985,6 @@ class bo_asecurite extends so_sql {
                 $nb_hour_night = 0;
                 $nb_hour_day = 0;
             }
-            
         }
         return array('total' => $nb_total_hour, 'day' => $nb_hour_day, 'night' => $nb_hour_night, 'sunday' => $sunday_nb_hour_day, 'sunnight' => $sunday_nb_hour_night);
     }
@@ -1050,7 +1051,7 @@ class bo_asecurite extends so_sql {
             if ($total_hour >= (3600 * 6)) {
                 $this->nb_baskets++;
             }
-        }      
+        }
     }
 
     function manage_display(&$row) {
@@ -1064,11 +1065,11 @@ class bo_asecurite extends so_sql {
         }
         $ferieA = '';
         if ($this->is_ferie($row['heure_arrivee'])) {
-            $ferieA = '<span id="error">'.lang('férié').'</span>';
+            $ferieA = '<span id="error">' . lang('férié') . '</span>';
         }
         $ferieD = '';
         if ($this->is_ferie($row['heure_depart'])) {
-            $ferieD = '<span id="error">'.lang('férié').'</span>';
+            $ferieD = '<span id="error">' . lang('férié') . '</span>';
         }
         $row['heures_jour'] = '<span id="hour">' . $this->get_time($row['heures_jour']) . '</span>';
         $row['heures_nuit'] = '<span id="hour">' . $this->get_time($row['heures_nuit']) . '</span>';

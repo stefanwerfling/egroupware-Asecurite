@@ -20,11 +20,19 @@
         'Gestion des agents' => $GLOBALS['egw']->link('/index.php', 'menuaction=asecurite.ui_agent.index'),
         'Gestion des jours fériés' => $GLOBALS['egw']->link('/index.php', 'menuaction=asecurite.ui_ferie.index'),
         'Echange de planning' => $GLOBALS['egw']->link('/index.php', 'menuaction=asecurite.ui_planning_global.change_planning&current=true'),
-        
     );
-    
-    display_sidebox($appname,$menu_title,$file);
 
-    
+    display_sidebox($appname, $menu_title, $file);
+
+    if ($location != 'preferences') {
+        $file = Array(
+            lang('Preferences') => egw::link('/index.php', 'menuaction=preferences.uisettings.index&appname=' . $appname)
+        );
+        if ($location == 'admin') {
+            display_section($appname, $file);
+        } else {
+            display_sidebox($appname, lang('Admin'), $file);
+        }
+    }
 }
 ?>

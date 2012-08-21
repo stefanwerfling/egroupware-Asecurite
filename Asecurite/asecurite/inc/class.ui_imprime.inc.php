@@ -5,7 +5,7 @@
  * asecurite's user interface for print
  * @author N'faly KABA
  * @since   29/08/2011
- * @version 1.0
+ * @version 2.0
  * @copyright KABANFALY
  * @package egroupware
  * @subpackage asecurite/inc/
@@ -73,8 +73,11 @@ class ui_imprime extends bo_asecurite {
         $content['planning'] .= '<th>' . lang("Nbre d'heures de jour") . '</th>' .
                 '<th>' . lang("Nbre d'heures de nuit") . '</th>' .
                 '<th>' . lang("Nbre d'heures de jour dimanche") . '</th>' .
-                '<th>' . lang("Nbre d'heures de nuit dimanche") . '</th>' .
-            //    '<th>' . lang("Nbre de paniers") . '</th>' .
+                '<th>' . lang("Nbre d'heures de nuit dimanche") . '</th>';
+        if (self::$preferences['isPanier']) {
+            $content['planning'] .= '<th>' . lang("Nbre de paniers") . '</th>';
+        }
+        $content['planning'] .=
                 '<th>' . lang('Heures totales') . '</th>' .
                 '</tr>';
 
@@ -114,14 +117,16 @@ class ui_imprime extends bo_asecurite {
             }
 
             $total = $day + $night + $sun_day + $sun_night;
-            $panier = floor($total/(3600*6));
-          //  $nb_paniers += $panier;
+            $panier = floor($total / (3600 * 6));
+            $nb_paniers += $panier;
             $content['planning'] .= '<td>' . $this->get_time($day) . '</td>' .
                     '<td>' . $this->get_time($night) . '</td>' .
                     '<td>' . $this->get_time($sun_day) . '</td>' .
-                    '<td>' . $this->get_time($sun_night) . '</td>' .
-                  //  '<td>' . $panier . '</td>' .
-                    '<td>' . $this->get_time($total) . '</td>' .
+                    '<td>' . $this->get_time($sun_night) . '</td>';
+            if (self::$preferences['isPanier']) {
+                $content['planning'] .= '<td>' . $panier . '</td>';
+            }
+            $content['planning'] .= '<td>' . $this->get_time($total) . '</td>' .
                     '</tr>';
 
             $total_day += $day;
@@ -133,12 +138,16 @@ class ui_imprime extends bo_asecurite {
 
 
         $content['planning'] .= '</table></div>';
-        $content['total'] = '<div id="total"><table><caption>Global</caption>' .
-                '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td>' . $this->get_time($total) . '</td></tr>' .
+        $content['total'] = '<div id="total"><table><caption>Global</caption>' ;
+        if (self::$preferences['isPanier']) {
+                $content['total'] .= '<tr><td>' . lang('Paniers') . '</td><td>' . $nb_paniers . '</td></tr>' ;
+        }
+                $content['total'] .= '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td>' . $this->get_time($total) . '</td></tr>' .
                 '<tr><td id="hour">' . lang('Total Heures de jour') . '</td><td>' . $this->get_time($total_day) . '</td></tr>' .
                 '<tr><td id="hour">' . lang('Total Heures de nuit') . '</td><td>' . $this->get_time($total_night) . '</td></tr>' .
                 '<tr><td id="sunday">' . lang('Heures jour dimanche') . '</td><td>' . $this->get_time($total_sun_day) . '</td></tr>' .
-                '<tr><td id="sunday">' . lang('Heures nuit dimanche') . '</td><td>' . $this->get_time($total_sun_night) . '</td></tr></table></div>';
+                '<tr><td id="sunday">' . lang('Heures nuit dimanche') . '</td><td>' . $this->get_time($total_sun_night) . '</td></tr>';
+        '</table></div>';
 
         if (is_array($nb_global_hour_by_agent)) {
             $content['total_by_agent'] = '<div id= "site_planning_by_agent">';
@@ -152,19 +161,19 @@ class ui_imprime extends bo_asecurite {
                     foreach ($site as $key => $value) {
                         $site = $this->sites[$key];
                         $content['total_by_agent'] .= '<div id="site_stat"><table><caption>' . $agent_name . ' ( ' . $site . ' )</caption>' .
-                                '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td><div>' .  $this->get_time($value['day'] + $value['night']+ $value['sunday'] + $value['sunnight']) . '</div></td></tr>' .
+                                '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td><div>' . $this->get_time($value['day'] + $value['night'] + $value['sunday'] + $value['sunnight']) . '</div></td></tr>' .
                                 '<tr><td id="hour">' . lang('Total Heures de jour') . '</td><td><div>' . $this->get_time($value['day']) . '</div></td></tr>' .
-                                '<tr><td id="hour">' . lang('Total Heures de nuit') . '</td><td><div>' .  $this->get_time($value['night']) . '</div></td></tr>' .
-                                '<tr><td id="sunday">' . lang('Heures jour dimanche') . '</td><td><div>' .  $this->get_time($value['sunday']) . '</div></td></tr>' .
-                                '<tr><td id="sunday">' . lang('Heures nuit dimanche') . '</td><td><div>' .  $this->get_time($value['sunnight']) . '</div></td></tr></table></div>';
+                                '<tr><td id="hour">' . lang('Total Heures de nuit') . '</td><td><div>' . $this->get_time($value['night']) . '</div></td></tr>' .
+                                '<tr><td id="sunday">' . lang('Heures jour dimanche') . '</td><td><div>' . $this->get_time($value['sunday']) . '</div></td></tr>' .
+                                '<tr><td id="sunday">' . lang('Heures nuit dimanche') . '</td><td><div>' . $this->get_time($value['sunnight']) . '</div></td></tr></table></div>';
                     }
                 }
             }
             $content['total_by_agent'] .= '</div><div id="end_float"></div>';
         }
         $content['date'] = date('j/m/Y');
-       // $content['paniers'] = $nb_paniers;
-        $content['adresse']=  '<span id="adresse"> <small> 20, bis rue de la Frelonnerie - 37270 Montlouis-sur-Loire </small><span>';
+        $content['paniers'] = $nb_paniers;
+        $content['adresse'] = '<span id="adresse"> <small>' . self::$preferences['address'] . '</small><span>';
         $this->tmpl->read(APP_NAME . '.imprime');
 
         $this->tmpl->exec(APP_NAME . '.ui_imprime.print_planning_global', $content, '', '', '', 2);
