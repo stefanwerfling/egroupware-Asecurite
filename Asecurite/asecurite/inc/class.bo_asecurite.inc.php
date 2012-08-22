@@ -106,7 +106,7 @@ class bo_asecurite extends so_sql {
             'sort' => 'DESC', // IO direction of the sort: 'ASC' or 'DESC'
             'col_filter' => array(), // IO array of column-name value pairs (optional for the filterheaders)
         );
-        self::$preferences=$GLOBALS['egw']->preferences->data[APP_NAME];
+        self::$preferences = $GLOBALS['egw']->preferences->data[APP_NAME];
 
         $this->monthes = array(
             0 => lang('Tous les mois'),
@@ -1105,11 +1105,24 @@ class bo_asecurite extends so_sql {
      */
     public static function is_expired($date) {
         if ($date != '') {
-            if (intval($date) < intval(mktime(0, 0, 0, date('m'), date('j'), date('Y')))) {
-                return true;
+            $explode = explode('-', $date);
+            if (count($explode) == 3) {
+                if (intval(mktime(0, 0, 0, $explode[1], $explode[2], $explode[0])) < intval(mktime(0, 0, 0, date('m'), date('j'), date('Y')))) {
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    /**
+     * convert special characters in a string to html
+     * @param string $str input string
+     * @return string converted string 
+     */
+    public function convert_to_html($str) {
+        $str = str_replace(array('é', 'è', 'ê', 'à', 'ï', 'î', 'ö', 'ô', 'ü', 'û'), array('&eacute;', '&egrave;', '&ecirc', '&agrave;', '&iuml;', '&icirc', '&ouml;', '&ocirc', '&uuml;', '&ucirc'), strtolower($str));
+        return ucfirst($str);
     }
 
 }

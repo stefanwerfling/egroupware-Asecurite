@@ -107,24 +107,29 @@ class ui_agent extends bo_agent {
                     $row['idasecurite_ville'] = '<span id="ville">' . $f_city_name[0]['nom'] . '</span>';
                 }
                 $id = $row['idasecurite_agent'];
-                $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '--' : $this->format_date($row['date_debut_contrat']);
-                $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '--' : $this->format_date($row['date_fin_contrat']);
-
+                $row['date_debut_contrat'] = $row['date_debut_contrat'] == '' ? '' : $this->format_date($row['date_debut_contrat']);
+                $style = 'success';
+                if (self::is_expired($row['date_fin_contrat'])) { 
+                    $style = 'error';
+                }
+                $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '' :'<span id="' . $style . '">' .  $this->format_date($row['date_fin_contrat']). '</span>';
+               
                 $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => 'true'));
                 $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
                 $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
 
-                $row['date_fin_piece_identite'] = $row['date_fin_piece_identite'] == '' ? '' : $this->format_date($row['date_fin_piece_identite']);
                 $row['piece_identite'] = '--';
-
+                $style = 'success';
                 if ($row['type_piece_identite'] != '') {
-                    $style = 'success';
-                    /* if (self::is_expired($row['date_fin_piece_identite'])) {
-                      $style = 'error';
-                      } */
-                    $row['piece_identite'] = $row['type_piece_identite'] . '(' . $row['numero_piece_identite'] . ')<br>';
-                    $row['piece_identite'] .= '<span id="' . $style . '">Fin: ' . $row['date_fin_piece_identite'] . '</span>';
+
+                    if (self::is_expired($row['date_fin_piece_identite'])) {
+                        $style = 'error';
+                    }
+                    $row['piece_identite'] = $row['type_piece_identite'] . ' N&deg;: ' . $row['numero_piece_identite'] . '<br>';
+                    if ($row['date_fin_piece_identite'] != '') {
+                        $row['piece_identite'] .= '<span id="' . $style . '">Fin: ' . $this->format_date($row['date_fin_piece_identite']) . '</span>';
+                    }
                 }
                 $agent_info_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_agent_info', 'id' => $id));
                 $agent_info = $this->html->image(APP_NAME, 'view', lang("Afficher les infos"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $agent_info_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
@@ -164,6 +169,12 @@ class ui_agent extends bo_agent {
                 if (count($f_city_name) == 1) {
                     $f_agent[0]['idasecurite_ville'] = $f_city_name[0]['nom'];
                 }
+                $f_agent[0]['date_debut_contrat'] = $f_agent[0]['date_debut_contrat'] == '' ? '' : $this->format_date( $f_agent[0]['date_debut_contrat']);
+                $f_agent[0]['date_fin_contrat'] = $f_agent[0]['date_fin_contrat'] == '' ? '' : $this->format_date( $f_agent[0]['date_fin_contrat']);
+                $f_agent[0]['date_debut_piece_identite'] = $f_agent[0]['date_debut_piece_identite'] == '' ? '' : $this->format_date( $f_agent[0]['date_debut_piece_identite']);
+                $f_agent[0]['date_fin_piece_identite'] = $f_agent[0]['date_fin_piece_identite'] == '' ? '' : $this->format_date( $f_agent[0]['date_fin_piece_identite']);
+
+                $f_agent[0] = array_map(array('bo_asecurite', 'convert_to_html'), $f_agent[0]);
                 $t->set_var('agent_name', $f_agent[0]['nom'] . ' ' . $f_agent[0]['nom']);
                 $t->set_var('date_naissance', $f_agent[0]['date_naissance']);
                 $t->set_var('adresse', $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville']);
