@@ -83,7 +83,7 @@ class ui_imprime extends bo_asecurite {
             $this->pdf->Cell(0, 0, utf8_decode('PLANNING DES AGENTS'), 0, 1, 'C');
         } else {
             $content['titre'] = "<span>FEUILLE DE PLANNING DE: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} </span>";
-            $this->pdf->Cell(0, 0, utf8_decode("FEUILLE DE PLANNING DE: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} "), 0, 1, 'C');
+            $this->pdf->Cell(0, 0, utf8_decode("Feuille de planning de: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} "), 0, 1, 'C');
         }
 
 
@@ -206,11 +206,11 @@ class ui_imprime extends bo_asecurite {
         $content['paniers'] = $nb_paniers;
         $content['adresse'] = '<center><span id="adresse"> <small>' . self::$preferences['address'] . '</small><span></center>';
         // $content['adresse'] = '<span id="adresse"> <small>20, bis rue de la Frelonnerie - 37270 Montlouis-sur-Loire</small><span>';
-        $this->tmpl->read(APP_NAME . '.imprime');
-        $this->tmpl->exec(APP_NAME . '.ui_imprime.print_planning_global', $content, '', '', '', 2);
+//        $this->tmpl->read(APP_NAME . '.imprime');
+//        $this->tmpl->exec(APP_NAME . '.ui_imprime.print_planning_global', $content, '', '', '', 2);
 
 
-      //  $this->pdf->Output();
+        $this->pdf->Output();
     }
 
 }
