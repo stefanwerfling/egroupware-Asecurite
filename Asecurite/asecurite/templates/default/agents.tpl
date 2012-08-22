@@ -34,6 +34,7 @@
                 {"mDataProp": "code_postal"},
                 {"mDataProp": "idasecurite_ville"},
                 {"mDataProp": "telephone"},
+                {"mDataProp": "email"},
                 {"mDataProp": "piece_identite"},
                 {"mDataProp": "date_debut_contrat"},
                 {"mDataProp": "date_fin_contrat"},
@@ -66,6 +67,7 @@
                         <th width="10%">Code postal</th>
                         <th width="10%">Ville</th>
                         <th width="12%">Téléphone</th>
+                        <th width="12%">Email</th>
                         <th width="20%">Pièce d'identité</th>
                         <th width="12%">Date de début de contrat</th>
                         <th width="12%">Date de fin de contrat</th>

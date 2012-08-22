@@ -27,21 +27,18 @@ class ui_imprime extends bo_asecurite {
         'print_planning_agent' => True,
         'print_planning_ville' => True,
     );
+    public $pdf;
 
     function __construct() {
 
         parent::__construct('egw_asecurite_horaires_agent');
         $this->init_template();
-        /*$pdf = new ui_imprime_pdf();
-        $pdf->AddPage();
-        $pdf->SetFont('Arial', 'B', 16);
-        $pdf->Cell(40, 10, 'Hello World!');
-        $pdf->Output();*/
+        $this->pdf = new ui_imprime_pdf();
     }
 
     function print_planning_global($content = NULL) {
 
-        $content['logo'] = $this->html->image(APP_NAME, 'asecurite', lang("Modifier l'agent"));
+        $content['logo'] = $this->html->image(APP_NAME, 'asecurite', lang("Logo"));
         //set month
         $content['mois'] = $this->monthes[$GLOBALS['egw']->session->appsession('current_month', APP_NAME)];
         // set year
@@ -51,18 +48,46 @@ class ui_imprime extends bo_asecurite {
         // set site name
         $content['site'] = $this->sites[$GLOBALS['egw']->session->appsession('current_site', APP_NAME)];
 
+        $this->pdf->AliasNbPages();
+        $this->pdf->AddPage();
+
+        $this->pdf->SetFont('Times', '', 12);
+        $this->pdf->Image(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/default/images/asecurite.png', 5, 6);
+        //décalage à droite
+        $this->pdf->Cell(45);
+        $this->pdf->Cell(60, 0, 'Date d\'impression: ' . date('j/m/Y'), 0, 1, 'L');
+        $this->pdf->Ln(1);
+        $this->pdf->Cell(45);
+        $this->pdf->Cell(114, 10, utf8_decode('Ville: ' . $content['ville']), 0, 1, 'L');
+        $this->pdf->Ln(1);
+        $this->pdf->Cell(45);
+        $this->pdf->Cell(114, 0, utf8_decode('Site: ' . $content['site']), 0, 1, 'L');
+        $this->pdf->Ln(1);
+        $this->pdf->Cell(45);
+        $this->pdf->Cell(114, 10, utf8_decode('Mois: ' . $content['mois']), 0, 1, 'L');
+        $this->pdf->Ln(1);
+        $this->pdf->Cell(45);
+        $this->pdf->Cell(114, 0, utf8_decode('Année: ' . $content['annee']), 0, 1, 'L');
+        $this->pdf->Ln(10);
+
         $all_site = false;
         if ($GLOBALS['egw']->session->appsession('current_site', APP_NAME) == '') {
             $all_site = true;
         }
         $all_agent = false;
+        $this->pdf->SetFont('Times', 'B', 14);
         // set agent
         if ($GLOBALS['egw']->session->appsession('current_agent', APP_NAME) == '') {
             $all_agent = true;
             $content['titre'] = '<span>PLANNING DES AGENTS</span>';
+            $this->pdf->Cell(0, 0, utf8_decode('PLANNING DES AGENTS'), 0, 1, 'C');
         } else {
             $content['titre'] = "<span>FEUILLE DE PLANNING DE: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} </span>";
+            $this->pdf->Cell(0, 0, utf8_decode("FEUILLE DE PLANNING DE: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} "), 0, 1, 'C');
         }
+
+
+        
 
         $content['planning'] = '<div id="planning"><table width="100%">
             <tr>
@@ -179,9 +204,13 @@ class ui_imprime extends bo_asecurite {
         }
         $content['date'] = date('j/m/Y');
         $content['paniers'] = $nb_paniers;
-        $content['adresse'] = '<span id="adresse"> <small>' . self::$preferences['address'] . '</small><span>';
+        $content['adresse'] = '<center><span id="adresse"> <small>' . self::$preferences['address'] . '</small><span></center>';
+        // $content['adresse'] = '<span id="adresse"> <small>20, bis rue de la Frelonnerie - 37270 Montlouis-sur-Loire</small><span>';
         $this->tmpl->read(APP_NAME . '.imprime');
         $this->tmpl->exec(APP_NAME . '.ui_imprime.print_planning_global', $content, '', '', '', 2);
+
+
+      //  $this->pdf->Output();
     }
 
 }

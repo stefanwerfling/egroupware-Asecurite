@@ -472,3 +472,13 @@ function asecurite_upgrade1_025()
 	return $GLOBALS['setup_info']['asecurite']['currentver'] = '1.026';
 }
 
+
+function asecurite_upgrade1_026()
+{
+	$GLOBALS['egw_setup']->oProc->AlterColumn('egw_asecurite_ferie','jour',array(
+		'type' => 'date'
+	));
+
+	return $GLOBALS['setup_info']['asecurite']['currentver'] = '1.027';
+}
+

@@ -149,7 +149,7 @@ class ui_planning_global extends bo_planning_global {
                     $f_ville = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
                     if (count($f_ville) == 1) {
                         $planning_ville_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $row['idasecurite_ville'], 'current' => 'true'));
-                        $row['ville'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_ville_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $f_ville[0]['nom'] . '</span>';
+                        $row['ville'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_ville_link . '\', \'_blank\', 1100, 700, \'yes\'); return false;">' . $f_ville[0]['nom'] . '</span>';
                     }
                 }
 

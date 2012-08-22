@@ -176,6 +176,7 @@ class ui_agent extends bo_agent {
 
                 $f_agent[0] = array_map(array('bo_asecurite', 'convert_to_html'), $f_agent[0]);
                 $t->set_var('agent_name', $f_agent[0]['nom'] . ' ' . $f_agent[0]['nom']);
+                $t->set_var('email', $f_agent[0]['email']);
                 $t->set_var('date_naissance', $f_agent[0]['date_naissance']);
                 $t->set_var('adresse', $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville']);
                 $t->set_var('telephone', $f_agent[0]['telephone']);
@@ -217,14 +218,14 @@ class ui_agent extends bo_agent {
         $sel_options = array(
             'idasecurite_ville' => $this->cities,
             'type_contrat' => $this->type_contrat,
-            'type_piece_identite' => array('Titre de séjour' => 'Titre de séjour', 'passeport' => 'Passeport', 'Permis de conduire' => 'Permis de conduire')
+            'type_piece_identite' => array('' => lang('Choisissez ...'), 'Titre de séjour' => 'Titre de séjour', 'passeport' => 'Passeport', 'Permis de conduire' => 'Permis de conduire')
         );
         if (!$this->cities) {
             $js = "opener.location.href='" . ($link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.index'))) . "';window.close();";
 
             $content['no_ville_msg'] = "<span id='error'>" . lang('Aucune ville trouvée') . ' <a><button onclick="' . $js . '">' . lang('Créer en ici') . '</button></a>' . " </span>";
         }
-        parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('nom', 'prenom', 'date_naissance', 'adresse', 'code_postal', 'idasecurite_ville', 'type_contrat', 'telephone', 'date_debut_contrat', 'date_fin_contrat', 'type_piece_identite', 'numero_piece_identite', 'date_debut_piece_identite', 'date_fin_piece_identite', 'commune_piece_identite', 'pays_piece_identite'), array('menuaction' => APP_NAME . '.ui_agent.index'));
+        parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('nom', 'prenom', 'date_naissance', 'adresse', 'code_postal', 'idasecurite_ville', 'type_contrat', 'telephone', 'date_debut_contrat', 'date_fin_contrat', 'type_piece_identite', 'numero_piece_identite', 'date_debut_piece_identite', 'date_fin_piece_identite', 'commune_piece_identite', 'pays_piece_identite', 'email'), array('menuaction' => APP_NAME . '.ui_agent.index'));
         $this->tmpl->read(APP_NAME . '.agent.edit');
         $this->tmpl->exec(APP_NAME . '.ui_agent.edit', $content, $sel_options, $no_button, '', 2);
     }

@@ -37,6 +37,7 @@
                 <div><b>Date de naissance:</b>  {date_naissance}</div>
                 <div><b>Adresse:</b>  {adresse}</div>
                 <div><b>T&eacute;l&eacute;phone: </b> {telephone}</div>
+                <div><b>Email: </b> {email}</div>
             </div>
             <div id="contrat">
                 <div><b>Type de contrat:</b>  {type_contrat}</div>

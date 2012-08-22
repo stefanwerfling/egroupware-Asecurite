@@ -482,3 +482,14 @@ function asecurite_upgrade1_026()
 	return $GLOBALS['setup_info']['asecurite']['currentver'] = '1.027';
 }
 
+
+function asecurite_upgrade1_027()
+{
+	$GLOBALS['egw_setup']->oProc->AddColumn('egw_asecurite_agent','email',array(
+		'type' => 'varchar',
+		'precision' => '45'
+	));
+
+	return $GLOBALS['setup_info']['asecurite']['currentver'] = '1.028';
+}
+

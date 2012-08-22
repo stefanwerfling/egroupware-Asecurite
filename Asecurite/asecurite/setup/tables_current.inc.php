@@ -30,7 +30,8 @@ $phpgw_baseline = array(
 			'date_debut_piece_identite' => array('type' => 'date'),
 			'date_fin_piece_identite' => array('type' => 'date'),
 			'commune_piece_identite' => array('type' => 'varchar','precision' => '45'),
-			'pays_piece_identite' => array('type' => 'varchar','precision' => '45')
+			'pays_piece_identite' => array('type' => 'varchar','precision' => '45'),
+			'email' => array('type' => 'varchar','precision' => '45')
 		),
 		'pk' => array('idasecurite_agent'),
 		'fk' => array(),
