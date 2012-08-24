@@ -223,7 +223,7 @@ class ui_imprime extends bo_asecurite {
 
 
         /* ---- BEGIN PLANNING TABLES ------ */
-        $proprietesTableau = array(
+        $tableProperty = array(
             'TB_ALIGN' => 'L',
             'L_MARGIN' => 0,
             'BRD_COLOR' => array(0, 0, 0),
@@ -359,26 +359,22 @@ class ui_imprime extends bo_asecurite {
         $total = $total_day + $total_night + $total_sun_day + $total_sun_night;
 
         $header = array_merge($headerSizes, $headerContents);
-        $this->pdf->drawTableau($this->pdf, $proprietesTableau, $header_property, $header, $content_property, $tableContent);
+        $this->pdf->drawTableau($this->pdf, $tableProperty, $header_property, $header, $content_property, $tableContent);
 
 
         /* ---- END PLANNING TABLES ------ */
 
         /* ---- BEGIN GLOBAL HOUR TABLE ------ */
-        $Global_header = array(50, 50, 'Global', '');
+        $tableProperty['L_MARGIN'] = 130;
+        $header_property['BG_COLOR_COL0'] = array(10, 240, 240);
+        $Global_header = array(50, 10, 'Global', 'COLSPAN2');
         $Global_tableContent = array();
-
 
         $content['total'] = '<div id="total"><table><caption>Global</caption>';
         if (self::$preferences['isPanier']) {
-            $content['total'] .= '<tr><td>' . lang('Paniers') . '</td><td>' . $nb_paniers . '</td></tr>';
+            $Global_tableContent[] = lang('Paniers');
+            $Global_tableContent[] = $nb_paniers;
         }
-        $content['total'] .= '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td>' . $this->get_time($total) . '</td></tr>' .
-                '<tr><td id="hour">' . lang('Total Heures de jour') . '</td><td>' . $this->get_time($total_day) . '</td></tr>' .
-                '<tr><td id="hour">' . lang('Total Heures de nuit') . '</td><td>' . $this->get_time($total_night) . '</td></tr>' .
-                '<tr><td id="sunday">' . lang('Heures jour dimanche') . '</td><td>' . $this->get_time($total_sun_day) . '</td></tr>' .
-                '<tr><td id="sunday">' . lang('Heures nuit dimanche') . '</td><td>' . $this->get_time($total_sun_night) . '</td></tr>';
-        '</table></div>';
         $Global_tableContent[] = lang('Heures jours');
         $Global_tableContent[] = $this->get_time($total_day);
         $Global_tableContent[] = lang('Heures nuits');
@@ -388,11 +384,18 @@ class ui_imprime extends bo_asecurite {
         $Global_tableContent[] = lang('Heures jours dimanche');
         $Global_tableContent[] = $this->get_time($total_sun_night);
 
-        $this->pdf->Ln(5);
-        $this->pdf->drawTableau($this->pdf, $proprietesTableau, $header_property, $Global_header, $content_property, $Global_tableContent);
+        $this->pdf->Ln(3);
+        $this->pdf->drawTableau($this->pdf, $tableProperty, $header_property, $Global_header, $content_property, $Global_tableContent);
+
+        /* ---- END GLOBAL HOUR TABLE ------ */
+
+        /* ---- BEGIN GLOBAL SITES TABLE ------ */
 
         if (is_array($nb_global_hour_by_agent)) {
-            $content['total_by_agent'] = '<div id= "site_planning_by_agent">';
+
+            $header_property['BG_COLOR_COL0'] = array(100, 200, 240);
+            $tableProperty['L_MARGIN'] = 0;
+
             foreach ($nb_global_hour_by_agent as $agent => $site) {
                 $this->setup_table(APP_NAME, 'egw_asecurite_agent');
                 $f_agent = $this->search(array('idasecurite_agent' => $agent), false);
@@ -401,22 +404,28 @@ class ui_imprime extends bo_asecurite {
                     $agent_name = $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'];
 
                     foreach ($site as $key => $value) {
+                        $site_stat_tableContent = array();
                         $site = $this->sites[$key];
-                        $content['total_by_agent'] .= '<div id="site_stat"><table><caption>' . $agent_name . ' ( ' . $site . ' )</caption>' .
-                                '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td><div>' . $this->get_time($value['day'] + $value['night'] + $value['sunday'] + $value['sunnight']) . '</div></td></tr>' .
-                                '<tr><td id="hour">' . lang('Total Heures de jour') . '</td><td><div>' . $this->get_time($value['day']) . '</div></td></tr>' .
-                                '<tr><td id="hour">' . lang('Total Heures de nuit') . '</td><td><div>' . $this->get_time($value['night']) . '</div></td></tr>' .
-                                '<tr><td id="sunday">' . lang('Heures jour dimanche') . '</td><td><div>' . $this->get_time($value['sunday']) . '</div></td></tr>' .
-                                '<tr><td id="sunday">' . lang('Heures nuit dimanche') . '</td><td><div>' . $this->get_time($value['sunnight']) . '</div></td></tr></table></div>';
+                        $site_stat_header = array(50, 10, $agent_name . ' ( ' . $site . ' )', 'COLSPAN2');
+
+                        $site_stat_tableContent[] = lang('Total Heures');
+                        $site_stat_tableContent[] = $this->get_time($value['day'] + $value['night'] + $value['sunday'] + $value['sunnight']);
+                        $site_stat_tableContent[] = lang('Heures jours');
+                        $site_stat_tableContent[] = $this->get_time($value['day']);
+                        $site_stat_tableContent[] = lang('Heures nuits');
+                        $site_stat_tableContent[] = $this->get_time($value['night']);
+                        $site_stat_tableContent[] = lang('Heures jours dimanche');
+                        $site_stat_tableContent[] = $this->get_time($value['sunday']);
+                        $site_stat_tableContent[] = lang('Heures jours dimanche');
+                        $site_stat_tableContent[] = $this->get_time($value['sunnight']);
+                        
+                        $this->pdf->drawTableau($this->pdf, $tableProperty, $header_property, $site_stat_header, $content_property, $site_stat_tableContent);
+                        $this->pdf->Ln(2);
                     }
                 }
             }
-            $content['total_by_agent'] .= '</div><div id="end_float"></div>';
         }
-        $content['date'] = date('j/m/Y');
-        $content['paniers'] = $nb_paniers;
-        $content['adresse'] = '<center><span id="adresse"> <small>' . self::$preferences['address'] . '</small><span></center>';
-
+        /* ---- BEGIN GLOBAL SITES TABLE ------ */
         $this->pdf->Output();
     }
 
