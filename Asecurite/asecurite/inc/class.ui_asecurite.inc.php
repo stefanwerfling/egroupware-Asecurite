@@ -121,4 +121,5 @@ class ui_asecurite extends bo_asecurite {
         $this->tmpl->read(APP_NAME . '.agent.edit');
         $this->tmpl->exec(APP_NAME . '.ui_asecurite.edit', $content, $sel_options, $no_button, '', 2);
     }   
+    
 }

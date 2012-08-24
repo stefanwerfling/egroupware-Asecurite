@@ -1125,4 +1125,20 @@ class bo_asecurite extends so_sql {
         return ucfirst($str);
     }
 
+    static function getPreference() {
+        return self::$preferences;
+    }
+    
+    /**
+     * send a file content as a stream
+     */
+    public function sendContentAsStream($content, $mimetype = "text/xml") {
+        ob_end_clean();
+        header("Content-type: " . $mimetype . ";charset=utf-8");
+        header("Content-Transfer-Encoding: binary");
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        echo $content;
+        exit;
+    }
 }

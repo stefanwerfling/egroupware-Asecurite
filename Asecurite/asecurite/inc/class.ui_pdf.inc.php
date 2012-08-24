@@ -1,7 +1,7 @@
 <?php
 
 /**
- * <b>File class.ui_imprime.inc.php</b>
+ * <b>File class.ui_pdf.inc.php</b>
  * asecurite's user interface for print
  * @author N'faly KABA
  * @since   21/08/2012
@@ -9,17 +9,20 @@
  * @copyright KABANFALY
  * @package egroupware
  * @subpackage asecurite/inc/
- * @filesource  class.ui_imprime_pdf.inc
+ * @filesource  class.ui_pdf.inc
  */
-require(EGW_INCLUDE_ROOT . '/phpgwapi/inc/fpdf/fpdf.php');
-define('FPDF_FONTPATH', EGW_INCLUDE_ROOT . '/phpgwapi/inc/fpdf/font/');
+include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/lib/phpToPDF.php');
+include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_asecurite.inc.php');
 
-class ui_imprime_pdf extends FPDF {
+class ui_pdf extends phpToPDF {
 
     public function Footer() {
         $this->SetY(-15);
         $this->SetFont('Arial', 'I', 8);
         $this->Cell(0,10, 'Page '.$this->PageNo().'/{nb}', 0,0, 'C');
+        $pref = bo_asecurite::getPreference();
+        $this->Ln(4);
+        $this->Cell(0,10, $pref['address'] , 0,0, 'C');
     }
 
 }
