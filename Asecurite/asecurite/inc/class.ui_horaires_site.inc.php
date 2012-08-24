@@ -136,7 +136,9 @@ class ui_horaires_site extends bo_horaires_site {
 
                     $f_agent_name = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
                     if (count($f_agent_name) == 1) {
-                        $row['agent'] = $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'];
+                        //$row['agent'] = $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'];
+                        $planning_agent_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $row['idasecurite_agent'], 'current' => 'true'));
+                        $row['agent'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_agent_link . '\', \'_blank\', 1100, 700, \'yes\'); return false;">' . $f_agent_name[0]['nom'] . ' ' . $f_agent_name[0]['prenom'] . '</span>';
                     }
                     $id = $row['idasecurite_horaires_agent'];
                     $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.delete_planning'));

@@ -223,7 +223,7 @@ class ui_imprime extends bo_asecurite {
 
 
         /* ---- BEGIN PLANNING TABLES ------ */
-        $tableProperty = array(
+        $table_property = array(
             'TB_ALIGN' => 'L',
             'L_MARGIN' => 0,
             'BRD_COLOR' => array(0, 0, 0),
@@ -231,8 +231,8 @@ class ui_imprime extends bo_asecurite {
         );
         $header_property = array(
             'T_COLOR' => array(0, 0, 0),
-            'T_SIZE' => 10,
-            'T_FONT' => 'Arial',
+            'T_SIZE' => 9,
+            'T_FONT' => 'Times',
             'T_ALIGN' => 'C',
             'V_ALIGN' => 'M',
             'T_TYPE' => 'B',
@@ -246,14 +246,14 @@ class ui_imprime extends bo_asecurite {
         );
 
 
-        $headerSizes = array();
-        $headerContents = array();
-        $tableContent = array();
+        $header_sizes = array();
+        $header_contents = array();
+        $table_content = array();
 
         $content_property = array(
             'T_COLOR' => array(0, 0, 0),
-            'T_SIZE' => 10,
-            'T_FONT' => 'Arial',
+            'T_SIZE' => 8,
+            'T_FONT' => 'Times',
             'T_ALIGN_COL0' => 'L',
             'T_ALIGN' => 'C',
             'V_ALIGN' => 'M',
@@ -267,46 +267,42 @@ class ui_imprime extends bo_asecurite {
             'BRD_TYPE_NEW_PAGE' => '',
         );
 
-        $headerSizes[] = 10;
-        $headerContents[] = lang('Date');
+        $header_sizes[] = 9;
+        $header_contents[] = lang('Date');
 
         if ($all_agent) {
-            $headerSizes[] = 30;
-            $headerContents[] = lang('Agent');
+            $header_sizes[] = 30;
+            $header_contents[] = lang('Agent');
         }
-        $headerSizes[] = 16;
-        $headerContents[] = utf8_decode(lang("Heure\nd'arrivée"));
-        $headerSizes[] = 15;
-        $headerContents[] = utf8_decode(lang("Pause"));
-        $headerSizes[] = 17;
-        $headerContents[] = utf8_decode(lang("Heure\nde départ"));
-
+        $header_sizes[] = 15;
+        $header_contents[] = utf8_decode(lang("Heure\nd'arrivée"));
+        $header_sizes[] = 12;
+        $header_contents[] = utf8_decode(lang("Pause"));
+        $header_sizes[] = 17;
+        $header_contents[] = utf8_decode(lang("Heure\nde départ"));
 
         if ($all_site) {
-            $headerSizes[] = 40;
-            $headerContents[] = utf8_decode(lang("Site"));
+            $header_sizes[] = 25;
+            $header_contents[] = utf8_decode(lang("Site"));
         }
-        $headerSizes[] = 15;
-        $headerContents[] = utf8_decode(lang("Heures\njours"));
-        $headerSizes[] = 15;
-        $headerContents[] = utf8_decode(lang("Heures\nnuits"));
-        $headerSizes[] = 20;
-        $headerContents[] = utf8_decode(lang("Heures jours\ndimanche"));
-        $headerSizes[] = 20;
-        $headerContents[] = utf8_decode(lang("Heures nuits\ndimanche"));
+        $header_sizes[] = ($all_agent && $all_site) ? 15 : 20;
+        $header_contents[] = utf8_decode(lang("Heures\njours"));
+        $header_sizes[] = ($all_agent && $all_site) ? 15 : 20;
+        $header_contents[] = utf8_decode(lang("Heures\nnuits"));
+        $header_sizes[] = ($all_agent && $all_site) ? 18 : 20;
+        $header_contents[] = utf8_decode(lang("Heures\njours\ndimanche"));
+        $header_sizes[] = ($all_agent && $all_site) ? 18 : 20;
+        $header_contents[] = utf8_decode(lang("Heures\nnuits\ndimanche"));
 
         if (self::$preferences['isPanier']) {
-            $headerSizes[] = 15;
-            $headerContents[] = utf8_decode(lang("Paniers"));
+            $header_sizes[] = 13;
+            $header_contents[] = utf8_decode(lang("Paniers"));
         }
-        $headerSizes[] = 15;
-        $headerContents[] = utf8_decode(lang("Heures\ntotales"));
+        $header_sizes[] = 13;
+        $header_contents[] = utf8_decode(lang("Heures\ntotales"));
         $this->pdf->Ln(5);
-
         $total_day = $total_night = $total_sun_day = $total_sun_night = $total = 0;
-
         $nb_global_hour_by_agent = array();
-
         $nb_paniers = 0;
         foreach ($GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME) as $key => $value) {
             if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']])) {
@@ -315,7 +311,6 @@ class ui_imprime extends bo_asecurite {
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] = 0;
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] = 0;
             }
-
             $day = intval($value['heures_jour']);
             $night = intval($value['heures_nuit']);
             $sun_day = intval($value['heures_jour_dimanche']);
@@ -326,30 +321,29 @@ class ui_imprime extends bo_asecurite {
             $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] += $night;
             $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] += $sun_night;
 
-            $tableContent[] = date('j', $value['heure_arrivee']);
+            $table_content[] = date('j', $value['heure_arrivee']);
             if ($all_agent) {
-                $tableContent[] = $this->agents[$value['idasecurite_agent']];
+                $table_content[] = $this->agents[$value['idasecurite_agent']];
             }
-            $tableContent[] = date('H:i', $value['heure_arrivee']);
-            $tableContent[] = $this->get_time($value['pause']);
-            $tableContent[] = date('H:i', $value['heure_depart']);
+            $table_content[] = date('H:i', $value['heure_arrivee']);
+            $table_content[] = $this->get_time($value['pause']);
+            $table_content[] = date('H:i', $value['heure_depart']);
 
             if ($all_site) {
-                $tableContent[] = $this->sites[$value['idasecurite_site']];
+                $table_content[] = $this->sites[$value['idasecurite_site']];
             }
-
             $total = $day + $night + $sun_day + $sun_night;
             $panier = floor($total / (3600 * 6));
             $nb_paniers += $panier;
-            $tableContent[] = $this->get_time($day);
-            $tableContent[] = $this->get_time($night);
-            $tableContent[] = $this->get_time($sun_day);
-            $tableContent[] = $this->get_time($sun_night);
+            $table_content[] = $this->get_time($day);
+            $table_content[] = $this->get_time($night);
+            $table_content[] = $this->get_time($sun_day);
+            $table_content[] = $this->get_time($sun_night);
 
             if (self::$preferences['isPanier']) {
-                $tableContent[] = $panier;
+                $table_content[] = $panier;
             }
-            $tableContent[] = $this->get_time($total);
+            $table_content[] = $this->get_time($total);
 
             $total_day += $day;
             $total_sun_day += $sun_day;
@@ -358,43 +352,45 @@ class ui_imprime extends bo_asecurite {
         }
         $total = $total_day + $total_night + $total_sun_day + $total_sun_night;
 
-        $header = array_merge($headerSizes, $headerContents);
-        $this->pdf->drawTableau($this->pdf, $tableProperty, $header_property, $header, $content_property, $tableContent);
-
+        $header = array_merge($header_sizes, $header_contents);
+        $this->pdf->drawTableau($this->pdf, $table_property, $header_property, $header, $content_property, $table_content);
 
         /* ---- END PLANNING TABLES ------ */
 
         /* ---- BEGIN GLOBAL HOUR TABLE ------ */
-        $tableProperty['L_MARGIN'] = 130;
         $header_property['BG_COLOR_COL0'] = array(10, 240, 240);
         $Global_header = array(50, 10, 'Global', 'COLSPAN2');
-        $Global_tableContent = array();
+        $Global_table_content = array();
 
-        $content['total'] = '<div id="total"><table><caption>Global</caption>';
         if (self::$preferences['isPanier']) {
-            $Global_tableContent[] = lang('Paniers');
-            $Global_tableContent[] = $nb_paniers;
+            $Global_table_content[] = lang('Paniers');
+            $Global_table_content[] = $nb_paniers;
         }
-        $Global_tableContent[] = lang('Heures jours');
-        $Global_tableContent[] = $this->get_time($total_day);
-        $Global_tableContent[] = lang('Heures nuits');
-        $Global_tableContent[] = $this->get_time($total_night);
-        $Global_tableContent[] = lang('Heures jours dimanche');
-        $Global_tableContent[] = $this->get_time($total_sun_day);
-        $Global_tableContent[] = lang('Heures jours dimanche');
-        $Global_tableContent[] = $this->get_time($total_sun_night);
+        $Global_table_content[] = lang('Heures jours');
+        $Global_table_content[] = $this->get_time($total_day);
+        $Global_table_content[] = lang('Heures nuits');
+        $Global_table_content[] = $this->get_time($total_night);
+        $Global_table_content[] = lang('Heures jours dimanche');
+        $Global_table_content[] = $this->get_time($total_sun_day);
+        $Global_table_content[] = lang('Heures jours dimanche');
+        $Global_table_content[] = $this->get_time($total_sun_night);
 
         $this->pdf->Ln(3);
-        $this->pdf->drawTableau($this->pdf, $tableProperty, $header_property, $Global_header, $content_property, $Global_tableContent);
+        $header_property['T_SIZE'] = 11;
+        $content_property['T_SIZE'] = 10;
+        $this->pdf->drawTableau($this->pdf, $table_property, $header_property, $Global_header, $content_property, $Global_table_content);
+        $this->pdf->Ln(3);
 
         /* ---- END GLOBAL HOUR TABLE ------ */
 
         /* ---- BEGIN GLOBAL SITES TABLE ------ */
 
         if (is_array($nb_global_hour_by_agent)) {
-
+            $this->pdf->AddPage();
+            $this->pdf->Cell(0, 10, lang('Statistiques globales par site et par agent'), 1, 1, 'C');
+            $this->pdf->Ln(3);
             $header_property['BG_COLOR_COL0'] = array(100, 200, 240);
-            $tableProperty['L_MARGIN'] = 0;
+            $table_property['L_MARGIN'] = 0;
 
             foreach ($nb_global_hour_by_agent as $agent => $site) {
                 $this->setup_table(APP_NAME, 'egw_asecurite_agent');
@@ -404,22 +400,22 @@ class ui_imprime extends bo_asecurite {
                     $agent_name = $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'];
 
                     foreach ($site as $key => $value) {
-                        $site_stat_tableContent = array();
+                        $site_stat_table_content = array();
                         $site = $this->sites[$key];
-                        $site_stat_header = array(50, 10, $agent_name . ' ( ' . $site . ' )', 'COLSPAN2');
+                        $site_stat_header = array(50, 10, $agent_name . '(' . $site . ')', 'COLSPAN2');
 
-                        $site_stat_tableContent[] = lang('Total Heures');
-                        $site_stat_tableContent[] = $this->get_time($value['day'] + $value['night'] + $value['sunday'] + $value['sunnight']);
-                        $site_stat_tableContent[] = lang('Heures jours');
-                        $site_stat_tableContent[] = $this->get_time($value['day']);
-                        $site_stat_tableContent[] = lang('Heures nuits');
-                        $site_stat_tableContent[] = $this->get_time($value['night']);
-                        $site_stat_tableContent[] = lang('Heures jours dimanche');
-                        $site_stat_tableContent[] = $this->get_time($value['sunday']);
-                        $site_stat_tableContent[] = lang('Heures jours dimanche');
-                        $site_stat_tableContent[] = $this->get_time($value['sunnight']);
-                        
-                        $this->pdf->drawTableau($this->pdf, $tableProperty, $header_property, $site_stat_header, $content_property, $site_stat_tableContent);
+                        $site_stat_table_content[] = lang('Total Heures');
+                        $site_stat_table_content[] = $this->get_time($value['day'] + $value['night'] + $value['sunday'] + $value['sunnight']);
+                        $site_stat_table_content[] = lang('Heures jours');
+                        $site_stat_table_content[] = $this->get_time($value['day']);
+                        $site_stat_table_content[] = lang('Heures nuits');
+                        $site_stat_table_content[] = $this->get_time($value['night']);
+                        $site_stat_table_content[] = lang('Heures jours dimanche');
+                        $site_stat_table_content[] = $this->get_time($value['sunday']);
+                        $site_stat_table_content[] = lang('Heures jours dimanche');
+                        $site_stat_table_content[] = $this->get_time($value['sunnight']);
+
+                        $this->pdf->drawTableau($this->pdf, $table_property, $header_property, $site_stat_header, $content_property, $site_stat_table_content);
                         $this->pdf->Ln(2);
                     }
                 }
