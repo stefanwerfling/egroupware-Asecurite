@@ -15,7 +15,7 @@ if (!defined('APP_NAME')) {
     define('APP_NAME', 'asecurite');
 }
 
-include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_tools.inc.php');
+//include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_tools.inc.php');
 
 class bo_asecurite extends so_sql {
 
