@@ -4,11 +4,9 @@
  * <b>File class.bo_fwktools.inc.php</b>
  * Tools library for eGroupware applications
  * @author N'faly KABA
- * @author Stephan Acquatella
- * @since   21/11/2011
+ * @since   02/04/2013
  * @version 1.0
  * @copyright France Telecom
- * @package egw-enp-framework
  * @subpackage tools
  * @filesource  class.bo_fwktools.inc.php
  */

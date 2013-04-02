@@ -41,6 +41,7 @@ class ui_agent extends bo_agent {
             'CDD' => 'CDD',
             'CDI' => 'CDI',
         );
+        $this->height = 800;
         $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.index'));
     }
 
@@ -48,6 +49,7 @@ class ui_agent extends bo_agent {
      * Display the application home content
      */
     public function index($content = NULL) {
+        $GLOBALS['egw']->js->set_onload("include('" . $GLOBALS['egw_info']['server']['webserver_url'] . "/phpgwapi/inc/jscalendar-setup.php?dateformat=d.m.Y&amp;lang=fr');");
         $this->createHeader();
         $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
         $t->set_file(array(
@@ -57,7 +59,9 @@ class ui_agent extends bo_agent {
 
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
-        $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.redirect_to_edit'));
+        $title_bar = lang(APP_NAME) . ' - ' . lang("Gestion des agents") . ' - ' . lang('Add');
+        $add_link = bo_fwkpopin::draw_button(APP_NAME . '.ui_agent.ajax_edit', 'Add', $this->width, $this->height, 0, $title_bar);
+        // $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.redirect_to_edit'));
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
 
@@ -161,12 +165,6 @@ class ui_agent extends bo_agent {
         $pdf->Cell(0, 15, lang("Fiche d'information"), 1, 1, 'C');
         $pdf->Ln(5);
 
-        /*$t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
-        $t->set_file(array(
-            'T_info_agent' => 'info_agent.tpl'
-        ));
-        $t->set_block('T_info_agent', 'info_agent');*/
-
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $agent_id = get_var('id');
 
@@ -183,22 +181,6 @@ class ui_agent extends bo_agent {
                 $f_agent[0]['date_debut_piece_identite'] = $f_agent[0]['date_debut_piece_identite'] == '' ? '' : $this->format_date($f_agent[0]['date_debut_piece_identite']);
                 $f_agent[0]['date_fin_piece_identite'] = $f_agent[0]['date_fin_piece_identite'] == '' ? '' : $this->format_date($f_agent[0]['date_fin_piece_identite']);
 
-                //$f_agent[0] = array_map(array('bo_asecurite', 'convert_to_html'), $f_agent[0]);
-                /*$t->set_var('agent_name', $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom']);
-                $t->set_var('email', $f_agent[0]['email']);
-                $t->set_var('date_naissance', $f_agent[0]['date_naissance']);
-                $t->set_var('adresse', $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville']);
-                $t->set_var('telephone', $f_agent[0]['telephone']);
-                $t->set_var('type_contrat', $f_agent[0]['type_contrat']);
-                $t->set_var('date_debut_contrat', $f_agent[0]['date_debut_contrat']);
-                $t->set_var('date_fin_contrat', $f_agent[0]['date_fin_contrat']);
-                $t->set_var('type_piece_identite', $f_agent[0]['type_piece_identite']);
-                $t->set_var('numero_piece_identite', $f_agent[0]['numero_piece_identite']);
-                $t->set_var('date_debut_piece_identite', $f_agent[0]['date_debut_piece_identite']);
-                $t->set_var('date_fin_piece_identite', $f_agent[0]['date_fin_piece_identite']);
-                $t->set_var('commune_piece_identite', $f_agent[0]['commune_piece_identite']);
-                $t->set_var('pays_piece_identite', $f_agent[0]['pays_piece_identite']);*/
-                
                 $this->_write_info($pdf, lang("Agent"), strtoupper($f_agent[0]['nom']) . ' ' . ucwords($f_agent[0]['prenom']), 15);
                 $this->_write_info($pdf, lang("Date de naissance"), $f_agent[0]['date_naissance'], 35);
                 $this->_write_info($pdf, lang("Adresse"), $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville'], 20);
@@ -219,11 +201,11 @@ class ui_agent extends bo_agent {
         $pdf->Output();
     }
 
-    private function _write_info(&$pdf, $label, $info, $label_w=10, $info_w=10) {
+    private function _write_info(&$pdf, $label, $info, $label_w = 10, $info_w = 10) {
         $pdf->SetFont('Times', 'B', 12);
         $pdf->Cell($label_w, 10, utf8_decode($label) . ':', 0, 0);
         $pdf->SetFont('Times', '', 12);
-        $pdf->Cell($info_w, 10, utf8_decode($info) , 0, 1);
+        $pdf->Cell($info_w, 10, utf8_decode($info), 0, 1);
     }
 
     /**
@@ -259,6 +241,70 @@ class ui_agent extends bo_agent {
         parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('nom', 'prenom', 'date_naissance', 'adresse', 'code_postal', 'idasecurite_ville', 'type_contrat', 'telephone', 'date_debut_contrat', 'date_fin_contrat', 'type_piece_identite', 'numero_piece_identite', 'date_debut_piece_identite', 'date_fin_piece_identite', 'commune_piece_identite', 'pays_piece_identite', 'email'), array('menuaction' => APP_NAME . '.ui_agent.index'));
         $this->tmpl->read(APP_NAME . '.agent.edit');
         $this->tmpl->exec(APP_NAME . '.ui_agent.edit', $content, $sel_options, $no_button, '', 2);
+    }
+
+    public function ajax_edit($id, $dialog = 'dialog') {
+        $content['id'] = $id;
+        $GLOBALS['egw']->session->appsession('idasecurite_agent', APP_NAME, $id);
+        $_response = new xajaxResponse();
+        $_response->addScript('disable_enable_fin_contrat();');
+        $content['title'] = 'Asecurite' . ' - ' . lang("Agents management");
+
+        if ($content['type_contrat'] == 'CDI') {
+            $content['date_fin_contrat'] = '';
+        }
+        $sel_options = array(
+            'idasecurite_ville' => $this->cities,
+            'type_contrat' => $this->type_contrat,
+            'type_piece_identite' => array('' => lang('Choisissez ...'), 'Titre de séjour' => 'Titre de séjour', 'passeport' => 'Passeport', 'Permis de conduire' => 'Permis de conduire')
+        );
+        if (!$this->cities) {
+            $js = "opener.location.href='" . ($link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.index'))) . "';window.close();";
+            $content['no_ville_msg'] = "<span id='error'>" . lang('Aucune ville trouvée') . ' <a><button onclick="' . $js . '">' . lang('Créer en ici') . '</button></a>' . " </span>";
+        }
+        parent::edit($content, $dialog);
+
+        $this->tmpl->read(APP_NAME . '.agent.edit');
+        $_edit = $this->tmpl->exec(APP_NAME . '.ui_agent.edit', $content, $sel_options, '', '', 1);
+        $calendarCSS = '/phpgwapi/js/jscalendar/calendar-blue.css';
+        $calendarCSS .= '?' . filemtime(EGW_SERVER_ROOT . $calendarCSS);
+        $_response->addIncludeCSS($GLOBALS['egw_info']['server']['webserver_url'] . $calendarCSS);
+        $_response->addAssign($dialog, 'innerHTML', $_edit);
+        $_response->addScript("addDatePopup('date_debut_contrat');");
+        $_response->addScript("addDatePopup('date_fin_contrat');");
+        $_response->addScript('Calendar.setup(
+            {
+                inputField  : "exec[date_debut_contrat][str]",
+                button      : "exec[date_debut_contrat][str]-trigger"
+            }
+        );');
+        $_response->addScript('Calendar.setup(
+            {
+                inputField  : "exec[date_fin_contrat][str]",
+                button      : "exec[date_fin_contrat][str]-trigger"
+            }
+        );');
+        return $_response->getXML();
+    }
+
+    /**
+     * Saves a form content to database
+     * @param array $content input data
+     * @return string XML
+     */
+    public function ajax_save($content) {
+        $id = $GLOBALS['egw']->session->appsession('idasecurite_agent', self::$currentapp);
+        if ($id) {
+            $save_ok = $this->save_data('Agent', 'egw_asecurite_agent', $content, $msg, array('idasecurite_agent' => $id));
+        } else {
+            $save_ok = $this->save_data('Agent', 'egw_asecurite_agent', $content, $msg);
+        }
+        $_response = new xajaxResponse();
+        $save = $save_ok ? 'success' : 'error';
+        $msg = "<span id=\"$save\">" . lang($msg) . "</span>";
+        // $_response->addScript("ajaxCall('" . APP_NAME . ".ui_agent.ajax_index', '$msg');");
+        $_response->addScript(bo_fwkpopin::add_close_script());
+        return $_response->getXML();
     }
 
 }

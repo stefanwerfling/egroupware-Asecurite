@@ -75,49 +75,6 @@ function concatNewCode() {
 }
 
 
-/**
- *(for rulesdresser)
- * Check a choosen media dimension contigent to form authorized dimensions
- * that operation his performed from server side
- * @param myaction, method from server side that perform this operation
- * @param mediaId1, media1 id
- * @param mediaId2, media1 id
- */
-function fillMediasName(myaction, mediaId1, mediaId2) {
-    if (!myaction)
-        myaction = form.action.replace(/.+myaction=/, '');
-    xajax_doXMLHTTPsync(myaction, mediaId1, mediaId2);
-    //validateForm();
-}
-
-/**
- * Fill alt field if empty
- */
-function fillAltField(altValue) {
-    var ALT = $('input[name*="_ALT"]').val();
-    if (ALT == '') {
-        $('input[name*="_ALT"]').val(altValue);
-        $('input[name*="_ALT"]').after("<span id='error'>La valeur de ce champ n'a pas encore \n été enregistrée.</span>");
-    }
-}
-/**
- *(for rulesdresser)
- * Reload media html container to display searched medias
- * @param myaction, ajax method that perform this operation from server
- */
-function reloadMediaList(myaction) {
-    if (!myaction)
-        myaction = form.action.replace(/.+myaction=/, '');
-    var formWidth = $('input[name="width"]').attr('value');
-    var formHeight = $('input[name="height"]').attr('value');
-
-    var name = $('#exec\\\[_media_name\\\]').attr('value');
-    var type = $('#exec\\\[_media_type\\\]').attr('value');
-    var tag = $('#exec\\\[_media_tag\\\]').attr('value');
-    xajax_doXMLHTTPsync(myaction, name, formWidth, formHeight, type, tag);
-}
-
-
 
 /** Check the filename which must be upload */
 function checkImgPath() {
@@ -143,161 +100,6 @@ function checkImgPath() {
 }
 
 
-/** Add a method for using regex to the jquery.validator plugin
- * 
- * To use it :
- *   "montelephone" : {
- *      "required": true,
- *      "regex": /^(\+33\.|0)[0-9]{9}$/
- *   }
- */
-function addValidateMethodRegex() {
-    jQuery.validator.addMethod(
-            "regex",
-            function(value, element, regexp) {
-                if (regexp.constructor != RegExp)
-                    regexp = new RegExp(regexp);
-                else if (regexp.global)
-                    regexp.lastIndex = 0;
-                return this.optional(element) || regexp.test(value);
-            }, "Le format est invalide"
-            );
-}
-
-/**
- * Add a rule for an e-mail validation
- * @param locatedElement
- * @param isRequired
- * http://www.pierrefay.fr/jquery-validate-formulaire-validation-tutoriel-455
- */
-function validateEmail(locatedElement, isRequired) {
-    $(locatedElement).rules(
-            "add", {
-        email: true,
-        maxlength: 255,
-        required: isRequired,
-        messages: {
-            email: "Veuillez saisir un email valide de la forme nom@domaine.tld, merci "
-        }
-    }
-    );
-}
-
-/**
- * Add a rules for URL validaton
- * @param locatedElement
- * @param isRequired
- */
-function validateURL(locatedElement, isRequired) {
-    $(locatedElement).rules(
-            "add", {
-        url: true,
-        maxlength: 255,
-        required: isRequired,
-        messages: {
-            url: "Veuillez saisir une URL valide, merci"
-        }
-    }
-    );
-}
-
-/**
- * Digits only
- * @param locatedElement
- * @param isRequired
- */
-function validateDigits(locatedElement, isRequired) {
-    $(locatedElement).rules(
-            "add", {
-        digits: true,
-        maxlength: 255,
-        required: isRequired,
-        messages: {
-            digits: "Veuillez ne saisir que des chiffres, merci"
-        }
-    }
-    );
-}
-
-/**
- * Decimal number
- * @param locatedElement
- * @param isRequired
- */
-function validateNumber(locatedElement, isRequired) {
-    $(locatedElement).rules(
-            "add", {
-        number: true,
-        maxlength: 255,
-        required: isRequired,
-        messages: {
-            number: "Veuillez entrer un nombre décimal, merci"
-        }
-    }
-    );
-}
-
-/**
- * Add a rule for a phone number validation
- * @param locatedElement
- * @param isRequired
- */
-function validatePhone(locatedElement, isRequired) {
-    $(locatedElement).rules(
-            "add", {
-        minlength: 10,
-        required: isRequired,
-        "regex": /^(\+33\.|0)[0-9]{9}$/,
-        messages: {
-            minlength: jQuery.format("Veuillez saisir au moins {0} chiffres, merci ")
-        }
-    }
-    );
-}
-
-/**
- * Add a rule for a phone number validation
- * @param locatedElement
- * @param isRequired
- */
-function validateRegex(locatedElement, isRequired, theRegex, theErrorMessage) {
-    $(locatedElement).rules(
-            "add", {
-        required: isRequired,
-        "regex": theRegex,
-        messages: {
-            "regex": theErrorMessage
-        }
-    }
-    );
-}
-
-/**
- * Add a rule for a phone number validation
- * @param locatedElement
- * @param isRequired
- */
-function validateAlphaNum(locatedElement, isRequired) {
-    $(locatedElement).rules(
-            "add", {
-        required: isRequired,
-        "regex": /^[A-Za-z0-9\-. _àéêèïôç²#+=!?;,:ù%€@<>|\[\]]*$/,
-        messages: {
-            "regex": jQuery.format("Veuillez entrer des caractères alpha-numeriques, merci")
-        }
-    }
-    );
-}
-
-/**
- * These function must be added on the submit button of a form 
- */
-function validateForm() {
-    $(document).ready(function() {
-        addValidateMethodRegex();
-        $('form[name="eTemplate"]').validate();
-    });
-}
 
 
 /**
@@ -357,35 +159,20 @@ function displayPopin(link, width, height, id, titleBar, dialogId) {
         width = 'auto';
     }
 
-    if (link.indexOf('ajax') != -1) {
-        //multi-param as id
-        $('#' + dialogId).dialog({
-            title: titleBar,
-            autoResize: true,
-            height: height,
-            width: width
+    //multi-param as id
+    $('#' + dialogId).dialog({
+        title: titleBar,
+        autoResize: true,
+        height: height,
+        width: width
 
-        });
-        if (link.indexOf('ui_rules') != -1) {
-            xajax_doXMLHTTP(link, id, dialogId);
-        } else {
-            xajax_doXMLHTTPsync(link, id, dialogId);
-        }
-
+    });
+    if (link.indexOf('ui_rules') != -1) {
+        xajax_doXMLHTTP(link, id, dialogId);
     } else {
-        $('#' + dialogId).dialog({
-            open: function() {
-                $(this).html('<iframe id="TB_iframeContent" src="' + link + '" width="' + width + '" height="' + height + '"></iframe>');
-            },
-            title: titleBar,
-            close: $(this).text(''),
-            width: width + 40,
-            height: height + 50,
-            resize: function() {
-                $('#TB_iframeContent').css('height', $(this).height() - 10 + 'px').css('width', $(this).width() - 10 + 'px');
-            }
-        });
+        xajax_doXMLHTTPsync(link, id, dialogId);
     }
+
 }
 
 /**
@@ -420,78 +207,7 @@ function checkMediaType() {
     }
 }
 
-function checkSaveMedia(save) {
-    var domain = $('.editMedia select[name="exec[idrules_dresser_domain]"]').attr('value');
-    var mediaType = $('.editMedia select[name="exec[media_type]"]').attr('value');
-    if (domain == '') {
-        alert("Veuillez choisir un domain s'il vous plait.");
-        return false;
-    }
-    else if (mediaType == '') {
-        alert("Veuillez choisir d'abord choisir un type s'il vous plait.");
-        return false;
-    }
-    else {
-        mediaType = mediaType.toLowerCase();
-        if (mediaType == 'magic' || mediaType == 'http') {
-            if ($('.editMedia input[name="exec[link]"]').attr('value') == '') {
-                alert("Le champ 'Média' est vide!");
-                return false;
-            }
-            return true;
-        } else if (save) {
-            if ($('.editMedia input[name="exec[img]"]').attr('value') == '') {
-                alert("Veuillez choisir un média SVP.");
-                return false;
-            }
-        }
-        var mediaName = $('.editMedia input[name="exec[img]"]').attr('value');
-        if (mediaName != '') {
-            var isOk = checkImgPath();
-            if (!isOk)
-                return false;
-            var extPos = mediaName.lastIndexOf('.');
-            if (extPos != -1) {
-                var ext = mediaName.substr(extPos + 1);
-                ext = ext.toLowerCase();
-                if (mediaType == 'image' && ext != 'jpg' && ext != 'jpeg' && ext != 'png' && ext != 'gif') {
-                    showCheckSaveMediaErrMsg(mediaName, mediaType, 'jpg, jpeg, png et gif');
-                    return false;
-                } else if (mediaType == 'word' && ext != 'doc' && ext != 'docx') {
-                    showCheckSaveMediaErrMsg(mediaName, mediaType, 'doc et docx')
-                    return false;
 
-                } else if (mediaType == 'excel' && ext != 'xls' && ext != 'xls') {
-                    showCheckSaveMediaErrMsg(mediaName, mediaType, 'xls et xlsx')
-                    return false;
-
-                } else if (mediaType == 'power point' && ext != 'ppt' && ext != 'pptx') {
-                    showCheckSaveMediaErrMsg(mediaName, mediaType, 'ppt et pptx')
-                    return false;
-
-                } else if (mediaType == 'zip' && ext != 'zip') {
-                    showCheckSaveMediaErrMsg(mediaName, mediaType, 'zip')
-                    return false;
-                } else if (mediaType == 'pdf' && ext != 'pdf') {
-                    showCheckSaveMediaErrMsg(mediaName, mediaType, 'pdf')
-                    return false;
-
-                } else if (mediaType == 'postscript' && ext != 'ps') {
-                    showCheckSaveMediaErrMsg(mediaName, mediaType, 'ps')
-                    return false;
-                }
-            } else {
-                alert("'" + mediaName + "', Type de média inconnu.");
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function showCheckSaveMediaErrMsg(mediaName, mediaType, extentions) {
-    alert("'" + mediaName + "', Extension non valide pour le type ''" + mediaType + "'.\nExtension(s) autorisée(s) pour le type '" + mediaType + "':\n" + extentions);
-}
 /**
  * Submits a media form content
  */
@@ -511,6 +227,9 @@ function ajaxSaveMedia(form, ajaxaction) {
 
 }
 
+function addDatePopup(id) {
+    $('input[name*="' + id + '"]').after('<img id="exec[' + id + '][str]-trigger" src="' + buildHttpPath('phpgwapi/templates/default/images/datepopup.gif') + '" title="Sélectionner la date" style="cursor:pointer; cursor:hand;">');
+}
 
 function setDimension(width, height) {
     if (width != 0 && height != 0) {

@@ -4,7 +4,7 @@
  * <b>File class.bo_fwkpopin.inc.php</b>
  * popin and popup managment for eGroupware applications
  * @author N'faly KABA
- * @since   14/04/2013
+ * @since   02/04/2013
  * @version 1.0
  * @copyright France Telecom
  * @subpackage popin
@@ -27,7 +27,7 @@ class bo_fwkpopin {
     }
 
     static function display_type() {
-        return $GLOBALS['egw_info']['user']['preferences']['common']['display_type'];
+        return 'popin';//$GLOBALS['egw_info']['user']['preferences']['common']['display_type'];
     }
 
     /**
@@ -108,7 +108,7 @@ class bo_fwkpopin {
             if ($height > self::$maxpopinheight)
                 $height = self::$maxpopinheight;
             
-            return '<span id="popin" name="popin" onclick="' . self::open_popin($link, $width, $height, $id, $title_bar, $dialog_id) . '"><button>' . lang($name) . '</button><span>';
+            return '<span id="popin" name="popin" onclick="' . self::open_popin($link, $width, $height, $id, $title_bar, $dialog_id) . '"><button>' . lang($name) . '</button></span>';
         }
     }
 

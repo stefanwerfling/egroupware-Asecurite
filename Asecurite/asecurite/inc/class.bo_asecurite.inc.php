@@ -15,7 +15,8 @@ if (!defined('APP_NAME')) {
     define('APP_NAME', 'asecurite');
 }
 
-//include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_tools.inc.php');
+include_once(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/inc/lib/class.bo_fwktools.inc.php');
+include_once(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/inc/lib/class.bo_fwkpopin.inc.php');
 
 class bo_asecurite extends so_sql {
 
@@ -83,13 +84,14 @@ class bo_asecurite extends so_sql {
 
     /** @var array . Preferences for the current application. */
     public static $preferences;
+    public $width = 0;
+    public $height = 0;
 
     /**
      * Constructor
      * @param string default table name
      */
     public function __construct($table = '') {
-
         parent::__construct(APP_NAME, $table);
         $GLOBALS['egw_info']['flags']['include_xajax'] = true;
         //$_main_conf = bo_var_setting::get_all_conf_var();
@@ -180,21 +182,35 @@ class bo_asecurite extends so_sql {
             $GLOBALS['egw']->js = & CreateObject('phpgwapi.javascript');
         }
         //javascript files
-        $GLOBALS['egw']->js->files = array(
-            APP_NAME => array(
-                '' => array(
-                    'app' => '', // file name: asecurite/js/app.js
-                    'jquery' => '', // file name: asecurite/js/jquery.js
-                    'jquery.lightbox' => '', // file name: asecurite/js/jquery-lightbox.js
-                    'jquery-ui' => '', // file name: asecurite/js/jquery-ui.js
-                    'tooltip' => '', // file name: asecurite/js/jquery.js
-                    'dataTables' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.js
-                    //'TableTools' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.editor.js
-                    //'dataTables.editor' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.editor.js
-                    'jscharts' => '', // file name: asecurite/js/jscharts.js
-                    'thickbox' => 'thickbox', // file name: asecurite/js/flexigrid/flexigrid.js
-            )));
-        $GLOBALS['egw_info']['flags']['include_xajax'] = true;
+//        $GLOBALS['egw']->js->files = array(
+//            APP_NAME => array(
+//                '' => array(
+//                    'app' => '', // file name: asecurite/js/app.js
+//                    'jquery' => '', // file name: asecurite/js/jquery.js
+//                    'jquery.lightbox' => '', // file name: asecurite/js/jquery-lightbox.js
+//                    'jquery-ui' => '', // file name: asecurite/js/jquery-ui.js
+//                    'tooltip' => '', // file name: asecurite/js/jquery.js
+//                    'common' => '', // file name: asecurite/js/jquery.js
+//                    'dataTables' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.js
+//                    'jscharts' => '', // file name: asecurite/js/jscharts.js
+//                    'thickbox' => 'thickbox', // file name: asecurite/js/flexigrid/flexigrid.js
+//        )));
+
+
+          if (!($GLOBALS['egw']->js->validate_file('', 'jquery', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'common', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'jquery.lightbox', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'jquery-ui', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'jquery.contextMenu', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'jquery.upload', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'dataTables/dataTables', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'jscharts', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'thickbox/thickbox', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('jscalendar', 'calendar') &&
+                $GLOBALS['egw']->js->validate_file('', 'tooltip', APP_NAME))) {            
+                
+            $GLOBALS['egw']->js->set_onload("alert('Un ou plusieurs fichiers JavaScripts n\'ont pas été inclus.');");
+        }
     }
 
     /**
@@ -328,12 +344,14 @@ class bo_asecurite extends so_sql {
      * @param string|array $where='' the referer column for update
      * @return boolean true if save|update is OK else false
      */
+    //public function save_data($name, $table_name, $data, $col, &$msg, $where = '') {
     public function save_data($name, $table_name, $data, $col, &$msg, $where = '') {
 
         $this->setup_table(APP_NAME, $table_name);
         $return_value = false;
 
-        foreach ($col as $c => $val) {
+        //foreach ($col as $c => $val) {
+        foreach ($this->db_data_cols as $c => $val) {
             $this->data[$val] = $data[$val];
         }
 
@@ -392,7 +410,7 @@ class bo_asecurite extends so_sql {
      * @param array $extra_param contains menuaction value (the redirect link value) and other value such as message
      * @return void
      */
-    public function edit(&$content, &$no_button, $pk, $name, $table_name, $col, $extra_param) {
+    public function edit_(&$content, &$no_button, $pk, $name, $table_name, $col, $extra_param) {
 
         $id = get_var('id', array('GET'));
 
@@ -460,6 +478,29 @@ class bo_asecurite extends so_sql {
 
             $content['weight'] = count($find_all) + 1;
         }
+    }
+
+    /**
+     * edit or save an element (used from user interface)
+     * @param array $content contains processing data
+     * @return void
+     */
+    public function edit(&$content, $dialog = 'dialog') {
+        $id = $content['id'];
+        if ($id) {
+            if ($this->read($id)) {
+                foreach ($this->data as $db_col => $col) {
+                    $content[$db_col] = $col;
+                }
+            }
+        }
+        if (isset($content['weight'])) {
+            if ($content['weight'] == '') {
+                $find_all = $this->search('', false, 'weight DESC');
+                $content['weight'] = intval($find_all[0]['weight']) + 1;
+            }
+        }
+        $content['closeWindow'] = bo_fwkpopin::draw_close_button('', 'close', $dialog);
     }
 
     /**
@@ -1128,7 +1169,7 @@ class bo_asecurite extends so_sql {
     static function getPreference() {
         return self::$preferences;
     }
-    
+
     /**
      * send a file content as a stream
      */
@@ -1141,4 +1182,5 @@ class bo_asecurite extends so_sql {
         echo $content;
         exit;
     }
+
 }
