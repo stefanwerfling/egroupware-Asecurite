@@ -1,0 +1,19 @@
+/* 
+    Document   : preview
+    Created on : 29 mars 2012, 16:37:42
+    Author     : knfaly
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+
+#preview{
+    position:absolute;
+    border:1px solid #ccc;
+    background:#333;
+    padding:5px;
+    display:none;
+    color:#fff;
+    z-index: 30000;
+}
