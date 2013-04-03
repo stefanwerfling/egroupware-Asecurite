@@ -56,7 +56,7 @@
     <div id="dynamic">
         <form name="form" id="form">
             <div>{MSG}</div>
-            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', 600, 700, 'yes'); return false;">Ajouter un nouvel agent</button></div>
+            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', 600, 550, 'yes'); return false;">Ajouter un nouvel agent</button></div>
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
                 <thead>
                     <tr>
@@ -69,8 +69,8 @@
                         <th width="12%">Téléphone</th>
                         <th width="12%">Email</th>
                         <th width="20%">Pièce d'identité</th>
-                        <th width="12%">Date de début de contrat</th>
-                        <th width="12%">Date de fin de contrat</th>
+                        <th width="12%">Début de contrat</th>
+                        <th width="12%">Fin de contrat</th>
                         <th>Opérations</th>
                     </tr>
                 </thead>
