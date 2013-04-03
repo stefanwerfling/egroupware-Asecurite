@@ -151,7 +151,7 @@ function displayPopin(link, width, height, id, titleBar, dialogId) {
     if (dialogId == '') {
         dialogId = 'dialog';
     }
-    $('#' + dialogId).html('<center><span><img src="' + buildHttpPath("phpgwapi/templates/default/advise_css/images/loading.gif") + '"></span></center>');
+    $('#' + dialogId).html('<center><span><img src="' + buildHttpPath("asecurite/templates/default/images/loading.gif") + '"></span></center>');
     if (height == 0) {
         height = 'auto';
     }
@@ -167,11 +167,7 @@ function displayPopin(link, width, height, id, titleBar, dialogId) {
         width: width
 
     });
-    if (link.indexOf('ui_rules') != -1) {
-        xajax_doXMLHTTP(link, id, dialogId);
-    } else {
-        xajax_doXMLHTTPsync(link, id, dialogId);
-    }
+    xajax_doXMLHTTP(link, id, dialogId);
 
 }
 
@@ -181,10 +177,10 @@ function displayPopin(link, width, height, id, titleBar, dialogId) {
 function checkRequiredField() {
     var ok = true;
     $('.inputRequired input, .inputRequired select').each(function(e) {
-        if ($(this).attr('value') == '') {
+        if ($(this).attr('value') === '') {
             var id = 'required' + e;
             $('#' + id).html('');
-            $(this).after('<span id="' + id + '" style="color:red">Le champ ne doit pas être vide!</span>');
+            $(this).after('<span id="' + id + '" style="color:red">Ce champ ne doit pas être vide!</span>');
             ok = false;
         }
     });
@@ -237,33 +233,6 @@ function setDimension(width, height) {
         document.write('<input  name="height" value="' + height + '" type="hidden"  size="40" />');
     }
 }
-function checkBoiMandatoryFields() {
-    if ($('select[name*="img"]').attr('value') == '') {
-        alert('Veuillez choisir une image');
-        return false;
-    } else if ($('input[name*="alt"]').attr('value') == '') {
-        //alert ("Le champ 'Alt' est vide");
-        return confirm("Attention, le champ 'Alt' est vide ! Voulez-vous poursuivre l'enregistrement ?");
-    } else if ($('input[name*="url1"]').attr('value') == '') {
-        //alert ("Le champ 'URL1' est vide");
-        return confirm("Attention, le champ 'URL1' est vide ! Voulez-vous poursuivre l'enregistrement ?");
-    }
-    return true;
-}
-
-function checkHpcMandatoryFields() {
-    if ($('select[name*="img"]').attr('value') == '') {
-        alert('Veuillez choisir une image');
-        return false;
-    } else if ($('input[name*="alt"]').attr('value') == '') {
-        //alert ("Le champ 'Alt' est vide");
-        return confirm("Attention, le champ 'Alt' est vide ! Voulez-vous poursuivre l'enregistrement ?");
-    } else if ($('input[name*="url1"]').attr('value') == '') {
-        //alert ("Le champ 'URL1' est vide");
-        return confirm("Attention, le champ 'URL1' est vide ! Voulez-vous poursuivre l'enregistrement ?");
-    }
-    return true;
-}
 
 /**
  * Submits a form by checking required input fields first
@@ -303,6 +272,7 @@ function ajaxSubmitNoCheck(form, ajaxaction) {
 function ajaxCall(ajaxaction, param) {
     if (!ajaxaction)
         ajaxaction = form.action.replace(/.+ajaxaction=/, '');
+   
     xajax_doXMLHTTP(ajaxaction, param);
 }
 /**
@@ -332,11 +302,11 @@ function ajaxCall(ajaxaction, param1, param2, param3, param4) {
 /**
  *Call an xajax function using 5 parameters
  */
-function ajaxCall(ajaxaction, param1, param2, param3, param4, param5) {
-    if (!ajaxaction)
-        ajaxaction = form.action.replace(/.+ajaxaction=/, '');
-    xajax_doXMLHTTP(ajaxaction, param1, param2, param3, param4, param5);
-}
+//function ajaxCall(ajaxaction, param1, param2, param3, param4, param5) {
+//    if (!ajaxaction)
+//        ajaxaction = form.action.replace(/.+ajaxaction=/, '');
+//    xajax_doXMLHTTP(ajaxaction, param1, param2, param3, param4, param5);
+//}
 
 /**
  * delete multiple selected elements
