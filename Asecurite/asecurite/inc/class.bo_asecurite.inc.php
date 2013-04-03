@@ -14,7 +14,8 @@
 if (!defined('APP_NAME')) {
     define('APP_NAME', 'asecurite');
 }
-
+//include_once(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/inc/lib/OPF/Logger.php');
+include_once('OPF/Logger.php');
 include_once(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/inc/lib/class.bo_fwktools.inc.php');
 include_once(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/inc/lib/class.bo_fwkpopin.inc.php');
 
@@ -74,6 +75,13 @@ class bo_asecurite extends so_sql {
      */
     var $current_month;
 
+    /** @var boolean contains true if log as been already initialysed * */
+    protected static $isloginit = false;
+
+
+    /** @var array . Preferences for the current application. */
+    public static $preferences;
+
     /**
      * current year
      * @var int
@@ -83,7 +91,6 @@ class bo_asecurite extends so_sql {
     var $current_link;
 
     /** @var array . Preferences for the current application. */
-    public static $preferences;
     public $width = 0;
     public $height = 0;
 
@@ -157,6 +164,37 @@ class bo_asecurite extends so_sql {
             }
         }
         $this->setup_table(APP_NAME, $table);
+        
+         if (!self::$isloginit) self::initLog();
+    }
+
+    /**
+     * Init OPF logger
+     */
+    public static function initLog() {
+
+        $_temppath = '/tmp';
+        if (!empty($GLOBALS['egw_info']['server']['temp_dir'])) {
+            $_temppath = $GLOBALS['egw_info']['server']['temp_dir'];
+        }
+        $opfConf['handler'] = self::$preferences['log_handler'];
+        $opfConf['Locallog']['fileName'] = $_temppath . '/' . self::$preferences['log_file'];
+        $opfConf['maxPriority'] = (int) self::$preferences['log_level'];
+        $opfConf['ident'] = APP_NAME;
+        $opfConf['Syslog']['facility'] = LOG_LOCAL6;
+        $opfConf['maxLineLength'] = 4096;
+        $opfConf['maxLineLengthCutMessage'] = true; // force message cuting if message size is longeur than 4096.
+        // otherwrite OPF values if there are set in env variable. Construction is PHP_ADVISE_appname_opfkeyword . ex: PHP_ADVISE_adv_broadband_handler
+        foreach ($opfConf as $opfkey => $opfsetting) {
+            $_forcedbyenvvalue = getenv('PHP_ADVISE_' . APP_NAME . '_' . $opfkey);
+            if (!empty($_forcedbyenvvalue))
+                $opfConf[$opfkey] = $_forcedbyenvvalue;
+        }
+
+        OPF_Logger::init($opfConf, time());
+        OPF_Logger::logDebug("Log initialised");
+        //OPF_Logger::log("Log initialised avec log", OPF_CRIT);
+        self::$isloginit = true;
     }
 
     /**
@@ -189,15 +227,18 @@ class bo_asecurite extends so_sql {
 //                    'jquery' => '', // file name: asecurite/js/jquery.js
 //                    'jquery.lightbox' => '', // file name: asecurite/js/jquery-lightbox.js
 //                    'jquery-ui' => '', // file name: asecurite/js/jquery-ui.js
+//                    'jquery.contextMenu' => '', // file name: asecurite/js/jquery-ui.js
+//                    'jquery.upload' => '', // file name: asecurite/js/jquery-ui.js
 //                    'tooltip' => '', // file name: asecurite/js/jquery.js
-//                    'common' => '', // file name: asecurite/js/jquery.js
+//                    'common' => '', 
 //                    'dataTables' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.js
 //                    'jscharts' => '', // file name: asecurite/js/jscharts.js
-//                    'thickbox' => 'thickbox', // file name: asecurite/js/flexigrid/flexigrid.js
+//                    'thickbox' => 'thickbox'
 //        )));
 
 
-          if (!($GLOBALS['egw']->js->validate_file('', 'jquery', APP_NAME) &&
+        if (!($GLOBALS['egw']->js->validate_file('', 'jquery', APP_NAME) &&
+                $GLOBALS['egw']->js->validate_file('', 'app', APP_NAME) &&
                 $GLOBALS['egw']->js->validate_file('', 'common', APP_NAME) &&
                 $GLOBALS['egw']->js->validate_file('', 'jquery.lightbox', APP_NAME) &&
                 $GLOBALS['egw']->js->validate_file('', 'jquery-ui', APP_NAME) &&
@@ -207,8 +248,8 @@ class bo_asecurite extends so_sql {
                 $GLOBALS['egw']->js->validate_file('', 'jscharts', APP_NAME) &&
                 $GLOBALS['egw']->js->validate_file('', 'thickbox/thickbox', APP_NAME) &&
                 $GLOBALS['egw']->js->validate_file('jscalendar', 'calendar') &&
-                $GLOBALS['egw']->js->validate_file('', 'tooltip', APP_NAME))) {            
-                
+                $GLOBALS['egw']->js->validate_file('', 'tooltip', APP_NAME))) {
+
             $GLOBALS['egw']->js->set_onload("alert('Un ou plusieurs fichiers JavaScripts n\'ont pas été inclus.');");
         }
     }
@@ -345,7 +386,7 @@ class bo_asecurite extends so_sql {
      * @return boolean true if save|update is OK else false
      */
     //public function save_data($name, $table_name, $data, $col, &$msg, $where = '') {
-    public function save_data($name, $table_name, $data, $col, &$msg, $where = '') {
+    public function save_data($name, $table_name, $data, &$msg, $where = '') {
 
         $this->setup_table(APP_NAME, $table_name);
         $return_value = false;
