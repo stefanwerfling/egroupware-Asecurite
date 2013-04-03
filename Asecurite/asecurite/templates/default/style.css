@@ -103,12 +103,3 @@ caption{
     min-width: 50px;
 
 }
-#ville {
-    font-weight: bold;
-}
-.calendar{
-    z-index: 10000;
-}
-.inputRequired{
-    background-color: #ECFFB3;
-}

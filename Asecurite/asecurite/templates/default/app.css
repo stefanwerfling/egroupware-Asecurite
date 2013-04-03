@@ -20,5 +20,7 @@
 @import "thickbox/thickbox.css";
 @import "jquery-ui.css";
 @import "jquery.lightbox.css";
-@import "common.css";
 
+#ville {
+    font-weight: bold;
+}

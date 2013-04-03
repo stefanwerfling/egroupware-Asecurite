@@ -56,8 +56,7 @@
     <div id="dynamic">
         <form name="form" id="form">
             <div>{MSG}</div>
-<!--            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', 600, 700, 'yes'); return false;">Ajouter un nouvel agent</button></div> -->
-            <div style="float: right">{ADD_LINK}</div>
+            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', 600, 700, 'yes'); return false;">Ajouter un nouvel agent</button></div>
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
                 <thead>
                     <tr>

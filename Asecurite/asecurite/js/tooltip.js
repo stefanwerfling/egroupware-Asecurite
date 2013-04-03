@@ -1,6 +1,7 @@
 $(function()
-    {        
+    {
         var hideDelay = 100;
+        var id;
         var hideTimer = null;
         // One instance that's reused to show info for the current segment
         var container = $('<div id="popupContainer">'
@@ -11,28 +12,35 @@ $(function()
 
         $('.popupTrigger').live('mouseover', function()
         {  // format of 'rel' tag: pageid,segmentguid
-           
-            var link = $(this).attr('url');           
+            id = $(this).attr('rel');
+            var link = $(this).attr('url');
+            split_ = link.split('|');
+            var link1 = split_[0];
+            var link2 = split_[1];
             // If no guid in url rel tag, don't popup blank
-         
+            if (id == '')
+                return;
+
             if (hideTimer)
                 clearTimeout(hideTimer);
 
             var pos = $(this).offset();
-            var width = $(this).width();     
-            
+            var width = $(this).width();
+
             container.css({
                 left: (pos.left + width) + 'px',
                 top: pos.top - 5 + 'px'
             });
-                       
+
             var winHeight = $(window).height();
-            var pTop = pos.top - $(window).scrollTop();           
-            
+            var pTop = pos.top - $(window).scrollTop();
+
             $('#popupContent').html('&nbsp;');
+
             $.ajax({
                 type: 'GET',
-                url: link,                
+                url: link1,
+                data:link2 +'&' + 'id=' + id ,
                 success: function(data)
                 {
                     // Verify that we're pointed to a page that returned the expected results.
@@ -44,7 +52,8 @@ $(function()
                     // Verify requested segment is this segment since we could have multiple ajax
                     // requests out if the server is taking a while.
                     if (data.indexOf('popupResult') > 0)
-                    {                      
+                    {
+
                         $('#popupContent').html(data);
                         var returnHeight = $('#popupContent').height();
                         if(returnHeight + pTop > winHeight) {
@@ -56,14 +65,14 @@ $(function()
                     }
                 }
             });
-            
+
             container.css('display', 'block');
         });
 
 
 
         $('.popupTrigger').live('mouseout', function()
-        {  
+        {
             if (hideTimer)
                 clearTimeout(hideTimer);
             hideTimer = setTimeout(function()
