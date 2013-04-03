@@ -45,20 +45,23 @@ class ui_agent extends bo_agent {
         $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.index'));
     }
 
-    /**
-     * Display the application home content
-     */
-    public function index($content = NULL) {
-        $GLOBALS['egw']->js->set_onload("include('" . $GLOBALS['egw_info']['server']['webserver_url'] . "/phpgwapi/inc/jscalendar-setup.php?dateformat=d.m.Y&amp;lang=fr');");
+    public function index() {
         $this->createHeader();
+        $GLOBALS['egw']->js->set_onload("include('" . $GLOBALS['egw_info']['server']['webserver_url'] . "/phpgwapi/inc/jscalendar-setup.php?dateformat=d.m.Y&amp;lang=fr');");
+        $msg = get_var('msg', array('GET'));
+        $save = get_var('save', array('GET'));
+        $msg = "<span id=\"$save\">" . lang($msg) . " </span>";
+        print $this->setup_index($msg);
+    }
+
+    public function setup_index($msg = '') {
+
         $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
         $t->set_file(array(
             'T_agents' => 'agents.tpl'
         ));
         $t->set_block('T_agents', 'agents');
 
-        $msg = get_var('msg', array('GET'));
-        $save = get_var('save', array('GET'));
         $title_bar = lang(APP_NAME) . ' - ' . lang("Gestion des agents") . ' - ' . lang('Add');
         $add_link = bo_fwkpopin::draw_button(APP_NAME . '.ui_agent.ajax_edit', 'Add', $this->width, $this->height, 0, $title_bar);
         // $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.redirect_to_edit'));
@@ -67,12 +70,23 @@ class ui_agent extends bo_agent {
 
         $t->set_var('ADD_LINK', $add_link);
         $t->set_var('DATA_LINK', $data_link);
-        $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
+        $t->set_var('MSG', $msg);
         $t->set_var('DELETE_LINK', $delete_link);
         $t->set_var('INDEX_LINK', $this->current_link);
         $t->set_var('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Supprimer les agents sélectionnés?')));
         $t->set_var('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'));
-        $t->pparse('out', 'agents');
+        return $t->parse('out', 'agents');
+    }
+
+    /**
+     * Display the application home content
+     */
+    public function ajax_index($msg) {
+        $_response = new xajaxResponse();
+        $content = $this->setup_index($msg);
+        OPF_Logger::logDebug('content', $content);
+        $_response->addAssign('divAppbox', 'innerHTML', $content);
+        return $_response->getXML();
     }
 
     /**
@@ -120,7 +134,8 @@ class ui_agent extends bo_agent {
                 $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '' : '<span id="' . $style . '">' . $this->format_date($row['date_fin_contrat']) . '</span>';
 
                 $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => 'true'));
-                $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
+                //$edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
+                $edit_link = APP_NAME . '.ui_agent.ajax_edit';
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
                 $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1100, 700, \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
 
@@ -136,11 +151,13 @@ class ui_agent extends bo_agent {
                         $row['piece_identite'] .= '<span id="' . $style . '">Fin: ' . $this->format_date($row['date_fin_piece_identite']) . '</span>';
                     }
                 }
+                $title_bar = lang(APP_NAME) . ' - ' . lang("Gestion des agents") . ' - ' . lang('Edit');
                 $agent_info_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_agent_info', 'id' => $id));
                 $agent_info = $this->html->image(APP_NAME, 'view', lang("Afficher les infos"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $agent_info_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
                 $row['piece_identite'] .= '&nbsp; ' . $agent_info;
                 $row['operation'] = '<span style="float:right">';
-                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 600, 700, \'yes\'); return false;"');
+                //$row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 600, 700, \'yes\'); return false;"');
+                $row['operation'] .= bo_fwkpopin::draw_icon_button($edit_link, $GLOBALS['egw']->common->image(APP_NAME, 'edit'), $this->width, $this->height, $id, 'id="edit2__' . $id . '" title="' . lang('Edit') . '" style="cursor:pointer;"', $title_bar);
                 $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cet agent?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
                 $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
@@ -247,7 +264,7 @@ class ui_agent extends bo_agent {
         $content['id'] = $id;
         $GLOBALS['egw']->session->appsession('idasecurite_agent', APP_NAME, $id);
         $_response = new xajaxResponse();
-        $_response->addScript('disable_enable_fin_contrat();');
+
         $content['title'] = 'Asecurite' . ' - ' . lang("Agents management");
 
         if ($content['type_contrat'] == 'CDI') {
@@ -265,13 +282,21 @@ class ui_agent extends bo_agent {
         parent::edit($content, $dialog);
 
         $this->tmpl->read(APP_NAME . '.agent.edit');
-        $_edit = $this->tmpl->exec(APP_NAME . '.ui_agent.edit', $content, $sel_options, '', '', 1);
+        $_edit = $this->tmpl->exec('', $content, $sel_options, '', '', 1);
         $calendarCSS = '/phpgwapi/js/jscalendar/calendar-blue.css';
         $calendarCSS .= '?' . filemtime(EGW_SERVER_ROOT . $calendarCSS);
         $_response->addIncludeCSS($GLOBALS['egw_info']['server']['webserver_url'] . $calendarCSS);
         $_response->addAssign($dialog, 'innerHTML', $_edit);
+        $_response->addScript('disable_enable_fin_contrat();');
+        $_response->addScript("addDatePopup('date_naissance');");
         $_response->addScript("addDatePopup('date_debut_contrat');");
         $_response->addScript("addDatePopup('date_fin_contrat');");
+        $_response->addScript('Calendar.setup(
+            {
+                inputField  : "exec[date_naissance][str]",
+                button      : "exec[date_naissance][str]-trigger"
+            }
+        );');
         $_response->addScript('Calendar.setup(
             {
                 inputField  : "exec[date_debut_contrat][str]",
@@ -293,17 +318,21 @@ class ui_agent extends bo_agent {
      * @return string XML
      */
     public function ajax_save($content) {
-        $id = $GLOBALS['egw']->session->appsession('idasecurite_agent', self::$currentapp);
+        $_response = new xajaxResponse();
+
+        $id = $GLOBALS['egw']->session->appsession('idasecurite_agent', APP_NAME);
+        OPF_Logger::logDebug('id', $id);
+        OPF_Logger::logDebug('id', $content);
         if ($id) {
             $save_ok = $this->save_data('Agent', 'egw_asecurite_agent', $content, $msg, array('idasecurite_agent' => $id));
         } else {
             $save_ok = $this->save_data('Agent', 'egw_asecurite_agent', $content, $msg);
         }
-        $_response = new xajaxResponse();
         $save = $save_ok ? 'success' : 'error';
         $msg = "<span id=\"$save\">" . lang($msg) . "</span>";
-        // $_response->addScript("ajaxCall('" . APP_NAME . ".ui_agent.ajax_index', '$msg');");
+        $_response->addScript("ajaxCall('" . APP_NAME . ".ui_agent.ajax_index', '');");
         $_response->addScript(bo_fwkpopin::add_close_script());
+        
         return $_response->getXML();
     }
 

@@ -1,7 +1,6 @@
 <?php
-require(EGW_INCLUDE_ROOT . '/phpgwapi/inc/fpdf/fpdf.php');
 define('FPDF_FONTPATH', EGW_INCLUDE_ROOT . '/phpgwapi/inc/fpdf/font/');
-
+require(EGW_INCLUDE_ROOT . '/phpgwapi/inc/fpdf/fpdf.php');
 $red = array(255,0,0);
 $green = array(0,255,0);
 $blue = array(0,0,255);

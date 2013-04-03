@@ -10,7 +10,6 @@
  * @subpackage tools
  * @filesource  class.bo_fwktools.inc.php
  */
-include_once('OPF/Logger.php');
 
 class bo_fwktools {
 
