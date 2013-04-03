@@ -1,0 +1,144 @@
+#OPFLog {
+    z-index:10000;
+    position:absolute;
+    display:table;
+    top:50px;
+    left:50px;
+    border:1px solid black;
+    background:beige;
+}
+
+#OPFLog a{
+    text-decoration:none;
+    color:gray;
+}
+
+#OPFLog a:hover{
+    color:green;
+}
+
+#OPFLog *{
+    font-family:arial;font-size:9pt;
+}
+
+.OPFLog_closeButton {
+    float:right;
+    position:relative;
+    top:-5px;
+    display:block;
+    font-weight:normal;
+    font-size:15pt;
+}
+
+.OPFLog_Header span{
+    font-size:10px;font-style:italic;font-weight:normal;
+}
+
+.OPFLog_Header{
+    background:black;
+    padding:10px;
+    color:white;
+    font-weight:bold;
+}
+
+.OPFLog_Body{
+    padding:0 10px 0 10px;
+}
+
+.OPFLog_item {
+    border-top:1px solid black;
+    padding-top:5px;
+}
+
+.OPFLog_item:first-child{
+    border-top:0;
+}
+
+.OPFLog_item table tbody tr > th{
+    width:25px;
+}
+
+.OPFLog_item th{
+    padding-right:15px;
+    font-size:15pt !important;
+    vertical-align:top;
+    text-align:left;
+}
+
+/* Header */
+
+.OPFLog_itemHeader {
+    font-weight:bold
+}
+
+.OPFLog_title{
+    float:left;
+}
+
+.OPFLog_tag{
+    float:right;
+    font-weight:bold;
+    font-style:italic;
+}
+
+/* Body */
+
+#OPFLogs .OPFLog_itemBody {
+    border-top:1px dashed gray;
+    border-bottom:1px dashed gray;
+    padding:5px 0;
+    margin:5px 0;
+}
+
+.OPFLog_message{}
+.OPFLog_data *{
+    float:left;
+}
+
+.OPFLog_viewDatas{
+    color:#545454;
+    font-style:italic;
+}
+
+
+
+/* Footer */
+
+.OPFLog_itemFooter {}
+.lOPFLog_astbacktrace{
+    color:#545454;
+    font-style:italic;
+}
+
+.OPFLog_lastbacktrace span{
+    color:green;
+}
+
+.OPFLog_backtracesList{
+    display:none;
+}
+
+.OPFLog_backtracesList th{
+    font-size:12px !important;
+}
+
+.OPFLog_backtracesList td{
+    padding:3px;
+    font-size:12px !important;
+}
+
+.OPFLog_function{}
+.OPFLog_file{
+    font-style:italic;
+}
+.OPFLog_line{
+    font-weight:bold;
+    text-align:right;
+}
+
+/* Print_r */
+
+.OPFLog_arrValue{color:gray;}
+.OPFLog_arrPunc{color:blue;}
+.OPFLog_arrKey{color:green;}
+.OPFLog_arr{color:red;}
