@@ -32,6 +32,8 @@ class ui_site extends bo_site {
 
         parent::__construct();
         $this->init_template(lang('Gestion des sites de travail'));
+        $this->width = 450;
+        $this->height = 250;
         $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.index'));
     }
 
@@ -53,6 +55,8 @@ class ui_site extends bo_site {
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_site.delete_site'));
 
         $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('WIDTH', $this->width);
+        $t->set_var('HEIGHT', $this->height);
         $t->set_var('DATA_LINK', $data_link);
         $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
         $t->set_var('DELETE_LINK', $delete_link);
@@ -106,7 +110,7 @@ class ui_site extends bo_site {
                 $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1000, 700, \'yes\'); return false;">' . $row['nom'] . '</span>';
 
                 $row['operation'] = '<span style="float:right">';
-                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier le site"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
+                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier le site"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', '. $this->width. ', '. $this->height. ', \'yes\'); return false;"');
                 $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer le site"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer ce site?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
                 $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 

@@ -15,7 +15,6 @@ if (!defined('APP_NAME')) {
     define('APP_NAME', 'asecurite');
 }
 
-//include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_tools.inc.php');
 
 class bo_asecurite extends so_sql {
 
@@ -80,7 +79,8 @@ class bo_asecurite extends so_sql {
     var $current_year;
     var $nb_baskets = 0;
     var $current_link;
-
+    var $width = 0;
+    var $height = 0;
     /** @var array . Preferences for the current application. */
     public static $preferences;
 

@@ -36,6 +36,8 @@ class ui_agent extends bo_agent {
 
         parent::__construct();
         $this->init_template(lang('Agents management'));
+        $this->width = 600;
+        $this->height = 550;
         $this->type_contrat = array(
             '' => lang('Choisissez ...'),
             'CDD' => 'CDD',
@@ -62,6 +64,8 @@ class ui_agent extends bo_agent {
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
 
         $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('WIDTH', $this->width);
+        $t->set_var('HEIGHT', $this->height);
         $t->set_var('DATA_LINK', $data_link);
         $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
         $t->set_var('DELETE_LINK', $delete_link);
@@ -136,7 +140,7 @@ class ui_agent extends bo_agent {
                 $agent_info = $this->html->image(APP_NAME, 'view', lang("Afficher les infos"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $agent_info_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
                 $row['piece_identite'] .= '&nbsp; ' . $agent_info;
                 $row['operation'] = '<span style="float:right">';
-                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 600, 700, \'yes\'); return false;"');
+                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', '. $this->width. ', '. $this->height. ', \'yes\'); return false;"');
                 $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cet agent?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
                 $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
@@ -161,11 +165,11 @@ class ui_agent extends bo_agent {
         $pdf->Cell(0, 15, lang("Fiche d'information"), 1, 1, 'C');
         $pdf->Ln(5);
 
-        /*$t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
-        $t->set_file(array(
-            'T_info_agent' => 'info_agent.tpl'
-        ));
-        $t->set_block('T_info_agent', 'info_agent');*/
+        /* $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
+          $t->set_file(array(
+          'T_info_agent' => 'info_agent.tpl'
+          ));
+          $t->set_block('T_info_agent', 'info_agent'); */
 
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $agent_id = get_var('id');
@@ -184,21 +188,21 @@ class ui_agent extends bo_agent {
                 $f_agent[0]['date_fin_piece_identite'] = $f_agent[0]['date_fin_piece_identite'] == '' ? '' : $this->format_date($f_agent[0]['date_fin_piece_identite']);
 
                 //$f_agent[0] = array_map(array('bo_asecurite', 'convert_to_html'), $f_agent[0]);
-                /*$t->set_var('agent_name', $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom']);
-                $t->set_var('email', $f_agent[0]['email']);
-                $t->set_var('date_naissance', $f_agent[0]['date_naissance']);
-                $t->set_var('adresse', $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville']);
-                $t->set_var('telephone', $f_agent[0]['telephone']);
-                $t->set_var('type_contrat', $f_agent[0]['type_contrat']);
-                $t->set_var('date_debut_contrat', $f_agent[0]['date_debut_contrat']);
-                $t->set_var('date_fin_contrat', $f_agent[0]['date_fin_contrat']);
-                $t->set_var('type_piece_identite', $f_agent[0]['type_piece_identite']);
-                $t->set_var('numero_piece_identite', $f_agent[0]['numero_piece_identite']);
-                $t->set_var('date_debut_piece_identite', $f_agent[0]['date_debut_piece_identite']);
-                $t->set_var('date_fin_piece_identite', $f_agent[0]['date_fin_piece_identite']);
-                $t->set_var('commune_piece_identite', $f_agent[0]['commune_piece_identite']);
-                $t->set_var('pays_piece_identite', $f_agent[0]['pays_piece_identite']);*/
-                
+                /* $t->set_var('agent_name', $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom']);
+                  $t->set_var('email', $f_agent[0]['email']);
+                  $t->set_var('date_naissance', $f_agent[0]['date_naissance']);
+                  $t->set_var('adresse', $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville']);
+                  $t->set_var('telephone', $f_agent[0]['telephone']);
+                  $t->set_var('type_contrat', $f_agent[0]['type_contrat']);
+                  $t->set_var('date_debut_contrat', $f_agent[0]['date_debut_contrat']);
+                  $t->set_var('date_fin_contrat', $f_agent[0]['date_fin_contrat']);
+                  $t->set_var('type_piece_identite', $f_agent[0]['type_piece_identite']);
+                  $t->set_var('numero_piece_identite', $f_agent[0]['numero_piece_identite']);
+                  $t->set_var('date_debut_piece_identite', $f_agent[0]['date_debut_piece_identite']);
+                  $t->set_var('date_fin_piece_identite', $f_agent[0]['date_fin_piece_identite']);
+                  $t->set_var('commune_piece_identite', $f_agent[0]['commune_piece_identite']);
+                  $t->set_var('pays_piece_identite', $f_agent[0]['pays_piece_identite']); */
+
                 $this->_write_info($pdf, lang("Agent"), strtoupper($f_agent[0]['nom']) . ' ' . ucwords($f_agent[0]['prenom']), 15);
                 $this->_write_info($pdf, lang("Date de naissance"), $f_agent[0]['date_naissance'], 35);
                 $this->_write_info($pdf, lang("Adresse"), $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville'], 20);
@@ -219,11 +223,11 @@ class ui_agent extends bo_agent {
         $pdf->Output();
     }
 
-    private function _write_info(&$pdf, $label, $info, $label_w=10, $info_w=10) {
+    private function _write_info(&$pdf, $label, $info, $label_w = 10, $info_w = 10) {
         $pdf->SetFont('Times', 'B', 12);
         $pdf->Cell($label_w, 10, utf8_decode($label) . ':', 0, 0);
         $pdf->SetFont('Times', '', 12);
-        $pdf->Cell($info_w, 10, utf8_decode($info) , 0, 1);
+        $pdf->Cell($info_w, 10, utf8_decode($info), 0, 1);
     }
 
     /**

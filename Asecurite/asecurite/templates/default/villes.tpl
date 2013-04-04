@@ -47,7 +47,7 @@
     <div id="dynamic">
         <form name="form" id="form">
             <div>{MSG}</div>
-            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', 400, 100, 'yes'); return false;">Ajouter une nouvelle ville</button></div>
+            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', {WIDTH}, {HEIGHT}, 'yes'); return false;">Ajouter une nouvelle ville</button></div>
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
                 <thead>
                     <tr>

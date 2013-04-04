@@ -32,6 +32,8 @@ class ui_ville extends bo_ville {
 
         parent::__construct();
         $this->init_template(lang('Gestion des villes de travail'));
+        $this->width = 400;
+        $this->height = 100;
         $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.index'));
     }
 
@@ -53,6 +55,8 @@ class ui_ville extends bo_ville {
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.delete_ville'));
 
         $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('WIDTH', $this->width);
+        $t->set_var('HEIGHT', $this->height);
         $t->set_var('DATA_LINK', $data_link);
         $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
         $t->set_var('DELETE_LINK', $delete_link);
@@ -101,7 +105,7 @@ class ui_ville extends bo_ville {
                 $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', 1100, 700, \'yes\'); return false;">' . $row['nom'] . '</span>';
 
                 $row['operation'] = '<span style="float:right">';
-                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier la ville"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 400, 150, \'yes\'); return false;"');
+                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier la ville"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\',' . $this->width . ', ' . $this->height . ', \'yes\'); return false;"');
                 $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ville"), 'style="cursor:pointer" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cette ville?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
                 $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
@@ -111,6 +115,7 @@ class ui_ville extends bo_ville {
         $return = json_encode($output);
         echo $return;
     }
+
     /**
      * redirect to edit page and unset session value in order to do add operation
      * @return void
