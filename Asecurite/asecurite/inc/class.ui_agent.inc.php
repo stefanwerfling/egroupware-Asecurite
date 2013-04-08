@@ -164,13 +164,6 @@ class ui_agent extends bo_agent {
         $pdf->Ln(30);
         $pdf->Cell(0, 15, lang("Fiche d'information"), 1, 1, 'C');
         $pdf->Ln(5);
-
-        /* $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
-          $t->set_file(array(
-          'T_info_agent' => 'info_agent.tpl'
-          ));
-          $t->set_block('T_info_agent', 'info_agent'); */
-
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $agent_id = get_var('id');
 
@@ -186,22 +179,6 @@ class ui_agent extends bo_agent {
                 $f_agent[0]['date_fin_contrat'] = $f_agent[0]['date_fin_contrat'] == '' ? '' : $this->format_date($f_agent[0]['date_fin_contrat']);
                 $f_agent[0]['date_debut_piece_identite'] = $f_agent[0]['date_debut_piece_identite'] == '' ? '' : $this->format_date($f_agent[0]['date_debut_piece_identite']);
                 $f_agent[0]['date_fin_piece_identite'] = $f_agent[0]['date_fin_piece_identite'] == '' ? '' : $this->format_date($f_agent[0]['date_fin_piece_identite']);
-
-                //$f_agent[0] = array_map(array('bo_asecurite', 'convert_to_html'), $f_agent[0]);
-                /* $t->set_var('agent_name', $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom']);
-                  $t->set_var('email', $f_agent[0]['email']);
-                  $t->set_var('date_naissance', $f_agent[0]['date_naissance']);
-                  $t->set_var('adresse', $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville']);
-                  $t->set_var('telephone', $f_agent[0]['telephone']);
-                  $t->set_var('type_contrat', $f_agent[0]['type_contrat']);
-                  $t->set_var('date_debut_contrat', $f_agent[0]['date_debut_contrat']);
-                  $t->set_var('date_fin_contrat', $f_agent[0]['date_fin_contrat']);
-                  $t->set_var('type_piece_identite', $f_agent[0]['type_piece_identite']);
-                  $t->set_var('numero_piece_identite', $f_agent[0]['numero_piece_identite']);
-                  $t->set_var('date_debut_piece_identite', $f_agent[0]['date_debut_piece_identite']);
-                  $t->set_var('date_fin_piece_identite', $f_agent[0]['date_fin_piece_identite']);
-                  $t->set_var('commune_piece_identite', $f_agent[0]['commune_piece_identite']);
-                  $t->set_var('pays_piece_identite', $f_agent[0]['pays_piece_identite']); */
 
                 $this->_write_info($pdf, lang("Agent"), strtoupper($f_agent[0]['nom']) . ' ' . ucwords($f_agent[0]['prenom']), 15);
                 $this->_write_info($pdf, lang("Date de naissance"), $f_agent[0]['date_naissance'], 35);
@@ -219,7 +196,6 @@ class ui_agent extends bo_agent {
                 $this->_write_info($pdf, lang("Pays"), $f_agent[0]['pays_piece_identite'], 12);
             }
         }
-        //$t->pparse('out', 'info_agent');
         $pdf->Output();
     }
 
