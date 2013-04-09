@@ -183,26 +183,34 @@ class ui_imprime extends bo_asecurite {
         $this->tmpl->exec(APP_NAME . '.ui_imprime.print_planning_global', $content, '', '', '', 2);
     }
 
+    /**
+     * Print planning as PDF by usiing fpdf pluging
+     */
     function print_planning_global() {
+        //Initialisation
         $this->pdf->SetMargins(5, 10, 5);
         $this->pdf->AliasNbPages();
         $this->pdf->AddPage();
         $this->pdf->startPageNums();
         $this->pdf->SetFont('Times', '', 11);
+        //Adding logo
         $this->pdf->Image(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/default/images/asecurite.png', 5, 6);
-        //décalage à droite
-        $this->pdf->Cell(48);
+        
+        $this->pdf->Cell(48);//set marging right
+        
         $this->pdf->Cell(60, 0, 'Date d\'impression: ' . date('j/m/Y'), 0, 1, 'L');
-        $this->pdf->Ln(1);
-        $this->pdf->Cell(48);
+        //$this->pdf->Ln(1);
+        
+        //set marging right
+        $this->pdf->Cell(48);//set marging right
         $this->pdf->Cell(114, 10, utf8_decode('Ville: ' . $this->cities[$GLOBALS['egw']->session->appsession('current_ville', APP_NAME)]), 0, 1, 'L');
-        $this->pdf->Ln(1);
+        //$this->pdf->Ln(1);
         $this->pdf->Cell(48);
         $this->pdf->Cell(114, 0, utf8_decode('Site: ' . $this->sites[$GLOBALS['egw']->session->appsession('current_site', APP_NAME)]), 0, 1, 'L');
-        $this->pdf->Ln(1);
+        //$this->pdf->Ln(1);
         $this->pdf->Cell(48);
         $this->pdf->Cell(114, 10, utf8_decode('Mois: ' . $this->monthes[$GLOBALS['egw']->session->appsession('current_month', APP_NAME)]), 0, 1, 'L');
-        $this->pdf->Ln(1);
+        // $this->pdf->Ln(1);
         $this->pdf->Cell(48);
         $this->pdf->Cell(114, 0, utf8_decode('Année: ' . $this->years[$GLOBALS['egw']->session->appsession('current_year', APP_NAME)]), 0, 1, 'L');
         $this->pdf->Ln(10);

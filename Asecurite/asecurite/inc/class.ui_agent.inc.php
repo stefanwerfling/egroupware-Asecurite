@@ -219,8 +219,7 @@ class ui_agent extends bo_agent {
      * @param int $content contains processing data
      * @return void
      */
-    public function edit($content = NULL) {
-
+    public function edit($content = NULL) {        
         $GLOBALS['egw']->js->set_onload('disable_enable_fin_contrat();');
         $content['title'] = 'Asecurite' . ' - ' . lang("Agents management");
 
@@ -236,7 +235,7 @@ class ui_agent extends bo_agent {
             $js = "opener.location.href='" . ($link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.index'))) . "';window.close();";
             $content['no_ville_msg'] = "<span id='error'>" . lang('Aucune ville trouvée') . ' <a><button onclick="' . $js . '">' . lang('Créer en ici') . '</button></a>' . " </span>";
         }
-        parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('nom', 'prenom', 'date_naissance', 'adresse', 'code_postal', 'idasecurite_ville', 'type_contrat', 'telephone', 'date_debut_contrat', 'date_fin_contrat', 'type_piece_identite', 'numero_piece_identite', 'date_debut_piece_identite', 'date_fin_piece_identite', 'commune_piece_identite', 'pays_piece_identite', 'email'), array('menuaction' => APP_NAME . '.ui_agent.index'));
+        parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('menuaction' => APP_NAME . '.ui_agent.index'));
         $this->tmpl->read(APP_NAME . '.agent.edit');
         $this->tmpl->exec(APP_NAME . '.ui_agent.edit', $content, $sel_options, $no_button, '', 2);
     }

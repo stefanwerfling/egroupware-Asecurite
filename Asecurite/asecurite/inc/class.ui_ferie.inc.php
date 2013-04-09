@@ -29,8 +29,9 @@ class ui_ferie extends bo_ferie {
     );
 
     function __construct() {
-
         parent::__construct();
+        $this->width = 350;
+        $this->height = 200;
         $this->init_template(lang('Gestion des jours fériés'));
         $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ferie.index'));
     }
@@ -53,6 +54,8 @@ class ui_ferie extends bo_ferie {
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ferie.delete_jour_ferie'));
 
         $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('WIDTH', $this->width);
+        $t->set_var('HEIGHT', $this->height);
         $t->set_var('DATA_LINK', $data_link);
         $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
         $t->set_var('DELETE_LINK', $delete_link);
@@ -112,8 +115,8 @@ class ui_ferie extends bo_ferie {
                 $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ferie.edit', 'id' => $id));
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ferie.delete_jour_ferie'));
                 $row['operation'] = '<span style="float:right">';
-                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', 350, 200, \'yes\'); return false;"');
-                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer ce jour férie?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
+                $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier le jour"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', ' . $this->width . ', ' . $this->height . ', \'yes\'); return false;"');
+                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer le jour"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer ce jour férie?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
                 $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
                 $row['jour'] = $this->datetime($row['jour'], false);
                 $output['aaData'][] = $row;
@@ -140,10 +143,10 @@ class ui_ferie extends bo_ferie {
 
         $content['title'] = 'Asecurite' . ' - ' . lang("Working feries management");
 
-        parent::edit($content, $no_button, 'idasecurite_ferie', 'Bank holiday', 'egw_asecurite_ferie', array('jour', 'description'), array('menuaction' => APP_NAME . '.ui_ferie.index'));
+        parent::edit($content, $no_button, 'idasecurite_ferie', 'Bank holiday', 'egw_asecurite_ferie', array('menuaction' => APP_NAME . '.ui_ferie.index'));
 
         $this->tmpl->read(APP_NAME . '.ferie.edit');
-        $this->tmpl->exec(APP_NAME . '.ui_ferie.edit', $content, $sel_options, $no_button, '', 2);
+        $this->tmpl->exec(APP_NAME . '.ui_ferie.edit', $content, '', $no_button, '', 2);
     }
 
 }

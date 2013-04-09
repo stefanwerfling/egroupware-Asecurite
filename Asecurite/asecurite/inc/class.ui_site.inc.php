@@ -147,7 +147,7 @@ class ui_site extends bo_site {
 
             $content['no_ville_msg'] = "<span id='error'>" . lang('Aucune ville trouvée') . ' <a><button onclick="' . $js . '">' . lang('Créer en ici') . '</button></a>' . " </span>";
         }
-        parent::edit($content, $no_button, 'idasecurite_site', 'site', 'egw_asecurite_site', array('nom', 'prenom', 'adresse', 'code_postal', 'idasecurite_ville', 'telephone'), array('menuaction' => APP_NAME . '.ui_site.index'));
+        parent::edit($content, $no_button, 'idasecurite_site', 'site', 'egw_asecurite_site', array('menuaction' => APP_NAME . '.ui_site.index'));
 
         $this->tmpl->read(APP_NAME . '.site.edit');
         $this->tmpl->exec(APP_NAME . '.ui_site.edit', $content, $sel_options, $no_button, '', 2);

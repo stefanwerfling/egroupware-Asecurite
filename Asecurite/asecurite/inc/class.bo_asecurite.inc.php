@@ -322,18 +322,17 @@ class bo_asecurite extends so_sql {
      * @param string $name to custum the return message
      * @param string $table_name the table concerning by the saving or the update
      * @param array $data data to store or for update
-     * @param array $col the table column names
      * @param string $msg message regarding to saving or updating
      * @param boolean $is_catalog=false if catalog is the current table
      * @param string|array $where='' the referer column for update
      * @return boolean true if save|update is OK else false
      */
-    public function save_data($name, $table_name, $data, $col, &$msg, $where = '') {
+    public function save_data($name, $table_name, $data, &$msg, $where = '') {
 
         $this->setup_table(APP_NAME, $table_name);
         $return_value = false;
 
-        foreach ($col as $c => $val) {
+        foreach ($this->db_data_cols as $c => $val) {
             $this->data[$val] = $data[$val];
         }
 
@@ -392,17 +391,13 @@ class bo_asecurite extends so_sql {
      * @param array $extra_param contains menuaction value (the redirect link value) and other value such as message
      * @return void
      */
-    public function edit(&$content, &$no_button, $pk, $name, $table_name, $col, $extra_param) {
-
+    public function edit(&$content, &$no_button, $pk, $name, $table_name, $extra_param) {        
         $id = get_var('id', array('GET'));
-
         $save_ok = false;
         if ($id != '') {
-
             $GLOBALS['egw']->session->appsession($pk, APP_NAME, $id);
-
             if ($this->read($id)) {
-                foreach ($this->data as $db_col => $col) {
+                foreach ($this->data as $db_col => $col){
                     $content[$db_col] = $col;
                 }
             }
@@ -414,20 +409,15 @@ class bo_asecurite extends so_sql {
                 $content['add_edit'] = '<span class="title">' . $content['title'] . '<span> - <span id="add">Ajouter</span>';
             }
         }
-
-
         if (isset($content['add'])) {
-            $save_ok = $this->save_data($name, $table_name, $content, $col, $msg);
+            $save_ok = $this->save_data($name, $table_name, $content, $msg);
         } elseif (isset($content['edit'])) {
 
             $id = $GLOBALS['egw']->session->appsession($pk, APP_NAME);
 
-            $save_ok = $this->save_data($name, $table_name, $content, $col, $msg, array($pk => $id));
-
-
+            $save_ok = $this->save_data($name, $table_name, $content, $msg, array($pk => $id));
             $content['add_edit'] = '<span id="edit">Modifier</span>';
         }
-
         if ($content['edit'] || $content['add']) {
             switch ($name) {
                 case 'Group':
@@ -448,30 +438,24 @@ class bo_asecurite extends so_sql {
             $extra_param['save'] = $save_ok ? 'success' : 'error';
             self::close_popup($extra_param);
         }
-
         $no_button = array(
             'add' => $content[$pk],
             'edit' => !$content[$pk],
         );
-
-
         if ($content['weight'] == '') {
             $find_all = $this->search('', false);
-
             $content['weight'] = count($find_all) + 1;
         }
     }
-
     /**
      * edit or save a planning
      * @param array $content contains processing data
      * @param string $name module name (ex: site, agent, ...)
      * @param string $table_name table name to save or to update data
-     * @param array $col the table column names
      * @param array $extra_param contains menuaction value (the redirect link value) and other value such as message
      * @return void
      */
-    function edit_planning(&$content, $table_name, $name, $col, $extra_param) {
+    function edit_planning(&$content, $table_name, $name, $extra_param) {
 
         $save_ok = false;
         $current = get_var('current');
@@ -533,16 +517,13 @@ class bo_asecurite extends so_sql {
                     }
                 }
             }
-            //$content['heures_jour'] -= $content['heures_jour_dimanche'];
-            //$content['heures_nuit'] -= $content['heures_nuit_dimanche'];
-
             if ($GLOBALS['egw']->session->appsession('editId', APP_NAME)) {
-                $save_ok = $this->save_data($name, $table_name, $content, $col, $msg, array('idasecurite_horaires_agent' => $GLOBALS['egw']->session->appsession('editId', APP_NAME)));
+                $save_ok = $this->save_data($name, $table_name, $content, $msg, array('idasecurite_horaires_agent' => $GLOBALS['egw']->session->appsession('editId', APP_NAME)));
                 $content['heure_arrivee'] = '';
                 $content['heure_depart'] = '';
                 $content['pause'] = '';
             } else {
-                $save_ok = $this->save_data($name, $table_name, $content, $col, $msg);
+                $save_ok = $this->save_data($name, $table_name, $content, $msg);
             }
             $GLOBALS['egw']->session->appsession('editId', APP_NAME, '');
 
@@ -693,6 +674,11 @@ class bo_asecurite extends so_sql {
         return $result;
     }
 
+    /**
+     * Set filter
+     * @param type $query
+     * @param type $col
+     */
     function filter(&$query, $col) {
         if ($col['idasecurite_agent']) {
             $query['col_filter']['idasecurite_agent'] = $col['idasecurite_agent'];
@@ -1030,6 +1016,11 @@ class bo_asecurite extends so_sql {
         return $min != 0 ? $hour . 'h:' . $min . 'm' : $hour . 'h';
     }
 
+    /**
+     * Determines if the given date is an off day
+     * @param datetime $date_time
+     * @return boolean
+     */
     function is_ferie($date_time) {
         $explode_date_time = explode(' ', $this->datetime($date_time, true));
 
@@ -1044,6 +1035,10 @@ class bo_asecurite extends so_sql {
         return false;
     }
 
+    /**
+     * Determines the total of baskets (1 basket = 6 hour)
+     * @param type $rows
+     */
     function compute_paniers($rows) {
         $this->nb_baskets = 0;
         foreach ($rows as &$row) {
@@ -1053,7 +1048,10 @@ class bo_asecurite extends so_sql {
             }
         }
     }
-
+    /**
+     * Format data to display
+     * @param type $row
+     */
     function manage_display(&$row) {
 
         $total_hour = ($row['heure_depart'] - $row['heure_arrivee']) - $row['pause'];

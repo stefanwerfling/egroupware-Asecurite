@@ -134,7 +134,7 @@ class ui_ville extends bo_ville {
 
         $content['title'] = 'Asecurite' . ' - ' . lang("Working villes management");
 
-        parent::edit($content, $no_button, 'idasecurite_ville', 'City', 'egw_asecurite_ville', array('nom'), array('menuaction' => APP_NAME . '.ui_ville.index'));
+        parent::edit($content, $no_button, 'idasecurite_ville', 'City', 'egw_asecurite_ville', array('menuaction' => APP_NAME . '.ui_ville.index'));
 
         $this->tmpl->read(APP_NAME . '.ville.edit');
         $this->tmpl->exec(APP_NAME . '.ui_ville.edit', $content, '', $no_button, '', 2);

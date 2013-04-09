@@ -60,9 +60,7 @@ class ui_horaires_ville extends bo_horaires_ville {
 
             $this->delete(array('idasecurite_horaires_agent' => $del));
         } elseif (isset($content['delete_selected'])) {
-
             for ($i = 0; $i < count($content['nm']['checkbox']); $i++) {
-
                 $this->delete(array('idasecurite_horaires_agent' => $content['nm']['checkbox'][$i]));
             }
         }
@@ -83,7 +81,7 @@ class ui_horaires_ville extends bo_horaires_ville {
             'annee' => $this->years,
         );
 
-        parent::edit_planning($content, 'egw_asecurite_horaires_agent', 'City schedule', array('heure_arrivee', 'heure_depart', 'pause', 'heures_jour', 'heures_nuit', 'idasecurite_agent', 'idasecurite_site', 'idasecurite_ville', 'heures_jour_dimanche', 'heures_nuit_dimanche'), array('menuaction' => APP_NAME . '.ui_horaire_ville.index'));
+        parent::edit_planning($content, 'egw_asecurite_horaires_agent', 'City schedule',  array('menuaction' => APP_NAME . '.ui_horaire_ville.index'));
 
         if (!$this->agents) {
             $content['msg_horaire'] = "<span id='error' style='font-weight:bold'>" . lang('Threre is no agent !') . " </span>";

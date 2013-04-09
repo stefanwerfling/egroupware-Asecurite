@@ -83,7 +83,7 @@ class ui_horaires_agent extends bo_horaires_agent {
             'annee' => $this->years,
         );
 
-        parent::edit_planning($content, 'egw_asecurite_horaires_agent', 'Agent schedule', array('heure_arrivee', 'heure_depart', 'pause', 'heures_jour', 'heures_nuit', 'idasecurite_agent', 'idasecurite_site', 'idasecurite_ville', 'heures_jour_dimanche', 'heures_nuit_dimanche'), array('menuaction' => APP_NAME . '.ui_horaires_agent.index'));
+        parent::edit_planning($content, 'egw_asecurite_horaires_agent', 'Agent schedule', array('menuaction' => APP_NAME . '.ui_horaires_agent.index'));
 
         if (!$this->sites) {
             $content['msg_horaire'] = "<span id='error' style='font-weight:bold'>" . lang('Threre is no site !') . " </span>";
