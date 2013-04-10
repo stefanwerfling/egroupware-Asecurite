@@ -11,7 +11,6 @@
  * @subpackage asecurite/inc/
  * @filesource  class.ui_imprime.inc.php
  */
-include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.ui_pdf.inc.php');
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_asecurite.inc.php');
 
 class ui_imprime extends bo_asecurite {

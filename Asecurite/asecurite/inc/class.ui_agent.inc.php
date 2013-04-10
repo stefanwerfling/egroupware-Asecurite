@@ -12,7 +12,6 @@
  * @filesource  class.ui_agent.inc.php
  */
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_agent.inc.php');
-include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/lib/phpToPDF.php');
 
 class ui_agent extends bo_agent {
 
@@ -157,7 +156,7 @@ class ui_agent extends bo_agent {
      * @return html
      */
     function get_agent_info() {
-        $pdf = new phpToPDF();
+        $pdf = new ui_pdf();
         $pdf->AddPage();
         $pdf->SetFont('Times', 'B', 14);
         $pdf->Image(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/default/images/asecurite.png', 5, 6);
