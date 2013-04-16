@@ -140,11 +140,8 @@ class ui_ferie extends bo_ferie {
      * @return void
      */
     public function edit($content = NULL) {
-
         $content['title'] = 'Asecurite' . ' - ' . lang("Working feries management");
-
         parent::edit($content, $no_button, 'idasecurite_ferie', 'Bank holiday', 'egw_asecurite_ferie', array('menuaction' => APP_NAME . '.ui_ferie.index'));
-
         $this->tmpl->read(APP_NAME . '.ferie.edit');
         $this->tmpl->exec(APP_NAME . '.ui_ferie.edit', $content, '', $no_button, '', 2);
     }

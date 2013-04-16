@@ -53,14 +53,12 @@ class ui_horaires_site extends bo_horaires_site {
             $this->current_year = get_var('year');
             $content['idasecurite_agent'] = get_var('agent');
         }
+        //Manage deletion
         if (isset($content['nm']['delete'])) {
             list($del) = each($content['nm']['delete']);
-
             $this->delete(array('idasecurite_horaires_agent' => $del));
         } elseif (isset($content['delete_selected'])) {
-
             for ($i = 0; $i < count($content['nm']['checkbox']); $i++) {
-
                 $this->delete(array('idasecurite_horaires_agent' => $content['nm']['checkbox'][$i]));
             }
         }

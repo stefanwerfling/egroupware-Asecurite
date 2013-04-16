@@ -1,0 +1,2 @@
+Functionality
+ Is_ferie is taking account only if the arrival and the departure are ferie

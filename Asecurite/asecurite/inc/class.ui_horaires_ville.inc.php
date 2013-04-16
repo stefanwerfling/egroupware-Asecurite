@@ -38,26 +38,24 @@ class ui_horaires_ville extends bo_horaires_ville {
             'agent' => $GLOBALS['egw']->session->appsession('current_agent', APP_NAME),
             'site' => $GLOBALS['egw']->session->appsession('current_site', APP_NAME)));
     }
-
     /**
      * Display the application home content
      */
     public function index($content = NULL) {
-
         $id = get_var('id');
         if ($id != '') {
             $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME, $id);
         }
+        // Get request parameters
         if (get_var('month')) {
             $this->current_month = get_var('month');
             $this->current_year = get_var('year');
             $content['idasecurite_agent'] = get_var('agent');
             $content['idasecurite_site'] = get_var('site');
         }
-
+        //Deletion management
         if (isset($content['nm']['delete'])) {
             list($del) = each($content['nm']['delete']);
-
             $this->delete(array('idasecurite_horaires_agent' => $del));
         } elseif (isset($content['delete_selected'])) {
             for ($i = 0; $i < count($content['nm']['checkbox']); $i++) {
@@ -65,29 +63,27 @@ class ui_horaires_ville extends bo_horaires_ville {
             }
         }
         $this->setup_table(APP_NAME, 'egw_asecurite_ville');
-
         $f_city = $this->search(array('idasecurite_ville' => $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME)), false);
         if (count($f_city) == 1) {
             $content['ville'] = $f_city[0]['nom'];
         }
         $content['idasecurite_ville'] = $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME);
-
         $this->update_lists($content['idasecurite_ville']);
-
         $select_option = array(
             'idasecurite_site' => $this->sites,
             'idasecurite_agent' => $this->agents,
             'mois' => $this->monthes,
             'annee' => $this->years,
         );
-
+        //Add
         parent::edit_planning($content, 'egw_asecurite_horaires_agent', 'City schedule',  array('menuaction' => APP_NAME . '.ui_horaire_ville.index'));
-
         if (!$this->agents) {
             $content['msg_horaire'] = "<span id='error' style='font-weight:bold'>" . lang('Threre is no agent !') . " </span>";
         }
+        //Get plannings by using filter
         $GLOBALS['egw']->session->appsession('all_planning_city', APP_NAME, $this->get_mensual_planning($content['mois'], $content['annee'], $content['idasecurite_agent'], $content['idasecurite_site'], $content['idasecurite_ville']));
-
+        
+        //Draw stat
         $content['stat'] = '<div class="stat">' . $this->draw_stat($GLOBALS['egw']->session->appsession('all_planning_city', APP_NAME)) . '</div>';
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
@@ -127,7 +123,6 @@ class ui_horaires_ville extends bo_horaires_ville {
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
-
         if ($rows) {
             foreach ($rows as &$row) {
                 $this->setup_table(APP_NAME, 'egw_asecurite_site');

@@ -16,6 +16,7 @@ if (!defined('APP_NAME')) {
 }
 
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.ui_pdf.inc.php');
+
 class bo_asecurite extends so_sql {
 
     /**
@@ -81,6 +82,7 @@ class bo_asecurite extends so_sql {
     var $current_link;
     var $width = 0;
     var $height = 0;
+
     /** @var array . Preferences for the current application. */
     public static $preferences;
 
@@ -193,7 +195,7 @@ class bo_asecurite extends so_sql {
                     //'dataTables.editor' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.editor.js
                     'jscharts' => '', // file name: asecurite/js/jscharts.js
                     'thickbox' => 'thickbox', // file name: asecurite/js/flexigrid/flexigrid.js
-            )));
+        )));
         $GLOBALS['egw_info']['flags']['include_xajax'] = true;
     }
 
@@ -391,13 +393,13 @@ class bo_asecurite extends so_sql {
      * @param array $extra_param contains menuaction value (the redirect link value) and other value such as message
      * @return void
      */
-    public function edit(&$content, &$no_button, $pk, $name, $table_name, $extra_param) {        
+    public function edit(&$content, &$no_button, $pk, $name, $table_name, $extra_param) {
         $id = get_var('id', array('GET'));
         $save_ok = false;
         if ($id != '') {
             $GLOBALS['egw']->session->appsession($pk, APP_NAME, $id);
             if ($this->read($id)) {
-                foreach ($this->data as $db_col => $col){
+                foreach ($this->data as $db_col => $col) {
                     $content[$db_col] = $col;
                 }
             }
@@ -419,22 +421,7 @@ class bo_asecurite extends so_sql {
             $content['add_edit'] = '<span id="edit">Modifier</span>';
         }
         if ($content['edit'] || $content['add']) {
-            switch ($name) {
-                case 'Group':
-                    $extra_param['msg_group'] = $msg;
-                    break;
-                case 'Grouptype':
-                    $extra_param['msg_grouptype'] = $msg;
-                    break;
-                case 'Context':
-                    $extra_param['msg_context'] = $msg;
-                    break;
-                case 'Publish_servers':
-                    $extra_param['msg_publish'] = $msg;
-                    break;
-                default :
-                    $extra_param['msg'] = $msg;
-            }
+            $extra_param['msg'] = $msg;
             $extra_param['save'] = $save_ok ? 'success' : 'error';
             self::close_popup($extra_param);
         }
@@ -447,6 +434,7 @@ class bo_asecurite extends so_sql {
             $content['weight'] = count($find_all) + 1;
         }
     }
+
     /**
      * edit or save a planning
      * @param array $content contains processing data
@@ -456,14 +444,14 @@ class bo_asecurite extends so_sql {
      * @return void
      */
     function edit_planning(&$content, $table_name, $name, $extra_param) {
-
         $save_ok = false;
         $current = get_var('current');
         if ($current) {
             $content['mois'] = $this->current_month;
             $content['annee'] = $this->current_year;
         }
-        $editId = get_var('editId');
+        //To modify a planning row
+        $editId = get_var('editId'); // row id to modify    
         if ($editId) {
             $GLOBALS['egw']->session->appsession('editId', APP_NAME, $editId);
             $this->setup_table(APP_NAME, $table_name);
@@ -477,8 +465,9 @@ class bo_asecurite extends so_sql {
                 $content['pause'] = $f_planning[0]['pause'];
             }
         }
+        //Get message after saving
         $save = get_var('save', array('GET'));
-
+        // Add planning
         if (isset($content['add_horaire'])) {
             $compute = $this->compute_hour((int) $content['heure_arrivee'], (int) $content['heure_depart']);
             $content['heures_jour'] = $compute['day'];
@@ -783,17 +772,13 @@ class bo_asecurite extends so_sql {
      * @return array associated array (date and night) for each working site
      */
     function get_hours_stat_by_site($all_planning) {
-
         $return = array();
-
         if (is_array($all_planning) && count($all_planning) != 0) {
-
             $return['total']['day'] = 0;
             $return['total']['night'] = 0;
             $return['total']['sun_day'] = 0;
             $return['total']['sun_night'] = 0;
-
-
+            $nb_ferie = 0;
             foreach ($all_planning as $key => $value) {
                 if (!is_array($return[$value['idasecurite_site']])) {
                     $return[$value['idasecurite_site']]['day'] = 0;
@@ -801,7 +786,13 @@ class bo_asecurite extends so_sql {
                     $return[$value['idasecurite_site']]['sun_day'] = 0;
                     $return[$value['idasecurite_site']]['sun_night'] = 0;
                 }
-
+                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
+                    $nb_ferie++;
+                    $value['heures_jour'] *= 2;
+                    $value['heures_nuit'] *= 2;
+                    $value['heures_jour_dimanche'] *= 2;
+                    $value['heures_nuit_dimanche'] *= 2;
+                }
                 $day = intval($value['heures_jour']);
                 $night = intval($value['heures_nuit']);
                 $sun_day = intval($value['heures_jour_dimanche']);
@@ -821,23 +812,22 @@ class bo_asecurite extends so_sql {
         return $return;
     }
 
+    /**
+     * Draw statistic for a planning
+     * @param array $all_planning
+     * @return string
+     */
     function draw_stat($all_planning) {
-
         $stat_array = $this->get_hours_stat_by_site($all_planning);
-
         $return = '<div>';
-
         $this->setup_table(APP_NAME, 'egw_asecurite_site');
         foreach ($stat_array as $key => $value) {
             $site_name = $key;
-
             if ($key == 'total') {
                 $site_name = lang('Total global');
             } else {
                 $f_site_name = $this->search(array('idasecurite_site' => $key), false);
-
                 $return .= '<div id="site_stat">';
-
                 if ($f_site_name) {
                     $site_name = $f_site_name[0]['nom'];
                 }
@@ -845,9 +835,7 @@ class bo_asecurite extends so_sql {
             $return .= $this->draw_chart($site_name, $value['day'] + $value['night'] + $value['sun_day'] + $value['sun_night'], $value['day'], $value['night'], $value['sun_day'], $value['sun_night']);
             $return .= '</div>';
         }
-
         $return .= '</div><div id="end_float"></div>';
-
         return $return;
     }
 
@@ -1048,33 +1036,31 @@ class bo_asecurite extends so_sql {
             }
         }
     }
+
     /**
      * Format data to display
      * @param type $row
      */
     function manage_display(&$row) {
-
         $total_hour = ($row['heure_depart'] - $row['heure_arrivee']) - $row['pause'];
-        $row['nombre_heures'] = '<span id="hour">' . $this->get_time($total_hour) . '</span>';
         $row['pause'] = $this->get_time($row['pause']);
         $row['panier'] = 0;
         if ($total_hour >= (3600 * 6)) {
             $row['panier'] = 1;
         }
-        $ferieA = '';
-        if ($this->is_ferie($row['heure_arrivee'])) {
-            $ferieA = '<span id="error">' . lang('férié') . '</span>';
+        $ferie = '';
+        //If ferie
+        if ($this->is_ferie($row['heure_arrivee']) && $this->is_ferie($row['heure_depart'])) {
+            $ferie = '<span id="error">' . lang('férié') . '</span>';
+            $total_hour *= 2;
         }
-        $ferieD = '';
-        if ($this->is_ferie($row['heure_depart'])) {
-            $ferieD = '<span id="error">' . lang('férié') . '</span>';
-        }
+        $row['nombre_heures'] = '<span id="hour">' . $this->get_time($total_hour) . ' ' . $ferie . '</span>';
         $row['heures_jour'] = '<span id="hour">' . $this->get_time($row['heures_jour']) . '</span>';
         $row['heures_nuit'] = '<span id="hour">' . $this->get_time($row['heures_nuit']) . '</span>';
         $row['heures_jour_dimanche'] = '<span id="sunday">' . $this->get_time($row['heures_jour_dimanche']) . '</span>';
         $row['heures_nuit_dimanche'] = '<span id="sunday">' . $this->get_time($row['heures_nuit_dimanche']) . '</span>';
-        $row['heure_arrivee'] = $this->datetime($row['heure_arrivee'], true) . ' ' . $ferieA;
-        $row['heure_depart'] = $this->datetime($row['heure_depart'], true) . ' ' . $ferieD;
+        $row['heure_arrivee'] = $this->datetime($row['heure_arrivee'], true) . ' ' . $ferie;
+        $row['heure_depart'] = $this->datetime($row['heure_depart'], true) . ' ' . $ferie;
     }
 
     /**
@@ -1126,7 +1112,7 @@ class bo_asecurite extends so_sql {
     static function getPreference() {
         return self::$preferences;
     }
-    
+
     /**
      * send a file content as a stream
      */
@@ -1139,4 +1125,5 @@ class bo_asecurite extends so_sql {
         echo $content;
         exit;
     }
+
 }
