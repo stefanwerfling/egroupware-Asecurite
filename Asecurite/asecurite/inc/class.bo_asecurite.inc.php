@@ -41,48 +41,73 @@ class bo_asecurite extends so_sql {
      * years to choose
      * @var array
      */
-    var $years = array();
+    protected $years = array();
 
     /**
      * monthes to choose
      * @var array
      */
-    var $monthes = array();
+    protected $monthes = array();
 
     /**
      * working sites
      * @var array
      */
-    var $sites = array();
+    protected $sites = array();
 
     /**
      * all agents
      * @var array 
      */
-    var $agents = array();
+    protected $agents = array();
 
     /**
      * all cities
      * @var array 
      */
-    var $cities = array();
+    protected $cities = array();
 
     /**
      * current month
      * @var int 
      */
-    var $current_month;
+    protected $current_month;
 
     /**
      * current year
      * @var int
      */
-    var $current_year;
-    var $nb_baskets = 0;
-    var $current_link;
-    var $width = 0;
-    var $height = 0;
-
+    protected $current_year;
+    /**
+     * basket number (1 basket = 6 consecutive hours)
+     * @var int
+     */
+    protected $nb_baskets = 0;
+    /**
+     * Page current link
+     * @var string 
+     */
+    protected $current_link;
+    /**
+     * popup window's width for edition
+     * @var int 
+     */
+    protected $width = 0;
+    /**
+     * popup window's height for edition
+     * @var int 
+     */
+    protected $height = 0;
+    /**
+     * planning popup window's width
+     * @var int 
+     */
+    protected $planning_width = 1100;
+    /**
+     * planning popup window's height
+     * @var int
+     */
+    protected $planning_height = 700;
     /** @var array . Preferences for the current application. */
     public static $preferences;
 
@@ -652,7 +677,7 @@ class bo_asecurite extends so_sql {
         $result = array();
         $i = 0;
         if ($f_planning) {
-            foreach ($f_planning as $key => $value) {
+            foreach ($f_planning as $value) {
                 $m = $month != 0 ? date('m', $value['heure_arrivee']) : 0;
                 $y = $year != 0 ? date('Y', $value['heure_arrivee']) : 0;
                 if (($m == $month && $y == $year)) {
@@ -715,7 +740,7 @@ class bo_asecurite extends so_sql {
      * @param int $nb_sun_night
      * @return string js chart 
      */
-    function draw_chart($char_id, $nb_total, $nb_day, $nb_night, $nb_sun_day, $nb_sun_night) {
+    function draw_chart($char_id, $nb_ferie, $nb_total, $nb_day, $nb_night, $nb_sun_day, $nb_sun_night) {
         $return = '<table border="1" bgcolor="white"><caption id="segment_name"></caption>';
         $return .= '<tr><td><div id="' . $char_id . '"></div><script type="text/javascript">';
         $return .= "var myData = new Array(";
@@ -749,6 +774,7 @@ class bo_asecurite extends so_sql {
         }
 
         $display_percent .= "&nbsp;&nbsp;<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>" . lang("Nombre d'heures totales travaillées") . " : &nbsp; $total_in_time ( 100% )<br>";
+        $display_percent .= "&nbsp;&nbsp;<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>" . lang("Nombre de jour férié") . " : &nbsp; $nb_ferie<br>";
         $display_percent .= "&nbsp;&nbsp;<span style='background-color: #{$day_color}'>&nbsp;&nbsp;&nbsp;&nbsp;</span>" . lang("Total du nombre d'heures jour") . " : &nbsp; $total_day_in_time &nbsp; ( $day_percent% )<br>";
         $display_percent .= "&nbsp;&nbsp;<span style='background-color: #{$night_color}'>&nbsp;&nbsp;&nbsp;&nbsp;</span>" . lang("Total du nombre d'heures nuit") . " : &nbsp; $total_night_in_time &nbsp; ( $night_percent% )<br>";
         $display_percent .= "&nbsp;&nbsp;<span style='background-color: #{$sun_day_color}; font-weight: bold'>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='font-weight: bold;'>" . lang("Total du nombre d'heures jour dimanche") . " : &nbsp; $total_sun_day_in_time &nbsp; ( $sun_day_percent% )</span><br>";
@@ -778,25 +804,27 @@ class bo_asecurite extends so_sql {
             $return['total']['night'] = 0;
             $return['total']['sun_day'] = 0;
             $return['total']['sun_night'] = 0;
-            $nb_ferie = 0;
-            foreach ($all_planning as $key => $value) {
+            foreach ($all_planning as $value) {
                 if (!is_array($return[$value['idasecurite_site']])) {
                     $return[$value['idasecurite_site']]['day'] = 0;
                     $return[$value['idasecurite_site']]['night'] = 0;
                     $return[$value['idasecurite_site']]['sun_day'] = 0;
                     $return[$value['idasecurite_site']]['sun_night'] = 0;
-                }
-                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
-                    $nb_ferie++;
-                    $value['heures_jour'] *= 2;
-                    $value['heures_nuit'] *= 2;
-                    $value['heures_jour_dimanche'] *= 2;
-                    $value['heures_nuit_dimanche'] *= 2;
+                    $return[$value['idasecurite_site']]['nb_ferie'] = 0;
                 }
                 $day = intval($value['heures_jour']);
                 $night = intval($value['heures_nuit']);
                 $sun_day = intval($value['heures_jour_dimanche']);
                 $sun_night = intval($value['heures_nuit_dimanche']);
+
+                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
+                    $day *= 2;
+                    $night *= 2;
+                    $sun_day *= 2;
+                    $sun_night *= 2;
+                    $return['total']['nb_ferie']++;
+                    $return[$value['idasecurite_site']]['nb_ferie']++;
+                }
 
                 $return[$value['idasecurite_site']]['day'] += $day;
                 $return['total']['day'] += $day;
@@ -832,7 +860,7 @@ class bo_asecurite extends so_sql {
                     $site_name = $f_site_name[0]['nom'];
                 }
             }
-            $return .= $this->draw_chart($site_name, $value['day'] + $value['night'] + $value['sun_day'] + $value['sun_night'], $value['day'], $value['night'], $value['sun_day'], $value['sun_night']);
+            $return .= $this->draw_chart($site_name, $value['nb_ferie'], $value['day'] + $value['night'] + $value['sun_day'] + $value['sun_night'], $value['day'], $value['night'], $value['sun_day'], $value['sun_night']);
             $return .= '</div>';
         }
         $return .= '</div><div id="end_float"></div>';

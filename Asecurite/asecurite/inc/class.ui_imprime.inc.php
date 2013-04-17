@@ -194,14 +194,13 @@ class ui_imprime extends bo_asecurite {
         $this->pdf->SetFont('Times', '', 11);
         //Adding logo
         $this->pdf->Image(EGW_INCLUDE_ROOT . '/' . APP_NAME . '/templates/default/images/asecurite.png', 5, 6);
-        
-        $this->pdf->Cell(48);//set marging right
-        
+
+        $this->pdf->Cell(48); //set marging right
+
         $this->pdf->Cell(60, 0, 'Date d\'impression: ' . date('j/m/Y'), 0, 1, 'L');
         //$this->pdf->Ln(1);
-        
         //set marging right
-        $this->pdf->Cell(48);//set marging right
+        $this->pdf->Cell(48); //set marging right
         $this->pdf->Cell(114, 10, utf8_decode('Ville: ' . $this->cities[$GLOBALS['egw']->session->appsession('current_ville', APP_NAME)]), 0, 1, 'L');
         //$this->pdf->Ln(1);
         $this->pdf->Cell(48);
@@ -228,7 +227,6 @@ class ui_imprime extends bo_asecurite {
             $this->pdf->Cell(0, 0, utf8_decode("Feuille de planning de: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} "), 0, 1, 'C');
         }
 
-
         /* ---- BEGIN PLANNING TABLES ------ */
         $table_property = array(
             'TB_ALIGN' => 'L',
@@ -236,6 +234,7 @@ class ui_imprime extends bo_asecurite {
             'BRD_COLOR' => array(0, 0, 0),
             'BRD_SIZE' => '0.3',
         );
+        //Table header property
         $header_property = array(
             'T_COLOR' => array(0, 0, 0),
             'T_SIZE' => 9,
@@ -256,7 +255,7 @@ class ui_imprime extends bo_asecurite {
         $header_sizes = array();
         $header_contents = array();
         $table_content = array();
-
+        //Table property
         $content_property = array(
             'T_COLOR' => array(0, 0, 0),
             'T_SIZE' => 8,
@@ -273,10 +272,10 @@ class ui_imprime extends bo_asecurite {
             'BRD_TYPE' => '1',
             'BRD_TYPE_NEW_PAGE' => '',
         );
-
+        /*         * ** Table Header *** */
         $header_sizes[] = 9;
         $header_contents[] = lang('Date');
-
+        //If agents are set 
         if ($all_agent) {
             $header_sizes[] = 30;
             $header_contents[] = lang('Agent');
@@ -311,24 +310,43 @@ class ui_imprime extends bo_asecurite {
         $total_day = $total_night = $total_sun_day = $total_sun_night = $total = 0;
         $nb_global_hour_by_agent = array();
         $nb_paniers = 0;
+        $nb_ferie = 0;
+        //Fill table
         foreach ($GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME) as $key => $value) {
             if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']])) {
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] = 0;
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunday'] = 0;
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] = 0;
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] = 0;
+                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie'] = 0;
             }
-            $day = intval($value['heures_jour']);
-            $night = intval($value['heures_nuit']);
-            $sun_day = intval($value['heures_jour_dimanche']);
-            $sun_night = intval($value['heures_nuit_dimanche']);
+            //Nb hours * 2 is ferie
+            if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
+                $day = intval($value['heures_jour']) * 2;
+                $night = intval($value['heures_nuit']) * 2;
+                $sun_day = intval($value['heures_jour_dimanche']) * 2;
+                $sun_night = intval($value['heures_nuit_dimanche']) * 2;
+                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie']++;
+                $nb_ferie++;
+            } else {
+                $day = intval($value['heures_jour']);
+                $night = intval($value['heures_nuit']);
+                $sun_day = intval($value['heures_jour_dimanche']);
+                $sun_night = intval($value['heures_nuit_dimanche']);
+            }
 
             $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] += $day;
             $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunday'] += $sun_day;
             $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] += $night;
             $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] += $sun_night;
 
-            $table_content[] = date('j', $value['heure_arrivee']);
+            //If ferie add (F) to date
+            if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
+                $table_content[] = date('j', $value['heure_arrivee']) . ' (F)';
+            } else {
+                $table_content[] = date('j', $value['heure_arrivee']);
+            }
+            //Add agent name if agent
             if ($all_agent) {
                 $table_content[] = $this->agents[$value['idasecurite_agent']];
             }
@@ -351,28 +369,33 @@ class ui_imprime extends bo_asecurite {
                 $table_content[] = $panier;
             }
             $table_content[] = $this->get_time($total);
-
             $total_day += $day;
             $total_sun_day += $sun_day;
             $total_night += $night;
             $total_sun_night += $sun_night;
         }
+        //compute total hours
         $total = $total_day + $total_night + $total_sun_day + $total_sun_night;
 
+        //Table header
         $header = array_merge($header_sizes, $header_contents);
+        //Draw table
         $this->pdf->drawTableau($this->pdf, $table_property, $header_property, $header, $content_property, $table_content);
 
-        /* ---- END PLANNING TABLES ------ */
-
-        /* ---- BEGIN GLOBAL HOUR TABLE ------ */
+        /* ----- END PLANNING TABLES ------ */
+        /* ----- BEGIN GLOBAL HOUR TABLE --- */
         $header_property['BG_COLOR_COL0'] = array(10, 240, 240);
-        $Global_header = array(50, 10, 'Global', 'COLSPAN2');
+        $Global_header = array(50, 25, 'Global', 'COLSPAN2');
         $Global_table_content = array();
 
         if (self::$preferences['isPanier']) {
             $Global_table_content[] = lang('Paniers');
             $Global_table_content[] = $nb_paniers;
         }
+        $Global_table_content[] = lang('Total heures');
+        $Global_table_content[] = $this->get_time($total);
+        $Global_table_content[] = lang(utf8_decode('Jours férié'));
+        $Global_table_content[] = $nb_ferie;
         $Global_table_content[] = lang('Heures jours');
         $Global_table_content[] = $this->get_time($total_day);
         $Global_table_content[] = lang('Heures nuits');
@@ -389,7 +412,6 @@ class ui_imprime extends bo_asecurite {
         $this->pdf->Ln(3);
 
         /* ---- END GLOBAL HOUR TABLE ------ */
-
         /* ---- BEGIN GLOBAL SITES TABLE ------ */
 
         if (is_array($nb_global_hour_by_agent)) {
@@ -403,16 +425,16 @@ class ui_imprime extends bo_asecurite {
                 $this->setup_table(APP_NAME, 'egw_asecurite_agent');
                 $f_agent = $this->search(array('idasecurite_agent' => $agent), false);
                 if (count($f_agent) == 1) {
-
                     $agent_name = $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'];
-
                     foreach ($site as $key => $value) {
                         $site_stat_table_content = array();
                         $site = $this->sites[$key];
-                        $site_stat_header = array(50, 10, $agent_name . '(' . $site . ')', 'COLSPAN2');
+                        $site_stat_header = array(50, 25, $agent_name . '(' . $site . ')', 'COLSPAN2');
 
                         $site_stat_table_content[] = lang('Total Heures');
                         $site_stat_table_content[] = $this->get_time($value['day'] + $value['night'] + $value['sunday'] + $value['sunnight']);
+                        $site_stat_table_content[] = lang(utf8_decode('Jours férié'));
+                        $site_stat_table_content[] = $value['nb_ferie'];
                         $site_stat_table_content[] = lang('Heures jours');
                         $site_stat_table_content[] = $this->get_time($value['day']);
                         $site_stat_table_content[] = lang('Heures nuits');
