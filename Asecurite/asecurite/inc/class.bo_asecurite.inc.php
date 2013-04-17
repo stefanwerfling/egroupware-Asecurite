@@ -14,9 +14,7 @@
 if (!defined('APP_NAME')) {
     define('APP_NAME', 'asecurite');
 }
-
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.ui_pdf.inc.php');
-
 class bo_asecurite extends so_sql {
 
     /**
@@ -256,49 +254,12 @@ class bo_asecurite extends so_sql {
      * @return string
      */
     public function time($timestamp) {
-
         if (!is_a($timestamp, 'DateTime')) {
             $timestamp = new egw_time($timestamp, egw_time::$server_timezone);
         }
         $timestamp->setTimezone(egw_time::$user_timezone);
-
         $format = ($GLOBALS['egw_info']['user']['preferences']['common']['timeformat'] != 12 ? 'H:i' : 'h:i a');
-
         return $timestamp->format($format);
-    }
-
-    /**
-     * convert time to seconde.      
-     * @param int $hour hour
-     * @param int $min minute
-     * @return int converted time 
-     */
-    public function convert_time_to_sec($hour, $min) {
-
-        /**
-         * PHP date function return 01:00 if the second parameter (timestamp) egal to 0 i.e $hour=0. so we need an algorithm
-         * in order to to display the user chosen hour from UI
-         */
-        switch ($hour) {
-            case 0:
-                $hour_to_sec = 0; // 1h
-                break;
-            case 1:
-                $hour_to_sec = 3600; // 2h
-                break;
-            default :
-                $hour_to_sec = 3600 * $hour;
-        }
-        $time = $hour_to_sec == 0 ? 0 : $hour_to_sec;
-
-        if ($min != 0 && $time == 0) {
-
-            $time = 60 * $min;
-        } else {
-            $time += 60 * $min;
-        }
-
-        return $time;
     }
 
     /**
@@ -320,25 +281,19 @@ class bo_asecurite extends so_sql {
      * @return void
      */
     public function move_up_down($up_down, $id, $where, $extra = '') {
-
         if ($this->read($id)) {
             foreach ($this->data as $db_col => $col) {
                 $content[$db_col] = $col;
             }
             $weight = (int) $content['weight'] + $up_down;
             $newWeight = $weight <= 0 ? 1 : $weight;
-
             if (is_array($extra)) {
                 $this->update(array('weight' => $content['weight']), array('weight' => $newWeight) + $extra);
-
                 $content['weight'] = $newWeight;
-
                 $this->update($content, $where + $extra);
             } else {
                 $this->update(array('weight' => $content['weight']), array('weight' => $newWeight));
-
                 $content['weight'] = $newWeight;
-
                 $this->update($content, $where);
             }
         }
@@ -358,17 +313,14 @@ class bo_asecurite extends so_sql {
 
         $this->setup_table(APP_NAME, $table_name);
         $return_value = false;
-
         foreach ($this->db_data_cols as $c => $val) {
             $this->data[$val] = $data[$val];
         }
-
         if ($where == '') { // save
             if (isset($data['weight'])) {
                 unset($this->data['weight']);
             }
             $found = $this->search($this->data, False); // searches by using the no-empty fields
-
             if (!$found) {
                 if (isset($data['weight'])) {
                     $this->data['weight'] = $data['weight'];
@@ -401,9 +353,7 @@ class bo_asecurite extends so_sql {
      * @return void
      */
     function redirect_to_edit($session_name, $link_to_edit) {
-
         $GLOBALS['egw']->session->appsession($session_name, APP_NAME, '');
-
         $GLOBALS['egw']->redirect_link('/index.php', $link_to_edit);
     }
 
