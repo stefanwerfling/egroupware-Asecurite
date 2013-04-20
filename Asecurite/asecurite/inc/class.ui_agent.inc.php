@@ -50,12 +50,11 @@ class ui_agent extends bo_agent {
      */
     public function index($content = NULL) {
         $this->createHeader();
-        $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
+        $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);        
         $t->set_file(array(
             'T_agents' => 'agents.tpl'
         ));
         $t->set_block('T_agents', 'agents');
-
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
         $add_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.redirect_to_edit'));

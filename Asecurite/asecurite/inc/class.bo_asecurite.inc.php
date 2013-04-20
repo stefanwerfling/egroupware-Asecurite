@@ -15,6 +15,7 @@ if (!defined('APP_NAME')) {
     define('APP_NAME', 'asecurite');
 }
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.ui_pdf.inc.php');
+include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/lib/class.bo_fwkpopin.inc.php');
 class bo_asecurite extends so_sql {
 
     /**
@@ -117,7 +118,6 @@ class bo_asecurite extends so_sql {
 
         parent::__construct(APP_NAME, $table);
         $GLOBALS['egw_info']['flags']['include_xajax'] = true;
-        //$_main_conf = bo_var_setting::get_all_conf_var();
 
         $this->nm = array(
             //'get_rows' => 'asecurite.ui_grouptype.get_rows', // I  method/callback to request the data for the rows eg. 'notes.bo.get_rows'
@@ -490,7 +490,6 @@ class bo_asecurite extends so_sql {
                 $save_ok = $this->save_data($name, $table_name, $content, $msg);
             }
             $GLOBALS['egw']->session->appsession('editId', APP_NAME, '');
-
             $save = $save_ok ? 'success' : 'error';
 
             if ($save_ok) {
@@ -622,7 +621,7 @@ class bo_asecurite extends so_sql {
         }
         if ($id_city) {
             $where['idasecurite_ville'] = $id_city;
-        }
+        }    
         $f_planning = $this->search($where, false, 'heure_arrivee ASC');
         $result = array();
         $i = 0;
