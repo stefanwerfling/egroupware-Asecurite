@@ -120,12 +120,11 @@ class ui_agent extends bo_agent {
                 $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => 'true'));
                 $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
-                $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\', '. $this->planning_width. ', '. $this->planning_height. ', \'yes\'); return false;">' . $row['nom'] . ' ' . $row['prenom'] . '</span>';
+                $row['nom'] = bo_fwkpopin::draw_openable_link($planning_link, $row['nom'] . ' ' . $row['prenom'], $this->planning_width, $this->planning_height,'', 'style="cursor:pointer; color:blue;"');
 
                 $row['piece_identite'] = '--';
                 $style = 'success';
                 if ($row['type_piece_identite'] != '') {
-
                     if (self::is_expired($row['date_fin_piece_identite'])) {
                         $style = 'error';
                     }

@@ -1401,7 +1401,7 @@
 			 *   array. 2D example: [ [ 10, 25, 50, 100, -1 ], [ 10, 25, 50, 100, 'All' ] ];
 			 */
 			//this.aLengthMenu = [ 10, 25, 50, 100 ];
-			this.aLengthMenu = [ 20, 40, 60, 80, 100 ];
+			this.aLengthMenu = [5, 10, 20, 40, 60, 80, 100 ];
 			
 			/*
 			 * Variable: iDraw

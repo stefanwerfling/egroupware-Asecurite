@@ -59,7 +59,6 @@ class ui_asecurite extends bo_asecurite {
                 $this->delete(array('idasecurite_agent' => $content['nm']['rows']['checkbox'][$i]));
             }
         }
-
         $content['msg'] = "<span id=\"$save\">" . lang($msg) . " </span>";
 
         $content['nm'] = $this->nm + array('get_rows' => APP_NAME . '.ui_' . APP_NAME . '.get_rows', 'order' => 'nom');

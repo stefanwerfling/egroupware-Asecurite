@@ -102,8 +102,7 @@ class ui_ville extends bo_ville {
                 $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $id, 'current' => 'true'));
                 $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.edit', 'id' => $id));
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.delete_ville', 'id' => $id));
-                $row['nom'] = '<span style="cursor:pointer; color:blue;" onclick="egw_openWindowCentered2(\'' . $planning_link . '\', \'_blank\',  '. $this->planning_width. ', '. $this->planning_height. ', \'yes\'); return false;">' . $row['nom'] . '</span>';
-
+                $row['nom'] = bo_fwkpopin::draw_openable_link($planning_link, $row['nom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                 $row['operation'] = '<span style="float:right">';
                 $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier la ville"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\',' . $this->width . ', ' . $this->height . ', \'yes\'); return false;"');
                 $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer la ville"), 'style="cursor:pointer" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cette ville?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');

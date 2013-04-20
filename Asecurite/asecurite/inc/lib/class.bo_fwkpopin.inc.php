@@ -27,7 +27,7 @@ class bo_fwkpopin {
     }
 
     static function display_type() {
-        return 'popin';//$GLOBALS['egw_info']['user']['preferences']['common']['display_type'];
+        return 'popup';//$GLOBALS['egw_info']['user']['preferences']['common']['display_type'];
     }
 
     /**
@@ -98,7 +98,7 @@ class bo_fwkpopin {
      * @param string $title_bar popin title bar
      * @return string html
      */
-    public static function draw_button($link, $name, $width, $height, $id, $title_bar = '', $dialog_id = '') {
+    public static function draw_button($link, $name, $width, $height, $id='', $title_bar = '', $dialog_id = '') {
         $display_type = self::display_type();
         if ($display_type == 'popup') {
             return '<button id="popup"  onclick="' . self::open_popup($link, $width, $height) . '" name="popup">' . lang($name) . '</button>';
@@ -122,7 +122,7 @@ class bo_fwkpopin {
      * @param string $title_bar popin title bar
      * @return string html
      */
-    public static function draw_icon_button($link, $src, $width, $height, $id, $extra = '', $title_bar = '', $dialog_id = '') {
+    public static function draw_icon_button($link, $src, $width, $height, $id='', $extra = '', $title_bar = '', $dialog_id = '') {
         $display_type = self::display_type();
         if ($display_type == 'popup') {
             return '<img onclick="' . self::open_popup($link, $width, $height) . '" ' . $extra . ' src="' . $src . '"/>';
@@ -146,7 +146,7 @@ class bo_fwkpopin {
      * @param string $title_bar popin title bar
      * @return string
      */
-    public static function draw_openable_link($link, $text, $width, $height, $id, $extra = '', $title_bar = '', $dialog_id = '') {
+    public static function draw_openable_link($link, $text, $width, $height, $id='', $extra = '', $title_bar = '', $dialog_id = '') {
         $display_type = self::display_type();
         if ($display_type == 'popup') {
             return '<span onclick="' . self::open_popup($link, $width, $height) . '" ' . $extra . '>' . $text . '</span>';
