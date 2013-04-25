@@ -397,8 +397,8 @@ class bo_asecurite extends so_sql {
         }
         if ($content['edit'] || $content['add']) {
             $extra_param['msg'] = $msg;
-            $extra_param['save'] = $save_ok ? 'success' : 'error';
-            self::close_popup($extra_param);
+            $extra_param['save'] = $save_ok ? 'success' : 'error';            
+            bo_fwkpopin::close($GLOBALS['egw']->link('/index.php', $extra_param));
         }
         $no_button = array(
             'add' => $content[$pk],
