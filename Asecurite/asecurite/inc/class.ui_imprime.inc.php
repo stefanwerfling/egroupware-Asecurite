@@ -87,6 +87,7 @@ class ui_imprime extends bo_asecurite {
         $nb_global_hour_by_agent = array();
 
         $nb_paniers = 0;
+
         foreach ($GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME) as $key => $value) {
             if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']])) {
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] = 0;
@@ -311,68 +312,74 @@ class ui_imprime extends bo_asecurite {
         $nb_global_hour_by_agent = array();
         $nb_paniers = 0;
         $nb_ferie = 0;
-        //Fill table
+        //--------------- Fill table ----------
+        //to print
+        $print_from = intval($GLOBALS['egw']->session->appsession('print_from', APP_NAME));
+        $print_to = intval($GLOBALS['egw']->session->appsession('print_to', APP_NAME));
+
         foreach ($GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME) as $key => $value) {
-            if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']])) {
-                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] = 0;
-                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunday'] = 0;
-                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] = 0;
-                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] = 0;
-                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie'] = 0;
-            }
-            //Nb hours * 2 is ferie
-            if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
-                $day = intval($value['heures_jour']) * 2;
-                $night = intval($value['heures_nuit']) * 2;
-                $sun_day = intval($value['heures_jour_dimanche']) * 2;
-                $sun_night = intval($value['heures_nuit_dimanche']) * 2;
-                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie']++;
-                $nb_ferie++;
-            } else {
-                $day = intval($value['heures_jour']);
-                $night = intval($value['heures_nuit']);
-                $sun_day = intval($value['heures_jour_dimanche']);
-                $sun_night = intval($value['heures_nuit_dimanche']);
-            }
+            if (($print_from && $print_to && intval($value['heure_arrivee']) >= $print_from && intval($value['heure_arrivee']) < $print_to + 24*3600) || (!$print_from && !$print_to)) {
+                if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']])) {
+                    $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] = 0;
+                    $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunday'] = 0;
+                    $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] = 0;
+                    $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] = 0;
+                    $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie'] = 0;
+                }
+                //Nb hours * 2 is ferie
+                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
+                    $day = intval($value['heures_jour']) * 2;
+                    $night = intval($value['heures_nuit']) * 2;
+                    $sun_day = intval($value['heures_jour_dimanche']) * 2;
+                    $sun_night = intval($value['heures_nuit_dimanche']) * 2;
+                    $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie']++;
+                    $nb_ferie++;
+                } else {
+                    $day = intval($value['heures_jour']);
+                    $night = intval($value['heures_nuit']);
+                    $sun_day = intval($value['heures_jour_dimanche']);
+                    $sun_night = intval($value['heures_nuit_dimanche']);
+                }
 
-            $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] += $day;
-            $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunday'] += $sun_day;
-            $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] += $night;
-            $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] += $sun_night;
+                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] += $day;
+                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunday'] += $sun_day;
+                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] += $night;
+                $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] += $sun_night;
 
-            //If ferie add (F) to date
-            if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
-                $table_content[] = date('j', $value['heure_arrivee']) . ' (F)';
-            } else {
-                $table_content[] = date('j', $value['heure_arrivee']);
-            }
-            //Add agent name if agent
-            if ($all_agent) {
-                $table_content[] = $this->agents[$value['idasecurite_agent']];
-            }
-            $table_content[] = date('H:i', $value['heure_arrivee']);
-            $table_content[] = $this->get_time($value['pause']);
-            $table_content[] = date('H:i', $value['heure_depart']);
+                //If ferie add (F) to date
+                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
+                    $table_content[] = date('j', $value['heure_arrivee']) . ' (F)';
+                } else {
+                    $table_content[] = date('j', $value['heure_arrivee']);
+                }
+                //Add agent name if agent
+                if ($all_agent) {
+                    $table_content[] = $this->agents[$value['idasecurite_agent']];
+                }
+                $table_content[] = date('H:i', $value['heure_arrivee']);
+                $table_content[] = $this->get_time($value['pause']);
+                $table_content[] = date('H:i', $value['heure_depart']);
 
-            if ($all_site) {
-                $table_content[] = $this->sites[$value['idasecurite_site']];
-            }
-            $total = $day + $night + $sun_day + $sun_night;
-            $panier = floor($total / (3600 * 6));
-            $nb_paniers += $panier;
-            $table_content[] = $this->get_time($day);
-            $table_content[] = $this->get_time($night);
-            $table_content[] = $this->get_time($sun_day);
-            $table_content[] = $this->get_time($sun_night);
+                if ($all_site) {
+                    $table_content[] = $this->sites[$value['idasecurite_site']];
+                }
+                $total = $day + $night + $sun_day + $sun_night;
+                $panier = floor($total / (3600 * 6));
+                $nb_paniers += $panier;
+                $table_content[] = $this->get_time($day);
+                $table_content[] = $this->get_time($night);
+                $table_content[] = $this->get_time($sun_day);
+                $table_content[] = $this->get_time($sun_night);
 
-            if (self::$preferences['isPanier']) {
-                $table_content[] = $panier;
+                if (self::$preferences['isPanier']) {
+                    $table_content[] = $panier;
+                }
+                $table_content[] = $this->get_time($total);
+                $total_day += $day;
+                $total_sun_day += $sun_day;
+                $total_night += $night;
+                $total_sun_night += $sun_night;
             }
-            $table_content[] = $this->get_time($total);
-            $total_day += $day;
-            $total_sun_day += $sun_day;
-            $total_night += $night;
-            $total_sun_night += $sun_night;
         }
         //compute total hours
         $total = $total_day + $total_night + $total_sun_day + $total_sun_night;

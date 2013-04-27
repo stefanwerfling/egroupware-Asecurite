@@ -88,14 +88,14 @@ class ui_planning_global extends bo_planning_global {
         //Get add or edit result
         $msg = get_var('msg', array('GET'));
         $save = get_var('save', array('GET'));
-        
-         //-----------  fill planning table ---------------
+
+        //-----------  fill planning table ---------------
         $t = & CreateObject('phpgwapi.Template', EGW_APP_TPL);
         $t->set_file(array(
             'T_all_planning' => 'all_planning.tpl'
         ));
         $t->set_block('T_all_planning', 'all_planning');
-        
+
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_planning_global.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.delete_planning'));
         $t->set_var('DATA_LINK', $data_link);
@@ -119,9 +119,10 @@ class ui_planning_global extends bo_planning_global {
         $GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME, $GLOBALS['egw']->session->appsession('all_planning_global', APP_NAME));
 
         $this->tmpl->read(APP_NAME . '.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
-        $this->tmpl->exec(APP_NAME . '.ui_planning_global.index', $content, $select_option, $readonlys, '');
+        $this->tmpl->exec(APP_NAME . '.ui_planning_global.index', $content, $select_option, '', '');
         $this->create_footer();
     }
+
     /**
      * get all planning for site
      */
@@ -142,7 +143,7 @@ class ui_planning_global extends bo_planning_global {
                     $f_site_name = $this->search(array('idasecurite_site' => $row['idasecurite_site']), false);
                     if (count($f_site_name) == 1) {
                         $planning_site_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $row['idasecurite_site'], 'current' => 'true'));
-                        $row['site'] = bo_fwkpopin::draw_openable_link($planning_site_link, $f_site_name[0]['nom'], $this->planning_width, $this->planning_height,'', 'style="cursor:pointer; color:blue;"');
+                        $row['site'] = bo_fwkpopin::draw_openable_link($planning_site_link, $f_site_name[0]['nom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                     }
                 }
                 $this->setup_table(APP_NAME, 'egw_asecurite_agent');
@@ -150,7 +151,7 @@ class ui_planning_global extends bo_planning_global {
                     $f_agent = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
                     if (count($f_agent) == 1) {
                         $planning_agent_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $row['idasecurite_agent'], 'current' => 'true'));
-                        $row['agent'] = bo_fwkpopin::draw_openable_link($planning_agent_link, $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'], $this->planning_width, $this->planning_height,'', 'style="cursor:pointer; color:blue;"');
+                        $row['agent'] = bo_fwkpopin::draw_openable_link($planning_agent_link, $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                     }
                 }
                 $this->setup_table(APP_NAME, 'egw_asecurite_ville');
@@ -158,7 +159,7 @@ class ui_planning_global extends bo_planning_global {
                     $f_ville = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
                     if (count($f_ville) == 1) {
                         $planning_ville_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $row['idasecurite_ville'], 'current' => 'true'));
-                        $row['ville'] = bo_fwkpopin::draw_openable_link($planning_ville_link, $f_ville[0]['nom'], $this->planning_width, $this->planning_height,'', 'style="cursor:pointer; color:blue;"');
+                        $row['ville'] = bo_fwkpopin::draw_openable_link($planning_ville_link, $f_ville[0]['nom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                     }
                 }
                 $id = $row['idasecurite_horaires_agent'];
@@ -223,7 +224,6 @@ class ui_planning_global extends bo_planning_global {
         $this->tmpl->read(APP_NAME . '.planning.copy'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
 
         $this->tmpl->exec(APP_NAME . '.ui_planning_global.change_planning', $content, $select_option, $readonlys, '');
-        $this->create_footer();
     }
 
 }

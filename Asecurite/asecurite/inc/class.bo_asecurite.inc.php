@@ -499,6 +499,13 @@ class bo_asecurite extends so_sql {
             }
         } elseif (isset($content['close'])) {
             self::close_popup($extra_param);
+        }elseif ($content['print']) {
+            $GLOBALS['egw']->session->appsession('print_from', APP_NAME, $content['print_from']);
+            $GLOBALS['egw']->session->appsession('print_to', APP_NAME, $content['print_to']);
+            $link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_imprime.print_planning_global'));
+            $this->js_content .= '<script type="text/javascript">
+                                open_popup(\'' . $link . '\', 800,700) ;
+                            </script>';
         }
         $this->setup_table(APP_NAME, $table_name);
     }
@@ -561,7 +568,6 @@ class bo_asecurite extends so_sql {
      * create application's footer
      */
     public function create_footer() {
-        include_once EGW_INCLUDE_ROOT . '/' . APP_NAME . '/js/jquery.php';
         echo $this->js_content;
         $GLOBALS['egw']->common->egw_footer();
     }

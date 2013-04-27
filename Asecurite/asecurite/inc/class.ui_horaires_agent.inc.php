@@ -63,7 +63,7 @@ class ui_horaires_agent extends bo_horaires_agent {
             for ($i = 0; $i < count($content['nm']['checkbox']); $i++) {
                 $this->delete(array('idasecurite_horaires_agent' => $content['nm']['checkbox'][$i]));
             }
-        }
+        } 
         //Get current agent name
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $f_agent = $this->search(array('idasecurite_agent' => $GLOBALS['egw']->session->appsession('idasecurite_agent', APP_NAME)), false);
@@ -127,6 +127,7 @@ class ui_horaires_agent extends bo_horaires_agent {
 
         $this->tmpl->read(APP_NAME . '.agent.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
         $this->tmpl->exec(APP_NAME . '.ui_horaires_agent.index', $content, $select_option, '', '', 2);
+        $this->create_footer();
     }
 
     /**
@@ -148,14 +149,14 @@ class ui_horaires_agent extends bo_horaires_agent {
 
                     if (count($f_site_name) == 1) {
                         $planning_site_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $row['idasecurite_site'], 'current' => 'true'));
-                        $row['site'] = bo_fwkpopin::draw_openable_link($planning_site_link, $f_site_name[0]['nom'], $this->planning_width, $this->planning_height,'', 'style="cursor:pointer; color:blue;"');
+                        $row['site'] = bo_fwkpopin::draw_openable_link($planning_site_link, $f_site_name[0]['nom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                     }
                     $this->setup_table(APP_NAME, 'egw_asecurite_ville');
                     if ($row['idasecurite_agent'] != '') {
                         $f_ville = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
                         if (count($f_ville) == 1) {
                             $planning_ville_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $row['idasecurite_ville'], 'current' => 'true'));
-                            $row['ville'] = bo_fwkpopin::draw_openable_link($planning_ville_link, $f_ville[0]['nom'], $this->planning_width, $this->planning_height,'', 'style="cursor:pointer; color:blue;"');
+                            $row['ville'] = bo_fwkpopin::draw_openable_link($planning_ville_link, $f_ville[0]['nom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                         }
                     }
                     $id = $row['idasecurite_horaires_agent'];

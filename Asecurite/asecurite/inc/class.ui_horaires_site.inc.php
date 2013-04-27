@@ -100,7 +100,7 @@ class ui_horaires_site extends bo_horaires_site {
             'T_planning_sites' => 'planning_sites.tpl'
         ));
         $t->set_block('T_planning_sites', 'planning_sites');
-        
+
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.delete_planning'));
         $t->set_var('DATA_LINK', $data_link);
@@ -110,8 +110,8 @@ class ui_horaires_site extends bo_horaires_site {
         $t->set_var('DELETE_BUTTON', $this->html->image(APP_NAME, 'delete', lang('Supprimer les plannings sélectionnés?')));
         $t->set_var('SELECT_ALL', $this->html->image(APP_NAME, 'arrow_ltr', lang('Tout cocher/décocher'), 'onclick="check_all(); return false;"'));
         $content['data'] = $t->parse('out', 'planning_sites');
-         //------------ END of filling ---------------------------
-        
+        //------------ END of filling ---------------------------
+
         $this->compute_paniers($GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME));
         $content['paniers'] = $this->nb_baskets;
         //Set sessions values
@@ -124,7 +124,7 @@ class ui_horaires_site extends bo_horaires_site {
         $GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME, $GLOBALS['egw']->session->appsession('all_planning_site', APP_NAME));
 
         $this->tmpl->read(APP_NAME . '.site.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
-        $this->tmpl->exec(APP_NAME . '.ui_horaires_site.index', $content, $select_option, $readonlys, '', 2);
+        $this->tmpl->exec(APP_NAME . '.ui_horaires_site.index', $content, $select_option, '', '', 2);
         $this->create_footer();
     }
 
