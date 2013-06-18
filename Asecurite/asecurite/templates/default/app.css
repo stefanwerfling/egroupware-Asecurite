@@ -15,11 +15,15 @@
 
 @import "style.css";
 @import "flexigrid/flexigrid.css";
-@import "dataTables/table_jui.css";
-@import "dataTables/jquery-ui-1.8.4.custom.css";
 @import "thickbox/thickbox.css";
-@import "jquery-ui.css";
 @import "jquery.lightbox.css";
+
+@import "dataTables/table.css";
+@import "dataTables/TableTools.css";
+@import "dataTables/table_jui.css";
+@import "dataTables/jquery.dataTables.css";
+@import "dataTables/jquery-ui-1.8.4.custom.css";
+@import "dataTables/TableTools_JUI.css";
 
 #ville {
     font-weight: bold;
