@@ -1048,7 +1048,7 @@ class bo_asecurite extends so_sql {
     }
 
     /**
-     * delete a site
+     * delete one or severals planning
      */
     public function delete_planning() {
         $this->setup_table(APP_NAME, 'egw_asecurite_horaires_agent');
