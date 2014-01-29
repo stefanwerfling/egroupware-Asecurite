@@ -13,7 +13,8 @@
  */
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_horaires_ville.inc.php');
 
-class ui_horaires_ville extends bo_horaires_ville {
+class ui_horaires_ville extends bo_horaires_ville
+{
 
     /**
      * Public functions callable via menuaction
@@ -26,7 +27,8 @@ class ui_horaires_ville extends bo_horaires_ville {
         'get_data' => True
     );
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->init_template(lang('Gestion des horaires'));
         $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index',
@@ -41,32 +43,48 @@ class ui_horaires_ville extends bo_horaires_ville {
     /**
      * Display the application home content
      */
-    public function index($content = NULL) {
+    public function index($content = NULL)
+    {
         //Get current agent id
         $id = get_var('id');
-        if ($id != '') {
+        if ($id != '')
+        {
             $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME, $id);
         }
         //Get request in case of modification
-        if (get_var('month')) {
+        if (get_var('month'))
+        {
             $this->current_month = get_var('month');
             $this->current_year = get_var('year');
             $content['idasecurite_agent'] = get_var('agent');
             $content['idasecurite_site'] = get_var('site');
         }
         //Deletion management
-        if (isset($content['nm']['delete'])) {
+        if (isset($content['nm']['delete']))
+        {
             list($del) = each($content['nm']['delete']);
             $this->delete(array('idasecurite_horaires_agent' => $del));
-        } elseif (isset($content['delete_selected'])) {
-            for ($i = 0; $i < count($content['nm']['checkbox']); $i++) {
+        } elseif (isset($content['delete_selected']))
+        {
+            for ($i = 0; $i < count($content['nm']['checkbox']); $i++)
+            {
                 $this->delete(array('idasecurite_horaires_agent' => $content['nm']['checkbox'][$i]));
+            }
+        }
+        //choose the current month last day for printing
+        if (isset($content['mois']))
+        {
+            $this->days = array();
+            for ($i = 1; $i <= self::$nb_days[$content['mois']]; $i++)
+            {
+                $this->days[$i] = $i;
             }
         }
         //Get current town name
         $this->setup_table(APP_NAME, 'egw_asecurite_ville');
         $f_city = $this->search(array('idasecurite_ville' => $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME)), false);
-        if (count($f_city) == 1) {
+        if (count($f_city) == 1)
+        {
             $content['ville'] = $f_city[0]['nom'];
         }
         $content['idasecurite_ville'] = $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME);
@@ -77,11 +95,14 @@ class ui_horaires_ville extends bo_horaires_ville {
             'idasecurite_agent' => $this->agents,
             'mois' => $this->monthes,
             'annee' => $this->years,
+            'print_from' => $this->days,
+            'print_to' => $this->days
         );
         //Manage add or edit (modification) operation
         parent::edit_planning($content, 'egw_asecurite_horaires_agent', 'City schedule', array('menuaction' => APP_NAME . '.ui_horaire_ville.index'));
         //In case of any existing agents
-        if (!$this->agents) {
+        if (!$this->agents)
+        {
             $content['msg_horaire'] = "<span id='error' style='font-weight:bold'>" . lang('Threre is no agent !') . " </span>";
         }
         //Get all plannings following the values containing in select inputs and the save them into a session
@@ -130,7 +151,8 @@ class ui_horaires_ville extends bo_horaires_ville {
     /**
      * get all planning for site
      */
-    public function get_data() {
+    public function get_data()
+    {
         $rows = $GLOBALS['egw']->session->appsession('all_planning_city', APP_NAME);
         $output = array(
             "sEcho" => intval($_GET['sEcho']),
@@ -138,20 +160,26 @@ class ui_horaires_ville extends bo_horaires_ville {
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
-        if ($rows) {
-            foreach ($rows as &$row) {
+        if ($rows)
+        {
+            foreach ($rows as &$row)
+            {
                 $this->setup_table(APP_NAME, 'egw_asecurite_site');
-                if ($row['idasecurite_site'] != '') {
+                if ($row['idasecurite_site'] != '')
+                {
                     $f_site_name = $this->search(array('idasecurite_site' => $row['idasecurite_site']), false);
-                    if (count($f_site_name) == 1) {
+                    if (count($f_site_name) == 1)
+                    {
                         $planning_site_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $row['idasecurite_site'], 'current' => 'true'));
                         $row['site'] = bo_fwkpopin::draw_openable_link($planning_site_link, $f_site_name[0]['nom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                     }
                 }
                 $this->setup_table(APP_NAME, 'egw_asecurite_agent');
-                if ($row['idasecurite_agent'] != '') {
+                if ($row['idasecurite_agent'] != '')
+                {
                     $f_agent = $this->search(array('idasecurite_agent' => $row['idasecurite_agent']), false);
-                    if (count($f_agent) == 1) {
+                    if (count($f_agent) == 1)
+                    {
                         $planning_agent_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $row['idasecurite_agent'], 'current' => 'true'));
                         $row['agent'] = bo_fwkpopin::draw_openable_link($planning_agent_link, $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                     }

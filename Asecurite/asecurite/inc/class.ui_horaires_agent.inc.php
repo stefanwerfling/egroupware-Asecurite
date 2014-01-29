@@ -13,7 +13,8 @@
  */
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_horaires_agent.inc.php');
 
-class ui_horaires_agent extends bo_horaires_agent {
+class ui_horaires_agent extends bo_horaires_agent
+{
 
     /**
      * Public functions callable via menuaction
@@ -28,7 +29,8 @@ class ui_horaires_agent extends bo_horaires_agent {
         'edit' => True
     );
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->init_template(lang('Gestion des horaires'));
         $this->current_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index',
@@ -42,32 +44,48 @@ class ui_horaires_agent extends bo_horaires_agent {
     /**
      * Display the application home content
      */
-    public function index($content = NULL) {
+    public function index($content = NULL)
+    {
         //Get current agent id
         $id = get_var('id');
-        if ($id != '') {
+        if ($id != '')
+        {
             $GLOBALS['egw']->session->appsession('idasecurite_agent', APP_NAME, $id);
         }
         //Get request in case of modification
-        if (get_var('month')) {
+        if (get_var('month'))
+        {
             $this->current_month = get_var('month');
             $this->current_year = get_var('year');
             $content['idasecurite_site'] = get_var('site');
         }
         //Manage deletions
-        if (isset($content['nm']['delete'])) {
+        if (isset($content['nm']['delete']))
+        {
             list($del) = each($content['nm']['delete']);
 
             $this->delete(array('idasecurite_horaires_agent' => $del));
-        } elseif (isset($content['delete_selected'])) {
-            for ($i = 0; $i < count($content['nm']['checkbox']); $i++) {
+        } elseif (isset($content['delete_selected']))
+        {
+            for ($i = 0; $i < count($content['nm']['checkbox']); $i++)
+            {
                 $this->delete(array('idasecurite_horaires_agent' => $content['nm']['checkbox'][$i]));
             }
-        } 
+        }
+        //choose the current month last day for printing
+        if (isset($content['mois']))
+        {
+            $this->days = array();
+            for ($i = 1; $i <= self::$nb_days[$content['mois']]; $i++)
+            {
+                $this->days[$i] = $i;
+            }
+        }
         //Get current agent name
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $f_agent = $this->search(array('idasecurite_agent' => $GLOBALS['egw']->session->appsession('idasecurite_agent', APP_NAME)), false);
-        if (count($f_agent) == 1) {
+        if (count($f_agent) == 1)
+        {
             $content['agent'] = $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'];
             $content['idasecurite_ville'] = $f_agent[0]['idasecurite_ville'];
             $GLOBALS['egw']->session->appsession('idasecurite_ville', APP_NAME, $content['idasecurite_ville']);
@@ -79,12 +97,15 @@ class ui_horaires_agent extends bo_horaires_agent {
             'idasecurite_site' => $this->sites,
             'mois' => $this->monthes,
             'annee' => $this->years,
+            'print_from' => $this->days,
+            'print_to' => $this->days
         );
         //Manage add or edit (modification) operation
         parent::edit_planning($content, 'egw_asecurite_horaires_agent', 'Agent schedule', array('menuaction' => APP_NAME . '.ui_horaires_agent.index'));
 
         //In case of any existing sites
-        if (!$this->sites) {
+        if (!$this->sites)
+        {
             $content['msg_horaire'] = "<span id='error' style='font-weight:bold'>" . lang('Threre is no site !') . " </span>";
         }
         //Get all plannings following the values containing in select inputs and the save them into a session
@@ -126,6 +147,7 @@ class ui_horaires_agent extends bo_horaires_agent {
         $GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME, $GLOBALS['egw']->session->appsession('all_planning_agent', APP_NAME));
 
         $this->tmpl->read(APP_NAME . '.agent.planning'); //APP_NAME defined in asecurite/inc/class.bo_asecurite.inc.php
+
         $this->tmpl->exec(APP_NAME . '.ui_horaires_agent.index', $content, $select_option, '', '', 2);
         $this->create_footer();
     }
@@ -133,7 +155,8 @@ class ui_horaires_agent extends bo_horaires_agent {
     /**
      * get all planning for agent
      */
-    public function get_data() {
+    public function get_data()
+    {
         $rows = $GLOBALS['egw']->session->appsession('all_planning_agent', APP_NAME);
         $output = array(
             "sEcho" => intval($_GET['sEcho']),
@@ -141,20 +164,26 @@ class ui_horaires_agent extends bo_horaires_agent {
             "iTotalDisplayRecords" => count($rows),
             "aaData" => array()
         );
-        if ($rows) {
-            foreach ($rows as &$row) {
+        if ($rows)
+        {
+            foreach ($rows as &$row)
+            {
                 $this->setup_table(APP_NAME, 'egw_asecurite_site');
-                if ($row['idasecurite_site'] != '') {
+                if ($row['idasecurite_site'] != '')
+                {
                     $f_site_name = $this->search(array('idasecurite_site' => $row['idasecurite_site']), false);
 
-                    if (count($f_site_name) == 1) {
+                    if (count($f_site_name) == 1)
+                    {
                         $planning_site_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.index', 'id' => $row['idasecurite_site'], 'current' => 'true'));
                         $row['site'] = bo_fwkpopin::draw_openable_link($planning_site_link, $f_site_name[0]['nom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                     }
                     $this->setup_table(APP_NAME, 'egw_asecurite_ville');
-                    if ($row['idasecurite_agent'] != '') {
+                    if ($row['idasecurite_agent'] != '')
+                    {
                         $f_ville = $this->search(array('idasecurite_ville' => $row['idasecurite_ville']), false);
-                        if (count($f_ville) == 1) {
+                        if (count($f_ville) == 1)
+                        {
                             $planning_ville_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.index', 'id' => $row['idasecurite_ville'], 'current' => 'true'));
                             $row['ville'] = bo_fwkpopin::draw_openable_link($planning_ville_link, $f_ville[0]['nom'], $this->planning_width, $this->planning_height, '', 'style="cursor:pointer; color:blue;"');
                         }

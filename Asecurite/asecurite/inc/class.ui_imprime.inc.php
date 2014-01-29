@@ -13,7 +13,8 @@
  */
 include_once(EGW_INCLUDE_ROOT . '/asecurite/inc/class.bo_asecurite.inc.php');
 
-class ui_imprime extends bo_asecurite {
+class ui_imprime extends bo_asecurite
+{
 
     /**
      * Public functions callable via menuaction
@@ -25,14 +26,16 @@ class ui_imprime extends bo_asecurite {
     );
     public $pdf;
 
-    function __construct() {
+    function __construct()
+    {
 
         parent::__construct('egw_asecurite_horaires_agent');
         $this->init_template();
         $this->pdf = new ui_pdf('P', 'mm', 'A4');
     }
 
-    function print_planning_global_($content = NULL) {
+    function print_planning_global_($content = NULL)
+    {
         $content['logo'] = $this->html->image(APP_NAME, 'asecurite', lang("Logo"));
         //set month
         $content['mois'] = $this->monthes[$GLOBALS['egw']->session->appsession('current_month', APP_NAME)];
@@ -44,15 +47,18 @@ class ui_imprime extends bo_asecurite {
         $content['site'] = $this->sites[$GLOBALS['egw']->session->appsession('current_site', APP_NAME)];
 
         $all_site = false;
-        if ($GLOBALS['egw']->session->appsession('current_site', APP_NAME) == '') {
+        if ($GLOBALS['egw']->session->appsession('current_site', APP_NAME) == '')
+        {
             $all_site = true;
         }
         $all_agent = false;
         // set agent
-        if ($GLOBALS['egw']->session->appsession('current_agent', APP_NAME) == '') {
+        if ($GLOBALS['egw']->session->appsession('current_agent', APP_NAME) == '')
+        {
             $all_agent = true;
             $content['titre'] = '<span>PLANNING DES AGENTS</span>';
-        } else {
+        } else
+        {
             $content['titre'] = "<span>FEUILLE DE PLANNING DE: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} </span>";
         }
 
@@ -61,14 +67,16 @@ class ui_imprime extends bo_asecurite {
             <tr>
             <th>' . lang('Date') . '</th>';
 
-        if ($all_agent) {
+        if ($all_agent)
+        {
             $content['planning'] .= '<th>' . lang('Agent') . '</th>';
         }
         $content['planning'] .= '<th>' . lang("Heure d'arrivée") . '</th>' .
                 '<th>' . lang('Pause') . '</th>' .
                 '<th>' . lang('Heure de départ') . '</th>';
 
-        if ($all_site) {
+        if ($all_site)
+        {
             $content['planning'] .= '<th>' . lang('Site') . '</th>';
         }
         $content['planning'] .= '<th>' . lang("Nbre d'heures jours") . '</th>' .
@@ -76,7 +84,8 @@ class ui_imprime extends bo_asecurite {
                 '<th>' . lang("Nbre d'heures jour dimanche") . '</th>' .
                 '<th>' . lang("Nbre d'heures nuit dimanche") . '</th>';
 
-        if (self::$preferences['isPanier']) {
+        if (self::$preferences['isPanier'])
+        {
             $content['planning'] .= '<th>' . lang("Nbre\nde paniers") . '</th>';
         }
         $content['planning'] .=
@@ -88,8 +97,10 @@ class ui_imprime extends bo_asecurite {
 
         $nb_paniers = 0;
 
-        foreach ($GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME) as $key => $value) {
-            if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']])) {
+        foreach ($GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME) as $key => $value)
+        {
+            if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']]))
+            {
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] = 0;
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunday'] = 0;
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] = 0;
@@ -108,14 +119,16 @@ class ui_imprime extends bo_asecurite {
 
             $content['planning'] .= '<tr>' .
                     '<td>' . date('j', $value['heure_arrivee']) . '</td>';
-            if ($all_agent) {
+            if ($all_agent)
+            {
                 $content['planning'] .= '<td>' . $this->agents[$value['idasecurite_agent']] . '</td>';
             }
             $content['planning'] .= '<td>' . date('H:i', $value['heure_arrivee']) . '</td>' .
                     '<td>' . $this->get_time($value['pause']) . '</td>' .
                     '<td>' . date('H:i', $value['heure_depart']) . '</td>';
 
-            if ($all_site) {
+            if ($all_site)
+            {
                 $content['planning'] .= '<td>' . $this->sites[$value['idasecurite_site']] . '</td>';
             }
 
@@ -127,7 +140,8 @@ class ui_imprime extends bo_asecurite {
                     '<td>' . $this->get_time($sun_day) . '</td>' .
                     '<td>' . $this->get_time($sun_night) . '</td>';
 
-            if (self::$preferences['isPanier']) {
+            if (self::$preferences['isPanier'])
+            {
                 $content['planning'] .= '<td>' . $panier . '</td>';
             }
             $content['planning'] .= '<td>' . $this->get_time($total) . '</td>' .
@@ -143,7 +157,8 @@ class ui_imprime extends bo_asecurite {
         $content['planning'] .= '</table></div>';
 
         $content['total'] = '<div id="total"><table><caption>Global</caption>';
-        if (self::$preferences['isPanier']) {
+        if (self::$preferences['isPanier'])
+        {
             $content['total'] .= '<tr><td>' . lang('Paniers') . '</td><td>' . $nb_paniers . '</td></tr>';
         }
         $content['total'] .= '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td>' . $this->get_time($total) . '</td></tr>' .
@@ -153,16 +168,20 @@ class ui_imprime extends bo_asecurite {
                 '<tr><td id="sunday">' . lang('Heures nuit dimanche') . '</td><td>' . $this->get_time($total_sun_night) . '</td></tr>';
         '</table></div>';
 
-        if (is_array($nb_global_hour_by_agent)) {
+        if (is_array($nb_global_hour_by_agent))
+        {
             $content['total_by_agent'] = '<div id= "site_planning_by_agent">';
-            foreach ($nb_global_hour_by_agent as $agent => $site) {
+            foreach ($nb_global_hour_by_agent as $agent => $site)
+            {
                 $this->setup_table(APP_NAME, 'egw_asecurite_agent');
                 $f_agent = $this->search(array('idasecurite_agent' => $agent), false);
-                if (count($f_agent) == 1) {
+                if (count($f_agent) == 1)
+                {
 
                     $agent_name = $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'];
 
-                    foreach ($site as $key => $value) {
+                    foreach ($site as $key => $value)
+                    {
                         $site = $this->sites[$key];
                         $content['total_by_agent'] .= '<div id="site_stat"><table><caption>' . $agent_name . ' ( ' . $site . ' )</caption>' .
                                 '<tr><td id="total_hour">' . lang('Total Heures') . '</td><td><div>' . $this->get_time($value['day'] + $value['night'] + $value['sunday'] + $value['sunnight']) . '</div></td></tr>' .
@@ -186,7 +205,10 @@ class ui_imprime extends bo_asecurite {
     /**
      * Print planning as PDF by usiing fpdf pluging
      */
-    function print_planning_global() {
+    function print_planning_global()
+    {
+        $current_month = $GLOBALS['egw']->session->appsession('current_month', APP_NAME);
+        $current_year = $GLOBALS['egw']->session->appsession('current_year', APP_NAME);
         //Initialisation
         $this->pdf->SetMargins(5, 10, 5);
         $this->pdf->AliasNbPages();
@@ -208,23 +230,26 @@ class ui_imprime extends bo_asecurite {
         $this->pdf->Cell(114, 0, utf8_decode('Site: ' . $this->sites[$GLOBALS['egw']->session->appsession('current_site', APP_NAME)]), 0, 1, 'L');
         //$this->pdf->Ln(1);
         $this->pdf->Cell(48);
-        $this->pdf->Cell(114, 10, utf8_decode('Mois: ' . $this->monthes[$GLOBALS['egw']->session->appsession('current_month', APP_NAME)]), 0, 1, 'L');
+        $this->pdf->Cell(114, 10, utf8_decode('Mois: ' . $this->monthes[$current_month]), 0, 1, 'L');
         // $this->pdf->Ln(1);
         $this->pdf->Cell(48);
-        $this->pdf->Cell(114, 0, utf8_decode('Année: ' . $this->years[$GLOBALS['egw']->session->appsession('current_year', APP_NAME)]), 0, 1, 'L');
+        $this->pdf->Cell(114, 0, utf8_decode('Année: ' . $this->years[$current_year]), 0, 1, 'L');
         $this->pdf->Ln(10);
 
         $all_site = false;
-        if ($GLOBALS['egw']->session->appsession('current_site', APP_NAME) == '') {
+        if ($GLOBALS['egw']->session->appsession('current_site', APP_NAME) == '')
+        {
             $all_site = true;
         }
         $all_agent = false;
         $this->pdf->SetFont('Times', 'B', 14);
         // set agent
-        if ($GLOBALS['egw']->session->appsession('current_agent', APP_NAME) == '') {
+        if ($GLOBALS['egw']->session->appsession('current_agent', APP_NAME) == '')
+        {
             $all_agent = true;
             $this->pdf->Cell(0, 0, utf8_decode('PLANNING DES AGENTS'), 0, 1, 'C');
-        } else {
+        } else
+        {
             $this->pdf->Cell(0, 0, utf8_decode("Feuille de planning de: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} "), 0, 1, 'C');
         }
 
@@ -277,7 +302,8 @@ class ui_imprime extends bo_asecurite {
         $header_sizes[] = 9;
         $header_contents[] = lang('Date');
         //If agents are set 
-        if ($all_agent) {
+        if ($all_agent)
+        {
             $header_sizes[] = 30;
             $header_contents[] = lang('Agent');
         }
@@ -288,7 +314,8 @@ class ui_imprime extends bo_asecurite {
         $header_sizes[] = 17;
         $header_contents[] = utf8_decode(lang("Heure\nde départ"));
 
-        if ($all_site) {
+        if ($all_site)
+        {
             $header_sizes[] = 25;
             $header_contents[] = utf8_decode(lang("Site"));
         }
@@ -301,7 +328,8 @@ class ui_imprime extends bo_asecurite {
         $header_sizes[] = ($all_agent && $all_site) ? 18 : 20;
         $header_contents[] = utf8_decode(lang("Heures\nnuits\ndimanche"));
 
-        if (self::$preferences['isPanier']) {
+        if (self::$preferences['isPanier'])
+        {
             $header_sizes[] = 13;
             $header_contents[] = utf8_decode(lang("Paniers"));
         }
@@ -314,12 +342,18 @@ class ui_imprime extends bo_asecurite {
         $nb_ferie = 0;
         //--------------- Fill table ----------
         //to print
-        $print_from = intval($GLOBALS['egw']->session->appsession('print_from', APP_NAME));
-        $print_to = intval($GLOBALS['egw']->session->appsession('print_to', APP_NAME));
+        $from = $GLOBALS['egw']->session->appsession('print_from', APP_NAME);
+        $to = $GLOBALS['egw']->session->appsession('print_to', APP_NAME);
+        //mktime(0, 0, 0, $content['mois'], $content['print_to'], $content['annee'])
+        $print_from = mktime(0, 0, 0, $current_month, $from, $current_year);
+        $print_to = mktime(0, 0, 0, $current_month, $to, $current_year);
 
-        foreach ($GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME) as $key => $value) {
-            if (($print_from && $print_to && intval($value['heure_arrivee']) >= $print_from && intval($value['heure_arrivee']) < $print_to + 24*3600) || (!$print_from && !$print_to)) {
-                if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']])) {
+        foreach ($GLOBALS['egw']->session->appsession('planning_to_print', APP_NAME) as $key => $value)
+        {
+            if (($print_from && $print_to && intval($value['heure_arrivee']) >= $print_from && intval($value['heure_arrivee']) < $print_to + 24 * 3600))
+            {
+                if (!is_array($nb_global_hour_by_agent[$value['idasecurite_agent']]))
+                {
                     $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['day'] = 0;
                     $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunday'] = 0;
                     $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['night'] = 0;
@@ -327,14 +361,16 @@ class ui_imprime extends bo_asecurite {
                     $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie'] = 0;
                 }
                 //Nb hours * 2 is ferie
-                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
+                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart']))
+                {
                     $day = intval($value['heures_jour']) * 2;
                     $night = intval($value['heures_nuit']) * 2;
                     $sun_day = intval($value['heures_jour_dimanche']) * 2;
                     $sun_night = intval($value['heures_nuit_dimanche']) * 2;
-                    $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie']++;
+                    $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['nb_ferie'] ++;
                     $nb_ferie++;
-                } else {
+                } else
+                {
                     $day = intval($value['heures_jour']);
                     $night = intval($value['heures_nuit']);
                     $sun_day = intval($value['heures_jour_dimanche']);
@@ -347,20 +383,24 @@ class ui_imprime extends bo_asecurite {
                 $nb_global_hour_by_agent[$value['idasecurite_agent']][$value['idasecurite_site']]['sunnight'] += $sun_night;
 
                 //If ferie add (F) to date
-                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart'])) {
+                if ($this->is_ferie($value['heure_arrivee']) && $this->is_ferie($value['heure_depart']))
+                {
                     $table_content[] = date('j', $value['heure_arrivee']) . ' (F)';
-                } else {
+                } else
+                {
                     $table_content[] = date('j', $value['heure_arrivee']);
                 }
                 //Add agent name if agent
-                if ($all_agent) {
+                if ($all_agent)
+                {
                     $table_content[] = $this->agents[$value['idasecurite_agent']];
                 }
                 $table_content[] = date('H:i', $value['heure_arrivee']);
                 $table_content[] = $this->get_time($value['pause']);
                 $table_content[] = date('H:i', $value['heure_depart']);
 
-                if ($all_site) {
+                if ($all_site)
+                {
                     $table_content[] = $this->sites[$value['idasecurite_site']];
                 }
                 $total = $day + $night + $sun_day + $sun_night;
@@ -371,7 +411,8 @@ class ui_imprime extends bo_asecurite {
                 $table_content[] = $this->get_time($sun_day);
                 $table_content[] = $this->get_time($sun_night);
 
-                if (self::$preferences['isPanier']) {
+                if (self::$preferences['isPanier'])
+                {
                     $table_content[] = $panier;
                 }
                 $table_content[] = $this->get_time($total);
@@ -395,7 +436,8 @@ class ui_imprime extends bo_asecurite {
         $Global_header = array(50, 25, 'Global', 'COLSPAN2');
         $Global_table_content = array();
 
-        if (self::$preferences['isPanier']) {
+        if (self::$preferences['isPanier'])
+        {
             $Global_table_content[] = lang('Paniers');
             $Global_table_content[] = $nb_paniers;
         }
@@ -421,19 +463,23 @@ class ui_imprime extends bo_asecurite {
         /* ---- END GLOBAL HOUR TABLE ------ */
         /* ---- BEGIN GLOBAL SITES TABLE ------ */
 
-        if (is_array($nb_global_hour_by_agent)) {
+        if (is_array($nb_global_hour_by_agent))
+        {
             $this->pdf->AddPage();
             $this->pdf->Cell(0, 10, lang('Statistiques globales par site et par agent'), 1, 1, 'C');
             $this->pdf->Ln(3);
             $header_property['BG_COLOR_COL0'] = array(100, 200, 240);
             $table_property['L_MARGIN'] = 0;
 
-            foreach ($nb_global_hour_by_agent as $agent => $site) {
+            foreach ($nb_global_hour_by_agent as $agent => $site)
+            {
                 $this->setup_table(APP_NAME, 'egw_asecurite_agent');
                 $f_agent = $this->search(array('idasecurite_agent' => $agent), false);
-                if (count($f_agent) == 1) {
+                if (count($f_agent) == 1)
+                {
                     $agent_name = $f_agent[0]['nom'] . ' ' . $f_agent[0]['prenom'];
-                    foreach ($site as $key => $value) {
+                    foreach ($site as $key => $value)
+                    {
                         $site_stat_table_content = array();
                         $site = $this->sites[$key];
                         $site_stat_header = array(50, 25, $agent_name . '(' . $site . ')', 'COLSPAN2');

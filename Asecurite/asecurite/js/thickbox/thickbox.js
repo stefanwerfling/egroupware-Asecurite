@@ -5,7 +5,7 @@
  * Licensed under the MIT License: http://www.opensource.org/licenses/mit-license.php
 */
 		  
-var tb_pathToImage = "adv4broadband/templates/default/images/loading.gif";
+var tb_pathToImage = "asecurite/templates/default/images/loading.gif";
 
 //var tb_pathToImage = "images/loading.gif";
 
