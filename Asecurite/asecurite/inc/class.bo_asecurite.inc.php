@@ -248,6 +248,7 @@ class bo_asecurite extends so_sql
             APP_NAME => array(
                 '' => array(
                     'jquery' => '', // file name: asecurite/js/jquery.js
+                    'app' => '', // file name: asecurite/js/jquery.js
                     'jquery.lightbox' => '', // file name: asecurite/js/jquery-lightbox.js
                     'jquery-ui' => '', // file name: asecurite/js/jquery-ui.js
                     'tooltip' => '', // file name: asecurite/js/jquery.js
