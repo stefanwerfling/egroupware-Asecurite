@@ -1,0 +1,213 @@
+/* ------------- top header -------------  */
+/* top header */
+
+#topmenuContainer {
+	background: aliceblue;
+}
+
+#topmenu {
+	padding: 2px;
+	font-size: 11px;
+	display: inline-block;
+	height:12px;
+	text-align:right;
+	right:20px;
+	float: right;
+}
+
+#topmenu li {
+	float: left;
+	border-left: 1px solid #555;
+	padding-left: 3px;
+	margin-left: 3px;
+}
+
+#topmenu li.adviseUserInfo {
+	border-left: 0px solid #555555;
+	border-right: 1px solid #555555;
+	padding: 0px 3px 0px 3px;
+}
+
+#topmenu li a, #topmenu li a:link, #topmenu li a:visited, #topmenu li a:hover {
+	font-weight: bold;
+	text-decoration:none;
+}
+
+#topmenu li a, #topmenu li a:link, #topmenu li a:visited {
+	color:#555;
+}
+
+#topmenu li a:hover {
+	color:#f60;
+}
+
+.adviseUserInfo a, .adviseUserInfo a:link, .adviseUserInfo a:visited, .adviseUserInfo a:hover {
+	font-weight: normal !important;
+}
+
+.adviseUser {
+	color: #f60;
+}
+
+.adviseDate {
+	color: #555;
+}
+
+.runtoolsDate {
+	display: none;
+}
+
+
+/* ------------- sub header -------------  */
+.mainHeader {
+	width: auto;
+	height: 50px;
+	text-align:right;
+}
+
+.mainHeader img {
+	float: left;
+	margin-right : 10px;
+}
+
+/* ------------- main navigation -------------  */
+#nav {
+	height: 36px;
+    background: url(../../images/nav/nav-bg.jpg) repeat-x bottom left;
+    border-top: 1px solid #CACACA;
+	font-size: 12px;
+	font-weight:bold;
+	margin: 0px 0px 5px 0px;	
+}
+
+#nav ul {
+	width: auto;
+	height: 30px;
+	border-right: 1px solid #CACACA;
+    background: url(../../images/nav/nav-dvdr.gif) no-repeat scroll 0 0 transparent;
+    padding-left: 1px;
+}
+
+#nav li, #nav li:hover, #nav li.iconBack, #nav li.iconCurrent, #nav li.iconBackHover {
+    float: left;
+    position: relative;
+ 	padding: 8px 30px 8px 10px;
+}
+
+#nav li, #nav li.iconBack {
+    background: url(../../images/nav/nav-dvdr.gif) no-repeat scroll right top transparent;
+}
+
+#nav li:active, #nav li.active, #nav li.iconCurrent {
+    background: url(../../images/nav/nav-dvdr.gif) no-repeat scroll right top #fff;
+	cursor: default !important;
+}
+
+#nav li a, #nav li a:link, #nav li a:visited, #nav li a:hover {
+    background-position: 10px 0;
+    background-repeat: no-repeat;
+    height: 22px;
+    overflow: hidden;
+    padding: 12px 0 3px;
+	text-decoration: none;
+}
+
+#nav li a:hover, #nav li.iconCurrent a {
+	color: #ff6600;
+}
+
+#nav li img {
+	margin: 0px 2px 0px 0px;
+}
+
+/* infoline */
+.infoline {
+	border-bottom: 1px dotted #cacaca;
+	height:20px;
+}
+
+.infoline span {
+	font-weight:bold;
+}
+
+
+/* ------------- left side bar menu  -------------  */
+
+/* menu structure */
+.divSidebox ul {
+	border-bottom: 1px solid #cacaca;
+	margin-bottom: 10px;
+	background:#03F;
+}
+
+/* menu header */
+.divSideboxHeader {
+	text-align:left;
+	color:#777;
+	/*height: 18px;*/
+	font-weight:bold;
+	font-size:12px;
+
+	border-bottom: 1px solid #cacaca;
+	padding: 10px 0px 2px 0px;
+}
+
+/* menu items */
+a.divSideboxEntry, .divSideboxEntry {
+	text-align:left;
+	height:auto;
+	border-bottom: 1px solid #cacaca;
+	border-right: 1px solid #cacaca;
+
+	padding: 3px 0px 4px 5px;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.sideboxstar {
+	margin-right: 3px;
+}
+
+
+/* ------------- footer -------------  */
+.adviseFooter{
+	background: #fff;
+	position: fixed;
+   	width: 100%;
+	height: 25px;
+	bottom: 0px;
+	left:0px;
+	font-size: 11px;
+	font-weight: normal;
+	color: #555;
+	margin: 2px 0px 0px 0px;
+	clear: both;
+	text-align: right;
+	
+	border-top: 1px solid #cacaca;	
+}
+
+.adviseFooter .footer {
+	width: auto;
+	float: left;
+	margin-left: auto;
+	margin-right: auto;
+
+	padding: 5px 0px 3px 0px;
+	margin: 0px 5px 0px 15px;
+	display: inline-block;
+}
+
+#divGenTime {
+	font-style: italic;
+	color: #f90;
+	display: inline-block;
+	padding: 5px 5px 3px 0px;
+}
+
+
+
+
+
+
+

@@ -1,0 +1,79 @@
+form {
+	margin:0px;
+	padding:0px;
+}
+
+input, button, select {
+	border: 1px solid #cacaca;
+	color: #555;
+	font-size: 11px;
+	height: 25px;
+	margin: 0px 2px 0px 2px;
+	
+}
+
+input {
+	height: 23px;
+	padding: 0px 2px 0px 2px;
+}
+
+button, select {
+	height: 25px;
+}
+
+select {
+	padding: 2px;
+}
+
+input[type=button], input[type=reset], input[type=submit], button, .egwbutton {
+	background: url(../../images/nav/nav-bg.jpg) repeat-x center left;
+	padding: 0 3px 3px !important;
+	cursor:  pointer;
+	font-weight: bold;
+	height: 25px !important;
+}
+
+input[type=checkbox] {
+        vertical-align: middle;
+}
+
+input[type=submit]:hover, input[type=button]:hover, input[type=reset]:hover, button:hover, .egwbutton:hover {
+	background: #f9f9f9;
+	color:  #f60;
+}
+
+input[type=submit]:active,input[type=button]:active,input[type=reset]:active,button:active,.egwbutton:active {
+	background-image: url(../../images/butActive.png);
+	border: 1px solid #7e94a5;
+	color: #17202b;
+}
+
+input.egwbutton {
+	background-color:#c5c5c5;
+	border:  outset 1px #dcdad5;
+	background-color:#b9d5e3;
+	border:  outset 1px #b9d5e3;
+	margin:  1px;
+	padding: 1px;
+	cursor:  pointer;
+	color:  #004e7d;
+}
+
+input.egwbutton:hover {
+	background-color:#94bfd4;
+	border:  outset 1px #b9d5e3;
+	color:  #006699;
+	color:  #004e7d;
+
+}
+
+input.egwbutton:active {
+   border:  inset 1px #bbbbbb;
+}
+
+input[type=image] {
+	cursor: pointer;
+	border: 0;
+	width: 16px;
+	height: 16px;		
+}

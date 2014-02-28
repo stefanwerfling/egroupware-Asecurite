@@ -1,0 +1,206 @@
+/**
+ * eGroupWare - CSS Styles used by eTemplate widgets
+ *
+ * @license http://opensource.org/licenses/gpl-license.php GPL - GNU General Public License
+ * @package etemplate
+ * @link http://www.egroupware.org
+ * @author Ralf Becker <RalfBecker@outdoor-training.de>
+ * @version $Id: app.css 27332 2009-06-30 18:21:15Z ralfbecker $
+ */
+
+/*
+ * a few generic styles used in most eT apps
+ */
+.redItalic,.message {
+	color: red;
+	font-style: italic;
+}
+.gray {
+	color: gray;
+}
+.leftPad5 {
+	padding-left: 5px;
+}
+.inputFullWidth input {
+	width: 100%;
+}
+
+/*
+ * mark input as required
+ */
+.inputRequired input,.inputRequired select,.inputRequired textarea {
+	border: gray 1px solid;
+	background-color: #ffffd0;
+}
+
+/*
+ * Styles of the eT editor
+ */
+.clickWidgetToEdit {
+	cursor: pointer;
+	display: inline;
+}
+.clickWidgetToEdit:hover {
+	background-color: pink;
+}
+
+/*
+ * Styles of the nextmatch widget
+ */
+.activ_sortcolumn {
+	font-weight: bold;
+}
+.inactiv_sortcolumn {
+	font-weight: normal;
+}
+.lettersearch,.lettersearch_active {
+	background-color: #D3DCE3;
+	width: 25px;
+	border: 1px solid #D3DCE3;
+	text-align: center;
+	cursor: pointer;
+}
+.lettersearch_active {
+	font-weight: bold;
+	background-color: #E8F0F0;
+}
+.lettersearch_active,.lettersearch:hover {
+	border: 1px solid black;
+	background-color: #E8F0F0;
+}
+.selectcols {
+	position: relative;
+}
+.colselection {
+	background-color: white;
+	position: absolute;
+	right: 0px;
+	top: 16px;
+	display: none;
+	z-index: 1;
+}
+
+/*
+ * Styles for the tab widget
+ */
+
+.etemplate_tab_active {
+    background-color: #f7f7f7;
+    border-color: #cacaca;
+    border-style: solid;
+    border-width: 1px 1px 0px 1px;	
+	color: #555;
+	font-weight: bold;
+}
+
+.etemplate_tab {
+    background-color: #fff;
+    border-color: #cacaca;
+    border-style: dotted;
+    border-width: 1px 1px 0px 1px;		
+    cursor: pointer;
+	color: #777;
+}
+
+.etemplate_tab, .etemplate_tab_active {
+    padding: 3px 6px;
+    white-space: nowrap;
+	width: 50% !important;
+	text-align: center;
+}
+
+.tab_body {
+    background-color: #f7f7f7;
+    border-color: #cacaca;
+    border-style: solid;
+    border-width: 0px 1px 1px 1px;		
+	
+}
+/** mofified SA */
+div.nextmatch_header {
+	border: 0px solid #cacaca !important;
+}
+
+.nextmatch_header table {
+	border: 1px solid #cacaca !important;
+	border-bottom: 0px solid #cacaca !important;
+}
+
+.nextmatch_header table .th {
+	height: 30px;
+}
+
+
+.nextmatch_header select {
+	width: 140px;
+}
+.nm_num_rows select {
+	width: 40px;
+}
+
+.vfsMode {
+	font-family: monospace; font-weight: bold;
+}
+.vfsMimeIcon img {
+	height: 16px;
+}
+.vfsFilename {
+	white-space: nowrap;
+}
+/**
+ * mark a file (icon) as link
+ */
+.vfsIsLink img {
+	border-bottom: 4px solid darkgray;
+	border-right: 4px solid darkgray;
+}
+/**
+ * nicer would be, but it's not working ...
+ */
+.vfsIsLink img:after {
+	content: url(filemanager/templates/default/images/link.png);
+}
+/**
+ * mark a link (icon) as broken link
+ */
+.vfsIsBrokenLink img {
+	border-bottom: 4px solid red;
+	border-right: 4px solid red;
+}
+
+/**
+ * class for big (more then 5 lines) custom field nextmatch header
+ */
+.cf_header_height_limit {
+	max-height: 6.75em;
+	overflow: auto;
+	padding-right: 15px;
+}
+
+/* table : creation & modification */
+.addEditBox {
+	border: 1px solid #cacaca !important;
+	background: #e1e1e1 !important;
+}
+
+.addEditBox table.formTitlet {
+	width: 98% !important;
+}
+
+.addEditBox fieldset {
+	border: 1px dotted #cacaca;	
+	margin: 5px;	
+	padding: 5px;
+}
+
+.addEditBox fieldset legend {
+	font-weight: bold;
+	padding: 0px 5px 0px 5px;
+}
+
+.addEditBox fieldset table {
+	width: auto !important;
+}
+
+
+

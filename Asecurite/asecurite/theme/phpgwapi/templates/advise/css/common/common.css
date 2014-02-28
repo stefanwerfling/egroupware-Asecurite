@@ -1,0 +1,459 @@
+/*
+	font styling
+	allowed attributes: font-family,font-size,color,font-weight
+
+*/
+
+html {
+	border: 0px;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #555;
+}
+
+ul, li {
+	margin: 0px;
+	list-style: none;
+}
+
+ul {
+	padding-left: 0px;	
+}
+
+
+
+/* links */
+a:link,a:visited {
+	cursor:pointer;
+	color: #000000;
+	text-decoration: none;
+}
+
+a:hover,a:active {
+	cursor:pointer;
+	color: #FF5500;
+	text-decoration: underline;
+}
+
+.prefSection {
+	font-weight:bold;
+	font-size:145%;
+	line-height:40px;
+}
+
+
+/*
+	other styling
+*/
+
+body {
+	background-color:#ffffff;
+	padding: 0px;
+	margin: 0px 20px 0px 20px;
+}
+
+img {
+	border:0;
+}
+
+
+/*
+	Sidebox - Loginbox Style ***BEGIN***
+*/
+
+#tdSidebox {
+	/*width:150px;
+	overflow:auto;*/
+        min-width: 160px;
+}
+
+#thesideboxcolumn {
+    width: 157px;
+    position:relative;
+}
+
+#sideresize {
+    /* background-image:url(../../images/resize.png); */
+    width:10px;
+    height:100px;
+    right:-12px;
+    top:0px;
+    position:absolute;
+    z-index:9999;
+}
+
+.divSidebox {
+	position: relative;
+	border: 1px solid #ffffff;
+	overflow:auto;
+}
+
+.textSideboxStar {
+	font-size:90%;
+	/*background-color: #a7c4db;*/
+	background-color: #FFFFFF;
+	border-right: 1px solid #ffffff;
+	width: 16px;
+}
+
+.divLoginboxHeader {
+	text-align:center;
+	/*background-image:url(../../images/menuTitle.png);*/ 
+	background-image:url(../../images/gradient22.png); 
+	
+	color:#17202b;
+	/*height: 18px;*/
+	font-weight:bold;
+	font-size:12px;
+}
+
+.menuHeadLt {
+    padding:0px;
+    width: 24px;
+    height:18px;
+}
+
+.menuHeadMid {
+    padding:0px;
+   /* margin-left: auto;
+	margin-right: auto; */
+}
+
+.menuHeadRt {
+    width:24px;
+    padding:0px;
+    height: 18px;
+}
+
+a.appTitles,.appTitles {
+	height:25px;
+	font-size:18px;
+	color: red;
+}
+
+a.textSidebox {
+	border-top: 0;
+}
+
+.textSidebox {
+	padding-left: 2px;
+	border-top: solid #ffffff 1px;
+	overflow:auto;
+}
+
+.textSideboxHover {
+	background-color: #ede6d8;
+	background-repeat: repeat-x;
+	border-top: 1px solid #9f9f9f;
+	padding-left: 2px;
+	font-size: 10px;
+}
+
+.textSideboxHover:first-letter {
+	text-transform:uppercase;
+}
+
+
+.textSideboxSpacer {
+	height:18px;
+	padding-left: 0px;
+	border-top: solid #9f9f9f 1px;
+}
+
+.slideoutBack {
+	/*background-image: url(../../images/divmain-background.jpg);*/
+	background-repeat: no-repeat;
+    background-color:white;
+    border: #17202b 1px solid;
+    padding:10px;
+	width: 203px;
+}
+
+.sideboxDrop {
+	position: relative;
+	left: 0px;
+	top: 0px;
+}
+
+.textSidebox:first-letter {
+	text-transform:uppercase;
+}
+
+.sideboxSpace {
+	height:11px;
+}
+
+/*
+	Sidebox - Loginbox Style ***END***
+*/
+
+.greyLine {
+	margin:1px;
+	border-top:solid 1px #7e7e7e;
+	height:1px;
+}
+
+/*
+	Drop Shadow ***BEGIN***
+*/
+
+.menuOneBox {
+	position: relative;
+	left: 5px;
+	text-align: left;
+	/*background-image: url(../../images/shadowAlpha.png);*/
+}
+
+/*
+	Drop Shadow ***END***
+*/
+
+
+
+
+#divMain,#popupMainDiv {
+/*	background-image:url(../../images/divmain-background.jpg); */
+	background-repeat:no-repeat;
+	background-color:white;
+	/* border:solid 1px #17202b; */
+	border-bottom-style:none;
+}
+
+#divMain {
+	padding: 0px;
+}
+
+#divLogo {
+	position:absolute;
+	left:27px;
+	top:20px;
+	z-index:999;
+}
+
+#divUpperTabs {
+	text-align:right;
+	height: 15px;
+	margin-right: 10px;
+}
+
+#divUpperTabs ul {
+	display:inline;
+	margin:0;
+	padding:10px 10px 0 1px;
+	list-style:none;
+}
+
+#divUpperTabs li {
+	float:right;
+	margin:0 5px 0 0;;
+	padding:0 5px 0 5px;
+	border:solid 1px #9c9c9c;
+	border-bottom: 0px;
+}
+
+
+/*
+	App Icon Bar ***BEGIN***
+*/
+
+
+.appIconTbl {
+	padding:0px;
+	/* background-image: url(../../images/rtbump.png);*/
+	background-repeat: no-repeat;
+	background-position: top right;
+	vertical-align: top;
+	color: white;
+}
+
+#divAppTextBar {
+}
+
+/*
+	App Icon Bar ***END***
+*/
+
+#divStatusBar {
+	position: relative;
+	top:0px;
+	left:0px;
+	vertical-align:bottom;
+	border: 0px solid black;
+	padding-top:10px;
+}
+
+.userinfolt {
+	background-image: url(../../images/userbacklt.png);
+	width: 20px;
+	height: 25px;
+}
+
+.userinfomid {
+	background-image: url(../../images/userback.png);
+	background-repeat: repeat-x;
+	color: #000000;
+}
+
+.userinfort {
+	background-image: url(../../images/userbackrt.png);
+	width: 20px;
+}
+
+
+/*
+	Appbox ***BEGIN***
+*/
+
+#tdAppbox {
+	padding-left:11px;
+	width: 100%;
+}
+
+#divAppboxHeader {
+	line-height:18px;
+	font-size:12px;
+	font-weight:bold;
+/*	background-image:url(../../images/appTitleBar.png); */
+	height:18px;
+	text-align:center;
+	padding-bottom:0px;
+	border:solid 1px #17202b;
+}
+
+#divAppbox {
+	background-color:#ffffff;
+	padding:5px;
+	margin-bottom: 20px;
+}
+
+/*
+	Appbox ***END***
+*/
+
+#admin_info
+{
+	position:relative;
+	text-align:right;
+}
+
+
+/*
+	Printing
+*/
+@media screen {	.onlyPrint { display: none; } }
+@media print {	.noPrint { display: none; } }
+
+/*
+	Portal_box as used in home
+*/
+.portal_box {
+	border: #9c9c9c 1px solid;
+}
+
+.portal_box table {
+	border: 1px solid black;
+}
+
+.portal_box_header {
+	height: 15px;
+	padding-top: 0px;
+}
+
+/*
+        Preferences tabs
+*/
+.tablink {
+	white-space: nowrap;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+/* eGroupWare popup */
+#egwpopup {
+	background-color: #fbf8f1;
+	border: 1px solid #17202b;
+}
+
+#egwpopup hr {
+	border: none;
+	border-top: 1px solid #17202b;
+	height: 1px;
+}
+
+#egwpopup_header {
+	background-image: url(../../images/appTitleBar.png);
+	height: 18px;
+	line-height: 18px;
+	margin: 0;
+	padding: 0;
+	font-size:12px;
+	font-weight: bold;
+	color: #17202b;
+	text-align: center;
+	border-bottom: 1px solid #17202b;
+}
+
+#egwpopup_message {
+	margin: 0;
+	padding: 7px;
+	overflow: auto;
+}
+
+#egwpopup_message > table {
+	font-size: 95%;
+}
+
+#egwpopup_message .link {
+	cursor: pointer;
+}
+
+#egwpopup_footer {
+	margin: 0;
+	padding: 7px;
+	border: none;
+	border-top: 1px solid #17202b;
+	text-align: center;
+}
+
+.selectbg {
+	position:absolute;
+	z-index:10;
+	overflow:hidden;
+	width:250px;
+}
+
+.iframeforselectbox {
+	display:block;
+	height:250px;
+	left:10pt;
+	position:absolute;
+	top:10pt;
+	width:224px;
+	z-index:-1;
+	border: 0px;
+}
+
+.bdforselection{;padding:12px;}
+
+.advise {
+	font-size:40px;	
+	color: #000000;
+}
+
+div#sideboxdragarea {
+	position: absolute;
+	left: 0px;
+	top: 120px;
+	z-index: 52;
+}
+
+div#menu2Container {
+    left: 0;
+    overflow: visible;
+    top: 120px;
+    visibility: hidden;
+    z-index: 10000;
+}

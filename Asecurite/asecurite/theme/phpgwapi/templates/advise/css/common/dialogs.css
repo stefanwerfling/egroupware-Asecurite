@@ -1,0 +1,162 @@
+/* ------------- DIALOGS : common style -------------  */
+
+/* tooltips on rollover in tables */
+#popupContent caption, caption, #context, #popupContent th {
+    background-color: #eee !important;
+    color: #555;
+    font-weight: bold !important;
+	padding: 3px !important;
+}
+
+#popupContent caption {
+    color: #555 !important;	
+}
+
+#popupContent th {
+	text-align: center !important;
+}
+
+#popupContent caption, caption {
+
+}
+
+#popupContent th {
+	border-top: 1px dotted #cacaca;
+	border-right: 1px dotted #cacaca;
+}
+
+#context {
+	color: #f60 !important;
+	border-top: 1px solid #cacaca !important;	
+}
+
+#popupContent td {
+	background: #fff !important;
+	border-right: 1px dotted #cacaca;
+	padding: 3px !important;
+	border-top: 1px dotted #cacaca;
+}
+
+/* main overlay */
+#TB_iframeContent body {
+	margin: 0px;
+}
+
+#popupMainDiv {
+	padding: 0px;
+	margin: 0px -10px 0px -10px;
+}
+
+#TB_title {
+    background-color: #fff !important;
+	border-bottom: 1px dotted #cacaca !important; 
+    height: 27px !important;
+}
+
+/* tables with data in overlays */
+.corps2 {
+    border: 1px solid #cacaca !important;
+}
+
+.corps2 .tabHeader td {
+	text-align: center;
+}
+
+.corps2 td {
+	border-color: #cacaca;
+	border-style: dotted;
+	border-width: 1px;
+	padding: 1px;
+}
+
+/* tables with data : titles */
+.formTitle {
+	background: #e1e1e1;
+	border-top: 1px solid #cacaca;
+	border-bottom: 1px solid #cacaca;
+	margin: 2px 0px 5px 0px;
+}
+
+.formTitle .popTitle {
+	padding-bottom: 15px;
+}
+
+.formTitle .popTitle label {
+	font-size: 14px;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
+.formTitle .popTitle #title {
+	color: #f60 !important;
+}
+
+.formTitle img {
+	margin-right: 10px;
+}
+
+.addButton {
+	padding: 3px 0px 5px 0px;
+}
+
+.footerTools {
+	width: 40px !important;
+	float: right;
+}
+
+.footerTools td {
+	width: 20px;
+	text-align: right;
+}
+
+/* inner overlay and dialogs */
+#popupMainDiv {
+	overflow: auto;
+}
+
+/* ------------- DIALOGS : specific to recommendation & concatenation -------------  */
+.recoLabel {
+	background: #e7e7e7;
+	height: 18px;
+	padding: 4px 4px 2px 4px;
+	border-top: 1px solid #cacaca;
+	border-bottom: 1px dotted #cacaca;
+	font-style: italic;
+}
+
+.recoLabel2 {
+	padding: 5px 0px 5px 0px;
+}
+
+.recoLabel2 {
+	width: 180px;
+}
+
+.recoLabelSB {
+
+}
+
+.recoLabelB input, .recoLabelTxt input{
+	width: 294px !important;
+}
+
+.recoLabelSB select {
+	width: 300px !important;
+
+}
+
+/* ------------- DIALOGS : specific to segment creation & modification -------------  */
+
+
+/* ------------- DIALOGS : publications -------------------------------------*/
+.publication td label {
+         vertical-align: middle;
+}
+
+.publication td {
+        vertical-align: middle;
+}
+
+.publication td select {
+        vertical-align: middle;
+}

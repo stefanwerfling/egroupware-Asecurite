@@ -1,0 +1,7 @@
+/* ---------------- common advise style ---------------- */
+@import "common/common.css";
+@import "common/layout.css";
+@import "common/forms.css";
+@import "common/tables.css";
+@import "common/login.css";
+@import "common/dialogs.css";

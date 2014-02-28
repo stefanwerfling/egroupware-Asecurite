@@ -1,0 +1,33 @@
+/*
+	Login page
+*/
+#loginMainDiv {
+	padding-top: 24px;
+	height: 700px;	/* 95% does not work */
+	position: relative;
+	background-repeat: no-repeat;
+	background-position: center 80px;
+	background-image: url(../../images/login-background.jpg);
+}
+#loginScreenMessage {
+	text-align: center;
+	padding: 10px;
+}
+#loginCdMessage {
+	text-align: center;
+	padding-bottom: 10px;
+	color: red;
+	font-style: italic;
+}
+.divLoginboxHeader {
+	text-align: center;
+	border: #9c9c9c 1px solid;	/* does NOT work */
+	padding: 0px;
+}
+
+.divLoginbox
+{
+	position:relative;
+	width: 420px;
+	border: #9f9f9f 1px solid;
+}

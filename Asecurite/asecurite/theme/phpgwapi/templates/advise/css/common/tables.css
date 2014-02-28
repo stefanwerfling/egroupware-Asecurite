@@ -1,0 +1,190 @@
+/* ------------- Table formatting -------------  */
+
+table {
+	border-collapse: collapse;
+}
+
+table td select, table td input {
+	margin-top: 3px;
+	margin-bottom: 3px;
+		
+} 
+
+.th {
+	background: #eee;
+	font-weight:bold;
+	color: #555;
+	vertical-align: middle;
+}
+
+.corps .th {
+	border-bottom: 1px solid #cacaca;		
+	height: 26px;
+}
+
+.corps .th td {
+	text-align: center;
+	font-weight: bold;
+}
+
+.corps td {
+	border-right: 1px dotted #cacaca;
+	padding: 0px 2px 0px 2px;
+}
+
+.corps .row_on, .corps .row_off {
+	border-bottom: 1px dotted #cacaca;	
+}
+
+.row_on {
+	background-color: #fff;
+}
+
+.row_off {
+	background-color: #f7f7f7;
+}
+
+.narrow_column { width: 1%; white-space: nowrap; }
+
+/* row hover */
+.row_on:hover, .row_off:hover {
+	background-color: #ffefdd;
+	color:#f60;
+}
+
+/* ------------- Tables with actions -------------  */
+.actionbox {
+	width: auto !important;
+	border: none 0px !important;
+} 
+
+td.actionbox {
+	border-right: 1px dotted #cacaca;
+}
+
+.actionbox td {
+	width: 18px !important;
+	border: none 0px !important;
+} 
+
+.actionbox img {
+	width: 16px;
+	height: 16px;
+}
+
+.actionbox input {
+	border: none !important;
+}
+
+.activ_sortcolumn td {
+	border: 0px dotted #cacaca !important;
+}
+
+/* ------------- Tables in overlays -------------  */
+.segmentBody {
+	width: 100% !important;
+	background-color: #fff !important;
+    border: 0px solid #5F6565 !important;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+} 
+ 
+.segmentBody * { 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+.segmentBody {
+	width: 100% !important;
+}
+
+.segmentBody table {
+	width: 100%;
+}
+
+.segmentBody fieldset {
+	border: 0px solid #cacaca;
+}
+
+.segmentBody fieldset legend {
+	display: block;
+	width: 100%;
+	height: 18px;
+	color: #f60;
+	font-weight: bold;
+	background: #fff;
+	border-top: double #cacaca;
+	border-bottom: 0px dotted #cacaca;
+	padding: 4px 0px 2px 0px;
+	margin-bottom: 0px;
+	text-transform: capitalize !important;
+}
+
+.tabHeader {
+    background-color: #eee !important;
+    border: 0px solid #cacaca !important;
+	padding: 4px 4px 2px 4px !important; mù!:
+}
+
+/* ------------- Tables in overlays : recommandations ------------- */
+.recoTabs table {
+	/* margin: 5px 0px 5px 0px; */
+}
+
+
+/* ------------- Extra Icons Menu -------------  */
+/* ***BEGIN*** */
+#extraIcons {
+	/*background-color:#fbf8f1;*/
+	background-color:#FFFFFF; 
+	border: 1px solid #cacaca;
+	position: relative;
+	left: 15px;
+	top: 114px;
+}
+
+#extraIcons table {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+.extraIconsHeader {
+    text-align:center;
+  /*  background-image:url(../../images/menuTitle.png); */
+    color:#555;
+    font-weight:normal;
+    font-size:11px;
+	height: 18px;
+}
+
+.extraIconsRowIcon {
+	border-bottom: 1px dotted #cacaca;
+	width: 20px;
+	padding: 1px;
+}
+
+.extraIconsRow {
+    border-bottom: 1px dotted #cacaca;
+    padding:1px;
+	padding-left: 3px;
+    font-size: 11px;
+	background-color: #ffffff;
+}
+
+.extraIconsRow:hover {
+	border-bottom: 1px dotted #cacaca;
+	padding:1px;
+	padding-left: 3px;
+	font-size: 11px;
+	background-color: #f5f5f5;
+}
+
+#extraIcons table tr:hover {
+	background-color: #f5f5f5;	
+}
+
+/* Extra Icons Menu ***END*** */
+
+
+ 
+
