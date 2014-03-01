@@ -37,9 +37,9 @@
 
             ],
             "aoColumnDefs": [
-                {"bSortable": false, "aTargets": [6]},
-                {"asSorting": ["desc"], "aTargets": [0]},
-                {"bVisible": false, "aTargets": [0]}
+    {"bSortable": false, "aTargets": [6]},
+    {"asSorting": ["desc"], "aTargets": [0]},
+    {"bVisible": false, "aTargets": [0]}
             ],
             "oLanguage": {
                 "sProcessing": "Traitement en cours...",
@@ -70,13 +70,15 @@
         //  initHighlight(oTable);
 
     });
+
 </script>
+<div id="addButton"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', {WIDTH}, {HEIGHT}, 'yes');
+        return false;">Ajouter un nouveau site</button></div>
 <div class="ex_highlight">
     <div id="dynamic">
         <form name="form" id="form">
             <div>{MSG}</div>
-            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', {WIDTH}, {HEIGHT}, 'yes');
-                    return false;">Ajouter un nouveau site</button></div>
+
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
                 <thead>
                     <tr>

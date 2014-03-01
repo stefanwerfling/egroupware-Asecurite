@@ -134,11 +134,11 @@ class ui_agent extends bo_agent {
                     }
                 }
                 $agent_info_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.get_agent_info', 'id' => $id));
-                $agent_info = $this->html->image(APP_NAME, 'view', lang("Afficher les infos"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $agent_info_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
-                $row['piece_identite'] .= '&nbsp; ' . $agent_info;
+                $agent_info = $this->html->image(APP_NAME, 'view', lang("Afficher la fiche complète"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $agent_info_link . '\', \'_blank\', 450, 400, \'yes\'); return false;"');
                 $row['operation'] = '<span style="float:right">';
                 $row['operation'] .= $this->html->image(APP_NAME, 'edit', lang("Modifier l'agent"), 'style="cursor:pointer" onclick="egw_openWindowCentered2(\'' . $edit_link . '\', \'_blank\', '. $this->width. ', '. $this->height. ', \'yes\'); return false;"');
-                $row['operation'] .='&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cet agent?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
+                $row['operation'] .= '&nbsp;' . $agent_info;
+                $row['operation'] .= '&nbsp;' . $this->html->image(APP_NAME, 'delete', lang("Supprimer l'agent"), 'style="cursor:pointer" id="' . $id . '" onclick="deleteElement(\'' . $id . '\', \'' . lang('Voulez vous supprimer cet agent?') . '\', \'' . $delete_link . '\', \'' . $this->current_link . '\' );"');
                 $row['operation'] .= '&nbsp;' . $this->html->input('checkbox[' . $id . ']', $id, 'checkbox', 'id="checkbox[' . $id . ']"') . '</span>';
 
                 $output['aaData'][] = $row;
@@ -177,20 +177,21 @@ class ui_agent extends bo_agent {
                 $f_agent[0]['date_debut_piece_identite'] = $f_agent[0]['date_debut_piece_identite'] == '' ? '' : $this->format_date($f_agent[0]['date_debut_piece_identite']);
                 $f_agent[0]['date_fin_piece_identite'] = $f_agent[0]['date_fin_piece_identite'] == '' ? '' : $this->format_date($f_agent[0]['date_fin_piece_identite']);
 
-                $this->_write_info($pdf, lang("Agent"), strtoupper($f_agent[0]['nom']) . ' ' . ucwords($f_agent[0]['prenom']), 15);
-                $this->_write_info($pdf, lang("Date de naissance"), $f_agent[0]['date_naissance'], 35);
-                $this->_write_info($pdf, lang("Adresse"), $f_agent[0]['adresse'] . ' ' . $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville'], 20);
-                $this->_write_info($pdf, lang("Téléphone"), $f_agent[0]['telephone'], 23);
-                $this->_write_info($pdf, lang("Email"), $f_agent[0]['email'], 18);
-                $this->_write_info($pdf, lang("Type de contrat"), $f_agent[0]['type_contrat'], 33);
-                $this->_write_info($pdf, lang("Date de début de contrat"), $f_agent[0]['date_debut_contrat'], 50);
-                $this->_write_info($pdf, lang("Date de fin de contrat"), $f_agent[0]['date_fin_contrat'], 45);
-                $this->_write_info($pdf, lang("Type de pièce d'identité"), $f_agent[0]['type_piece_identite'], 47);
-                $this->_write_info($pdf, lang("Numéro"), $f_agent[0]['numero_piece_identite'], 20);
-                $this->_write_info($pdf, lang("Date de début de validité"), $f_agent[0]['date_debut_piece_identite'], 50);
-                $this->_write_info($pdf, lang("Date de fin de validité"), $f_agent[0]['date_fin_piece_identite'], 45);
-                $this->_write_info($pdf, lang("Commune/Préfecture"), $f_agent[0]['commune_piece_identite'], 43);
-                $this->_write_info($pdf, lang("Pays"), $f_agent[0]['pays_piece_identite'], 12);
+                $this->_write_info($pdf, lang("Agent"). ':', strtoupper($f_agent[0]['nom']) . ' ' . ucwords($f_agent[0]['prenom']), 15);
+                $this->_write_info($pdf, lang("Date de naissance"). ':', $f_agent[0]['date_naissance'], 35);
+                $this->_write_info($pdf, lang("Adresse"). ':', $f_agent[0]['adresse'], 20);
+                $this->_write_info($pdf, '',  $f_agent[0]['code_postal'] . ', ' . $f_agent[0]['idasecurite_ville'], 20);
+                $this->_write_info($pdf, lang("Téléphone"). ':', $f_agent[0]['telephone'], 23);
+                $this->_write_info($pdf, lang("Email"). ':', $f_agent[0]['email'], 18);
+                $this->_write_info($pdf, lang("Type de contrat"). ':', $f_agent[0]['type_contrat'], 33);
+                $this->_write_info($pdf, lang("Date de début de contrat"). ':', $f_agent[0]['date_debut_contrat'], 50);
+                $this->_write_info($pdf, lang("Date de fin de contrat"). ':', $f_agent[0]['date_fin_contrat'], 45);
+                $this->_write_info($pdf, lang("Type de pièce d'identité"). ':', $f_agent[0]['type_piece_identite'], 47);
+                $this->_write_info($pdf, lang("Numéro"). ':', $f_agent[0]['numero_piece_identite'], 20);
+                $this->_write_info($pdf, lang("Date de début de validité"). ':', $f_agent[0]['date_debut_piece_identite'], 50);
+                $this->_write_info($pdf, lang("Date de fin de validité"). ':', $f_agent[0]['date_fin_piece_identite'], 45);
+                $this->_write_info($pdf, lang("Commune/Préfecture"). ':', $f_agent[0]['commune_piece_identite'], 43);
+                $this->_write_info($pdf, lang("Pays"). ':', $f_agent[0]['pays_piece_identite'], 12);
             }
         }
         $pdf->Output();
@@ -198,7 +199,7 @@ class ui_agent extends bo_agent {
 
     private function _write_info(&$pdf, $label, $info, $label_w = 10, $info_w = 10) {
         $pdf->SetFont('Times', 'B', 12);
-        $pdf->Cell($label_w, 10, utf8_decode($label) . ':', 0, 0);
+        $pdf->Cell($label_w, 10, utf8_decode($label) , 0, 0);
         $pdf->SetFont('Times', '', 12);
         $pdf->Cell($info_w, 10, utf8_decode($info), 0, 1);
     }

@@ -2,24 +2,24 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var oTable;
-        $('#delete').click(function() {            
+        $('#delete').click(function() {
             var checkedId = getChecked(); // in app.js
-            if(checkedId){
-                if(confirm("Voulez vous supprimer les agents sélectionnés")){
+            if (checkedId) {
+                if (confirm("Voulez vous supprimer les agents sélectionnés")) {
                     $.ajax({
                         type: "POST",
                         url: "{DELETE_LINK}",
-                        data: "id="+checkedId,
-                        success: function(){
-                            document.location.href= "{INDEX_LINK}&msg="+"La suppression a été effectuée avec succès&save=success";
+                        data: "id=" + checkedId,
+                        success: function() {
+                            document.location.href = "{INDEX_LINK}&msg=" + "La suppression a été effectuée avec succès&save=success";
                         }
-                    } );
+                    });
                 }
-            }else{
+            } else {
                 alert("Aucune ligne n'a été cochée");
             }
         });
-                                
+
         oTable = $('#tableContent').dataTable({
             "bJQueryUI": true,
             "bSortClasses": false,
@@ -27,60 +27,61 @@
             "bProcessing": true,
             "sAjaxSource": "{DATA_LINK}",
             "aoColumns": [
-                {"mDataProp": "idasecurite_agent" },
-                {"mDataProp": "nom" },
-                {"mDataProp": "type_contrat"},
-                {"mDataProp": "adresse"},
-                {"mDataProp": "code_postal"},
-                {"mDataProp": "idasecurite_ville"},
-                {"mDataProp": "telephone"},
-                {"mDataProp": "email"},
-                {"mDataProp": "piece_identite"},
-                {"mDataProp": "date_debut_contrat"},
-                {"mDataProp": "date_fin_contrat"},
-                {"mDataProp": "operation"}
-                    
+    {"mDataProp": "idasecurite_agent" },
+    {"mDataProp": "nom" },
+    {"mDataProp": "type_contrat"},
+    {"mDataProp": "adresse"},
+    {"mDataProp": "code_postal"},
+    {"mDataProp": "idasecurite_ville"},
+    {"mDataProp": "telephone"},
+    {"mDataProp": "email"},
+    {"mDataProp": "piece_identite"},
+    {"mDataProp": "date_debut_contrat"},
+    {"mDataProp": "date_fin_contrat"},
+    {"mDataProp": "operation"}
+
             ],
-             "aoColumnDefs": [
-                { "bSortable": false, "aTargets": [ 9 ] },
-                { "asSorting": [ "desc" ], "aTargets": [ 0 ] },
-                { "bVisible": false, "aTargets": [ 0 ] }
+            "aoColumnDefs": [
+                {"bSortable": false, "aTargets": [9]},
+                {"asSorting": ["desc"], "aTargets": [0]},
+                {"bVisible": false, "aTargets": [0]}
             ],
-             "oLanguage": {
-                "sProcessing":     "Traitement en cours...",
-                "sSearch":         "Rechercher&nbsp;:",
-                "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
-                "sInfo":           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-                "sInfoEmpty":      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                "sInfoPostFix":    "",
+            "oLanguage": {
+                "sProcessing": "Traitement en cours...",
+                "sSearch": "Rechercher&nbsp;:",
+                "sLengthMenu": "Afficher _MENU_ &eacute;l&eacute;ments",
+                "sInfo": "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "sInfoPostFix": "",
                 "sLoadingRecords": "Chargement en cours...",
-                "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                "sEmptyTable":     "Aucune donnée disponible dans le tableau",
-            "oPaginate": {
-                "sFirst":      "Premier",
-                "sPrevious":   "Pr&eacute;c&eacute;dent",
-                "sNext":       "Suivant",
-                "sLast":       "Dernier"
+                "sZeroRecords": "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                "oPaginate": {
+                    "sFirst": "Premier",
+                    "sPrevious": "Pr&eacute;c&eacute;dent",
+                    "sNext": "Suivant",
+                    "sLast": "Dernier"
+                },
+                "oAria": {
+                    "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                    "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+                }
             },
-            "oAria": {
-                "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
-                "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
-            }
-        },
-        "iDisplayLength": 30,
-        "aLengthMenu": [[30,50,100,200,-1],[30,50,100,200,"Tout"]] 
+            "iDisplayLength": 30,
+            "aLengthMenu": [[30, 50, 100, 200, -1], [30, 50, 100, 200, "Tout"]]
         });
-        
-      //  initHighlight(oTable);
-       
-    } );
+
+        //  initHighlight(oTable);
+
+    });
 </script>
+<div id="addButton"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', {WIDTH}, {HEIGHT}, 'yes');
+                    return false;">Ajouter un nouvel agent</button></div>
 <div class="ex_highlight">
     <div id="dynamic">
         <form name="form" id="form">
             <div>{MSG}</div>
-            <div style="float: right"><button onclick="egw_openWindowCentered2('{ADD_LINK}', '_blank', {WIDTH}, {HEIGHT}, 'yes'); return false;">Ajouter un nouvel agent</button></div>
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="tableContent">
                 <thead>
                     <tr>
