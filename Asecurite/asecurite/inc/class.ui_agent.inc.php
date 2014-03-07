@@ -163,10 +163,11 @@ class ui_agent extends bo_agent {
         $pdf->Ln(5);
         $this->setup_table(APP_NAME, 'egw_asecurite_agent');
         $agent_id = get_var('id');
-
+        $output_filename = '';
         if ($agent_id) {
             $f_agent = $this->search(array('idasecurite_agent' => $agent_id), false);
             if ($f_agent) {
+                $output_filename = $f_agent[0]['nom'].'_info.pdf';
                 $this->setup_table(APP_NAME, 'egw_asecurite_ville');
                 $f_city_name = $this->search(array('idasecurite_ville' => $f_agent[0]['idasecurite_ville']), false);
                 if (count($f_city_name) == 1) {
@@ -194,7 +195,7 @@ class ui_agent extends bo_agent {
                 $this->_write_info($pdf, lang("Pays"). ':', $f_agent[0]['pays_piece_identite'], 12);
             }
         }
-        $pdf->Output();
+        $pdf->Output($output_filename);
     }
 
     private function _write_info(&$pdf, $label, $info, $label_w = 10, $info_w = 10) {

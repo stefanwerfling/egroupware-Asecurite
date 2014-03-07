@@ -233,9 +233,10 @@ class ui_imprime extends bo_asecurite
         $this->pdf->Cell(114, 10, utf8_decode('Mois: ' . $this->monthes[$current_month]), 0, 1, 'L');
         // $this->pdf->Ln(1);
         $this->pdf->Cell(48);
-        $this->pdf->Cell(114, 0, utf8_decode('Année: ' . $this->years[$current_year]), 0, 1, 'L');
+        $this->pdf->Cell(114, 0, utf8_decode('Année: ' . $current_year), 0, 1, 'L');
         $this->pdf->Ln(10);
 
+        $output_filename = '';
         $all_site = false;
         if ($GLOBALS['egw']->session->appsession('current_site', APP_NAME) == '')
         {
@@ -243,14 +244,18 @@ class ui_imprime extends bo_asecurite
         }
         $all_agent = false;
         $this->pdf->SetFont('Times', 'B', 14);
-        // set agent
-        if ($GLOBALS['egw']->session->appsession('current_agent', APP_NAME) == '')
+        
+        if ($GLOBALS['egw']->session->appsession('current_agent', APP_NAME) == '') // To print all agents
         {
             $all_agent = true;
+            $output_filename = "Tous les agents_{$this->monthes[$current_month]}/$current_year".'.pdf';
             $this->pdf->Cell(0, 0, utf8_decode('PLANNING DES AGENTS'), 0, 1, 'C');
-        } else
+        } else // To print selected agent
         {
-            $this->pdf->Cell(0, 0, utf8_decode("Feuille de planning de: {$this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)]} "), 0, 1, 'C');
+            $agent = $this->agents[$GLOBALS['egw']->session->appsession('current_agent', APP_NAME)];
+            //Set output filename
+            $output_filename = $agent."_{$this->monthes[$current_month]}/$current_year".'.pdf';
+            $this->pdf->Cell(0, 0, utf8_decode("Feuille de planning de: $agent"), 0, 1, 'C');
         }
 
         /* ---- BEGIN PLANNING TABLES ------ */
@@ -504,7 +509,7 @@ class ui_imprime extends bo_asecurite
             }
         }
         /* ---- BEGIN GLOBAL SITES TABLE ------ */
-        $this->pdf->Output();
+        $this->pdf->Output($output_filename);
     }
 
 }

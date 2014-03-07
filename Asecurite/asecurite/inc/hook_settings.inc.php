@@ -19,7 +19,7 @@ $choice = array(
 
 $GLOBALS['settings'] = array(
     'address' => array(
-        'type' => 'input',
+        'type' => 'text',
         'label' => 'Adresse',
         'name' => 'address',
         'help' => 'Adresse du siège social de la société'
