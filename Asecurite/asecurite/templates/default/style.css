@@ -114,3 +114,6 @@ caption{
 #ex_highlight{
     clear: both;
 }
+.dataTables_wrapper{
+    min-height: 100px !important;
+}
