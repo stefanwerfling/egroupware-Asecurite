@@ -119,6 +119,7 @@ class ui_planning_global extends bo_planning_global
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_planning_global.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_ville.delete_planning'));
         $t->set_var('DATA_LINK', $data_link);
+        $t->set_var('BASE_URL', $GLOBALS['egw']->link('/').APP_NAME);
         $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
         $t->set_var('DELETE_LINK', $delete_link);
         $t->set_var('INDEX_LINK', $this->current_link);

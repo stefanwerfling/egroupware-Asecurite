@@ -62,6 +62,7 @@ class ui_agent extends bo_agent {
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
 
         $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('BASE_URL', $GLOBALS['egw']->link('/').APP_NAME);
         $t->set_var('WIDTH', $this->width);
         $t->set_var('HEIGHT', $this->height);
         $t->set_var('DATA_LINK', $data_link);
@@ -116,7 +117,7 @@ class ui_agent extends bo_agent {
                     $style = 'error';
                 }
                 $row['date_fin_contrat'] = $row['date_fin_contrat'] == '' ? '' : '<span id="' . $style . '">' . $this->format_date($row['date_fin_contrat']) . '</span>';
-
+                $row['adresse'] = $row['adresse'] ? $row['adresse'] . "<br>". $row['postal'] .' '.$row['idasecurite_ville']: $row['idasecurite_ville'];
                 $planning_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_agent.index', 'id' => $id, 'current' => 'true'));
                 $edit_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.edit', 'id' => $id));
                 $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_agent.delete_agent'));
@@ -237,6 +238,30 @@ class ui_agent extends bo_agent {
         parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('menuaction' => APP_NAME . '.ui_agent.index'));
         $this->tmpl->read(APP_NAME . '.agent.edit');
         $this->tmpl->exec(APP_NAME . '.ui_agent.edit', $content, $sel_options, $no_button, '', 2);
+    }
+    public function ajax_edit() {        
+        $GLOBALS['egw']->js->set_onload('disable_enable_fin_contrat();');
+        $content['title'] = 'Asecurite' . ' - ' . lang("Agents management");
+
+        if ($content['type_contrat'] == 'CDI') {
+            $content['date_fin_contrat'] = '';
+        }
+        $sel_options = array(
+            'idasecurite_ville' => $this->cities,
+            'type_contrat' => $this->type_contrat,
+            'type_piece_identite' => array('' => lang('Choisissez ...'), 'Titre de séjour' => 'Titre de séjour', 'passeport' => 'Passeport', 'Permis de conduire' => 'Permis de conduire')
+        );
+        if (!$this->cities) {
+            $js = "opener.location.href='" . ($link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.index'))) . "';window.close();";
+            $content['no_ville_msg'] = "<span id='error'>" . lang('Aucune ville trouvée') . ' <a><button onclick="' . $js . '">' . lang('Créer en ici') . '</button></a>' . " </span>";
+        }
+        parent::edit($content, $no_button, 'idasecurite_agent', 'Agent', 'egw_asecurite_agent', array('menuaction' => APP_NAME . '.ui_agent.index'));
+        $this->tmpl->read(APP_NAME . '.agent.edit');
+        $edit = $this->tmpl->exec(APP_NAME . '.ui_agent.edit', $content, $sel_options, $no_button, '', 1);
+        
+        $_response = new xajaxResponse();
+        $_response->addAssign("dialog", "innerHTML", $edit);
+        return $_response->getXML();
     }
 
 }

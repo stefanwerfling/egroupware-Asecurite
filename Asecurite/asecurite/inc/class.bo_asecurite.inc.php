@@ -133,7 +133,8 @@ class bo_asecurite extends so_sql
         10 => 31,
         11 => 30,
         12 => 31
-        );
+    );
+
     /**
      * Constructor
      * @param string default table name
@@ -247,15 +248,13 @@ class bo_asecurite extends so_sql
         $GLOBALS['egw']->js->files = array(
             APP_NAME => array(
                 '' => array(
-                    'jquery' => '', // file name: asecurite/js/jquery.js
-                    'app' => '', // file name: asecurite/js/jquery.js
-                    'jquery.lightbox' => '', // file name: asecurite/js/jquery-lightbox.js
-                    'jquery-ui' => '', // file name: asecurite/js/jquery-ui.js
-                    'tooltip' => '', // file name: asecurite/js/jquery.js
-                    'jquery.dataTables.min' => 'dataTables', // file name: asecurite/js/dataTables/jquery.dataTables.min.js
-                    'ZeroClipboard' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.js
-                    'TableTools.min' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.editor.js
-                    //'dataTables.editor' => 'dataTables', // file name: asecurite/js/dataTables/dataTables.editor.js
+                    "jquery.min" => "assets/jquery/dist",
+                    "jquery-ui.min" => "assets/jquery-ui",
+                    "bootstrap.min" => "assets/bootstrap/dist/js",
+                    "jquery.dataTables.min" => "assets/datatables/media/js",
+                    "datatables" => "assets/datatables-bootstrap3/BS3/assets/js",
+                    "angular.min" => 'assets/angular',
+                    'app' => '.', // file name: asecurite/js/jquery.js
                     'jscharts' => '', // file name: asecurite/js/jscharts.js
         )));
         $GLOBALS['egw_info']['flags']['include_xajax'] = true;

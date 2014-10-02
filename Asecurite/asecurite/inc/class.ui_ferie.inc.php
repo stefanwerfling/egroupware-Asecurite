@@ -54,6 +54,7 @@ class ui_ferie extends bo_ferie {
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ferie.delete_jour_ferie'));
 
         $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('BASE_URL', $GLOBALS['egw']->link('/').APP_NAME);
         $t->set_var('WIDTH', $this->width);
         $t->set_var('HEIGHT', $this->height);
         $t->set_var('DATA_LINK', $data_link);

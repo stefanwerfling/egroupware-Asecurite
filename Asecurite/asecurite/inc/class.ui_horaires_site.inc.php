@@ -125,6 +125,7 @@ class ui_horaires_site extends bo_horaires_site
         $data_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.get_data'));
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_horaires_site.delete_planning'));
         $t->set_var('DATA_LINK', $data_link);
+        $t->set_var('BASE_URL', $GLOBALS['egw']->link('/').APP_NAME);
         $t->set_var('MSG', "<span id=\"$save\">" . lang($msg) . " </span>");
         $t->set_var('DELETE_LINK', $delete_link);
         $t->set_var('INDEX_LINK', $this->current_link);

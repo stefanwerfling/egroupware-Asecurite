@@ -1,0 +1,21 @@
+{
+    "name": "planification",
+    "version": "1.0.0",
+    "description": "An application to schedule employees of a security company",
+    "license": "MIT",
+    "dependencies": {
+        "requirejs": "latest",
+        "jquery": ">=1.11.1",
+        "jquery-ui-bootstrap": "latest",
+        "datatables": "latest",
+        "datatables-plugins": "latest",
+        "bootstrap": "latest",
+        "datatables-bootstrap3": "latest",
+        "metro-ui-css": "latest",
+        "angular": "latest",
+        "angular-mocks": "~1.2.x",
+        "angular-route": "~1.2.x",
+        "angular-resource": "~1.2.x",
+        "angular-animate": "~1.2.x"
+    }
+}

@@ -55,6 +55,7 @@ class ui_ville extends bo_ville {
         $delete_link = $GLOBALS['egw']->link('/index.php', array('menuaction' => APP_NAME . '.ui_ville.delete_ville'));
 
         $t->set_var('ADD_LINK', $add_link);
+        $t->set_var('BASE_URL', $GLOBALS['egw']->link('/').APP_NAME);
         $t->set_var('WIDTH', $this->width);
         $t->set_var('HEIGHT', $this->height);
         $t->set_var('DATA_LINK', $data_link);

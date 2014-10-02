@@ -14,12 +14,12 @@
 /* FLEXGRID */
 
 @import "style.css";
-@import "flexigrid/flexigrid.css";
-@import "jquery/jquery.lightbox.css";
-
-@import "dataTables/table.css";
-@import "dataTables/TableTools.css";
 @import "dataTables/table_jui.css";
-@import "dataTables/jquery.dataTables.css";
-@import "dataTables/jquery-ui-1.8.4.custom.css";
-@import "dataTables/TableTools_JUI.css";
+/*@import "dataTables/jquery.dataTables.css";*/
+@import "../../js/assets/datatables/media/css/jquery.dataTables.min.css";
+/*@import "../../js/assets/datatables/media/css/jquery.dataTables_themeroller.css";*/
+
+@import "../../js/assets/jquery-ui/themes/base/all.css";
+/*@import "../../js/assets/bootstrap/dist/css/bootstrap.min.css";*/
+/*@import "../../js/assets/bootstrap/dist/css/bootstrap-theme.min.css";*/
+@import "../../js/assets/datatables-bootstrap3/BS3/assets/css/datatables.css";
